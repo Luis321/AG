@@ -1,8 +1,9 @@
-const CACHE_NAME = 'agile-coach-pwa-v1';
+const CACHE_NAME = 'agile-coach-pwa-v2';
 
 const CORE_ASSETS = [
   './index.html',
   './plan.html',
+  './herramientas.html',
   './modelos.html',
   './safe.html',
   './less.html',
@@ -16,12 +17,19 @@ const CDN_ASSETS = [
   'https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;1,9..40,300&display=swap'
 ];
 
-// Install: cache all core assets
+// Install: cache all core assets + CDN dependencies
 self.addEventListener('install', event => {
   event.waitUntil(
     caches.open(CACHE_NAME).then(cache => {
       return cache.addAll(CORE_ASSETS).catch(err => {
         console.warn('Some core assets failed to cache:', err);
+      });
+    }).then(() => {
+      // Pre-cache CDN assets (React, Babel) needed for herramientas.html
+      return caches.open(CACHE_NAME).then(cache => {
+        return Promise.allSettled(
+          CDN_ASSETS.map(url => fetch(url).then(r => r.ok ? cache.put(url, r) : null).catch(() => null))
+        );
       });
     }).then(() => self.skipWaiting())
   );
