@@ -1,0 +1,1251 @@
+const { useState } = React;
+
+const GROUPS = [
+  { id: "gestion",      label: "Gestión Ágil",        color: "#0052CC" },
+  { id: "colaboracion", label: "Colaboración Visual",  color: "#FF5722" },
+  { id: "enterprise",   label: "Enterprise & Procesos", color: "#6B4FBB" },
+  { id: "estrategia",   label: "Estrategia de Herramientas", color: "#0D9488" },
+];
+
+const CHAPTERS = [
+
+  // ══════════ GESTIÓN ÁGIL ══════════
+
+  {
+    id: "jira-fundamentos", group: "gestion", title: "Jira — Fundamentos y Tableros", icon: "🔵",
+    color: "#0052CC", light: "#DEEBFF", border: "#4C9AFF", text: "#0747A6",
+    functional: `Jira es la herramienta de gestión de trabajo ágil más usada en NTT Data. Para un Agile Coach senior, no basta con "usarla" — se espera que puedas configurarla, diagnosticar problemas de flujo desde sus métricas y explicar a los equipos cómo sacarle el máximo partido.
+
+¿POR QUÉ JIRA ES CRÍTICA PARA NTT DATA?
+NTT Data trabaja con múltiples clientes simultáneamente, muchos en banca y sector público. Jira es el estándar en esos entornos. En entrevista te pueden pedir que describas cómo configurarías un tablero para un equipo nuevo, qué métricas activarías primero, o cómo diagnosticarías un problema de flujo desde los datos de Jira.
+
+LOS 3 TABLEROS PRINCIPALES:
+→ Scrum Board: para equipos que trabajan en Sprints. Columnas típicas: To Do · In Progress · In Review · Done. Tiene Sprint Planning integrado, Backlog priorizado y Burndown chart automático.
+→ Kanban Board: para flujo continuo sin sprints. Sin fechas fijas. WIP limits configurables por columna. Ideal para equipos de soporte o mantenimiento.
+→ Business Project Board: para trabajo no-técnico (HR, Marketing, Legal). Más simple que Scrum/Kanban técnico.
+
+LA DIFERENCIA QUE MARCA EN ENTREVISTA:
+La mayoría de candidatos sabe "usar" Jira. Lo que NTT Data busca es alguien que entienda la diferencia entre un tablero bien configurado y uno que produce datos inútiles — y que pueda corregirlo.`,
+
+    technical: `CONFIGURACIÓN DE UN TABLERO SCRUM DESDE CERO:
+
+PASO 1 — PROYECTO Y TIPO:
+Jira → Crear proyecto → Scrum (software) o Kanban. Elegir "Company-managed" (más control) vs "Team-managed" (más simple). NTT Data suele usar Company-managed para proyectos de cliente.
+
+PASO 2 — COLUMNAS Y ESTADOS:
+Cada columna del tablero mapea a uno o más estados del workflow. Un error común: múltiples columnas para el mismo estado. El workflow limpio es:
+Backlog → To Do → In Progress → In Review → Done
+Columnas adicionales solo si hay un estado real de espera distinto (ej: "Waiting for Client").
+
+PASO 3 — ÉPICAS, HISTORIAS Y SUBTAREAS:
+Jerarquía en Jira: Epic → Story → Sub-task (o Bug, Task).
+Las Epic tienen un Epic Link que conecta todas las historias relacionadas.
+En proyectos grandes de NTT Data también se usa Initiative (nivel superior a Epic).
+
+PASO 4 — CAMPOS OBLIGATORIOS Y CUSTOM FIELDS:
+Agregar campos según el contexto del cliente: Story Points (estimación relativa), Sprint (asignación), Fix Version (release), Priority, Components (módulo del sistema), Labels (etiquetas libres).
+
+PASO 5 — QUICK FILTERS:
+Crear filtros rápidos en el tablero para: "Solo mis tareas", "Bloqueadas", "Sin asignar", "Alta prioridad". Permiten al SM ver el estado del sprint de un vistazo.
+
+PASO 6 — SWIMLANES:
+Organizar el tablero por: Epic (útil para ver distribución de trabajo), Assignee (útil para detectar sobrecarga), Priority (útil para standup). Por defecto están desactivadas.
+
+JIRA QUERY LANGUAGE (JQL) — las 5 queries que todo AC debe saber:
+→ Ítems sin asignar en sprint activo:
+   project = "X" AND sprint in openSprints() AND assignee is EMPTY
+→ Issues bloqueadas:
+   project = "X" AND status = "Blocked" ORDER BY created ASC
+→ Historias sin Story Points:
+   project = "X" AND issuetype = Story AND "Story Points" is EMPTY
+→ Lead Time manual:
+   project = "X" AND status = Done AND updated >= -30d ORDER BY updated DESC
+→ Issues de un épico específico:
+   "Epic Link" = "X-123" ORDER BY priority DESC`,
+
+    visual: { type: "jira-tableros" },
+    questions: [
+      {
+        q: "Un equipo tiene un tablero Jira con 8 columnas y el SM dice que 'no saben en qué estado está nada'. ¿Cuál es el problema más probable?",
+        opts: [
+          "El equipo necesita más capacitación en Jira — deben aprender a actualizar las tarjetas",
+          "Demasiadas columnas que no reflejan estados reales del flujo — el trabajo se pierde entre columnas que nadie actualiza. Solución: auditar el workflow real del equipo y reducir a 4–5 estados significativos con transiciones claras",
+          "Jira no es la herramienta adecuada para este equipo — deberían usar Trello",
+          "Falta un campo obligatorio de 'estado' en cada issue"
+        ],
+        correct: 1,
+        explanation: "El síntoma 'no sé en qué estado está nada' casi siempre indica un workflow mal diseñado, no un problema de disciplina del equipo. Demasiadas columnas crean ambigüedad sobre dónde va cada ítem. La solución es co-diseñar el workflow con el equipo, identificando los estados reales de su proceso (no los ideales), y configurar el tablero para que refleje exactamente eso."
+      },
+      {
+        q: "¿Cuál es la diferencia entre un tablero Scrum y uno Kanban en Jira, y cuándo usarías cada uno?",
+        opts: [
+          "Son idénticos — solo cambia el nombre. Cualquiera sirve para cualquier equipo",
+          "Scrum Board: trabajo en Sprints con fechas, Burndown chart, Sprint Planning integrado — para equipos con ciclos de entrega definidos. Kanban Board: flujo continuo sin sprints, WIP limits por columna, Cumulative Flow Diagram — para equipos de soporte, mantenimiento o con demanda variable",
+          "Kanban es para equipos técnicos; Scrum es para equipos de negocio",
+          "Scrum Board es más moderno y siempre es la mejor opción"
+        ],
+        correct: 1,
+        explanation: "La elección del tablero debe reflejar cómo trabaja realmente el equipo. Si el equipo planifica en sprints de 2 semanas y tiene compromisos fijos, Scrum. Si el trabajo llega de forma continua (tickets de soporte, bugs, mejoras) sin ciclos fijos, Kanban. Un error común es forzar Scrum Board en equipos de mantenimiento y después quejarse de que 'Jira no funciona'."
+      },
+      {
+        q: "¿Qué query JQL usarías para detectar historias en el sprint activo que llevan más de 5 días sin movimiento?",
+        opts: [
+          "sprint = active AND status != Done",
+          "project = X AND sprint in openSprints() AND updated <= -5d AND status != Done ORDER BY updated ASC",
+          "issuetype = Story AND sprint = current AND priority = High",
+          "status = 'In Progress' AND assignee is not EMPTY"
+        ],
+        correct: 1,
+        explanation: "La query correcta usa 'sprint in openSprints()' para el sprint activo, 'updated <= -5d' para filtrar ítems sin actividad en 5+ días, y 'status != Done' para excluir los completados. Ordenada por 'updated ASC' muestra primero los más viejos — los más urgentes de revisar en el standup. Este es exactamente el tipo de query que un AC usa para preparar el standup o detectar ítems aging."
+      }
+    ]
+  },
+
+  {
+    id: "jira-metricas", group: "gestion", title: "Jira — Métricas y Reports", icon: "📊",
+    color: "#0052CC", light: "#DEEBFF", border: "#4C9AFF", text: "#0747A6",
+    functional: `Las métricas de Jira son el termómetro del equipo para un Agile Coach en NTT Data. No basta con saber que existen — en entrevista pueden pedirte que interpretes un Burndown chart o que expliques qué le dice un Velocity report a un SM.
+
+LOS 6 REPORTS CLAVE DE JIRA:
+
+BURNDOWN CHART (Scrum):
+Muestra cuánto trabajo queda en el sprint vs. el tiempo ideal de consumo. La línea real vs. la línea ideal.
+→ Línea real SOBRE la ideal: el equipo está atrasado
+→ Línea real plana: hay bloqueos o el trabajo no se está actualizando
+→ Caída brusca al final: el equipo actualiza todo junto al final del sprint (anti-patrón)
+→ Línea real BAJO la ideal antes del día 7: ritmo saludable
+
+VELOCITY CHART:
+Muestra story points completados por sprint. Útil para predecir la capacidad del próximo sprint.
+Regla práctica: usar el promedio de los últimos 3 sprints como estimación de capacidad.
+
+CUMULATIVE FLOW DIAGRAM (Kanban):
+Las bandas de colores por estado acumuladas en el tiempo. Un AC que lee un CFD puede diagnosticar cuellos de botella sin preguntarle nada al equipo.
+
+SPRINT REPORT:
+Issues completadas vs. no completadas al final del sprint. Si hay > 20% de issues no completadas consistentemente, hay un problema de planificación o de scope creep.
+
+EPIC BURNDOWN:
+Progreso de una épica completa a lo largo de múltiples sprints. Útil para comunicar avance al cliente.
+
+RELEASE BURNUP:
+Trabajo completado vs. scope total para una versión. A diferencia del Burndown, el Burnup muestra cuándo el scope cambió (sube la línea de scope).`,
+
+    technical: `DASHBOARDS PERSONALIZADOS EN JIRA:
+
+Un AC en NTT Data suele tener 3 dashboards configurados:
+
+DASHBOARD 1 — VISIÓN DEL SPRINT (actualización diaria):
+Gadgets: Sprint Progress · Issues Assigned to Me · Burndown Chart · Issues in Sprint por estado · Bloqueados
+
+DASHBOARD 2 — HEALTH DEL EQUIPO (semanal):
+Gadgets: Velocity Chart · Sprint Report histórico · Issues sin Story Points · Issues sin asignar · Lead Time promedio
+
+DASHBOARD 3 — REPORTE AL CLIENTE (mensual/QBR):
+Gadgets: Epic Burndown · Release Burnup · Issues completadas este mes · Bugs resueltos vs. abiertos · DORA metrics (si está integrado con pipeline)
+
+CÓMO COMPARTIR DASHBOARDS:
+Jira → Dashboards → ... → Share. Se puede compartir con: Everyone, Group, Project, o una persona específica. Para reportes de cliente, crear un usuario "viewer" sin edit permissions.
+
+INTEGRACIONES CLAVE EN NTT DATA:
+→ Jira + Confluence: vincular issues a páginas de documentación
+→ Jira + Slack/Teams: notificaciones de cambios de estado, menciones
+→ Jira + Bitbucket/GitHub: smart commits — escribir el ID de Jira en el commit actualiza el issue automáticamente
+→ Jira + Tempo: time tracking para proyectos billables (muy usado en consultoras)
+→ Jira + Miro: vincular tableros Miro a sprints (para retrospectivas y PI Planning)
+
+MÉTRICAS DE FLUJO EN JIRA (plugin o nativo):
+Jira Software Cloud tiene Flow Metrics integradas en proyectos Scrum/Kanban:
+→ Cycle Time: en Reports → Cycle Time. Configurable por tipo de issue.
+→ Throughput: en Reports → Throughput. Items per week/day.
+→ WIP: visible en el tablero Kanban con los WIP limits configurados.
+
+ANTI-PATRONES FRECUENTES EN JIRA:
+→ Velocity inflada: el equipo cierra issues sin terminarlas realmente para "cumplir" el sprint
+→ Story Points de 1 para todo: no hay diferenciación de esfuerzo real
+→ Workflow zombie: estados que nadie usa pero que "siempre estuvieron ahí"
+→ Backlog sin grooming: 400+ issues sin prioridad ni Story Points — inmanejable
+→ Sin Definition of Done: issues se mueven a Done sin criterios claros`,
+
+    visual: { type: "jira-metricas" },
+    questions: [
+      {
+        q: "El Burndown chart del sprint muestra una línea completamente plana durante los primeros 6 días y luego cae en picada los últimos 4 días. ¿Qué indica esto?",
+        opts: [
+          "El equipo trabajó de manera eficiente — completaron todo antes del final del sprint",
+          "Es el anti-patrón 'last-minute rush': el equipo no actualiza Jira durante el sprint y cierra todo al final. Los datos no reflejan el progreso real — el burndown es inútil para diagnosticar problemas a tiempo",
+          "El sprint comenzó bien pero hubo bloqueos en la segunda semana",
+          "El equipo tuvo vacaciones durante los primeros 6 días del sprint"
+        ],
+        correct: 1,
+        explanation: "Una línea plana seguida de caída brusca indica que el equipo no actualiza Jira durante el sprint — actualizan todo junto al final. Esto destruye el valor del Burndown como herramienta de diagnóstico temprano. El SM necesita establecer el hábito de actualizar el estado diariamente, idealmente durante el standup mismo. La solución no es tecnológica — es cultural."
+      },
+      {
+        q: "Querés saber si el equipo está tomando más trabajo del que puede completar en cada sprint. ¿Qué reporte de Jira consultás primero?",
+        opts: [
+          "Burndown Chart — muestra si el trabajo se completa a tiempo",
+          "Sprint Report histórico — muestra el % de issues NO completadas sprint a sprint. Si consistentemente hay 30%+ de issues que se 'arrastran' al siguiente sprint, el equipo está sobre-comprometido o hay scope creep",
+          "Velocity Chart — muestra la velocidad del equipo",
+          "Epic Burndown — muestra el progreso general del proyecto"
+        ],
+        correct: 1,
+        explanation: "El Sprint Report es el más directo para este diagnóstico: muestra exactamente qué issues se completaron y cuáles no en cada sprint. Si el patrón histórico muestra consistentemente 30%+ de issues incompletas, el equipo está sistemáticamente sobre-comprometido. La solución puede ser: reducir el Sprint Goal, mejorar el refinamiento, o revisar los Story Points para que reflejen el esfuerzo real."
+      },
+      {
+        q: "¿Cuál es la diferencia entre un Burndown y un Burnup chart, y cuándo cada uno comunica mejor al cliente?",
+        opts: [
+          "Son lo mismo con colores distintos — se puede usar cualquiera indistintamente",
+          "Burndown muestra trabajo que QUEDA (baja de arriba hacia abajo). Burnup muestra trabajo COMPLETADO y también la línea de scope total — cuando el scope sube, el cliente puede verlo claramente. Para proyectos donde el scope cambia, Burnup es más honesto y comunicativamente más poderoso",
+          "Burndown es para sprints; Burnup es para releases largas",
+          "Burnup es más moderno y siempre es la mejor opción para comunicar al cliente"
+        ],
+        correct: 1,
+        explanation: "El Burndown solo muestra trabajo restante. El Burnup muestra trabajo completado Y la línea de scope. Cuando el cliente agrega features a mitad de release, en el Burnup se ve cómo la línea de scope sube — lo que visualmente explica por qué la fecha de entrega cambia sin necesidad de defensas verbales. Para proyectos con scope creep frecuente, el Burnup es una herramienta de comunicación con el cliente mucho más poderosa."
+      }
+    ]
+  },
+
+  {
+    id: "azure-devops", group: "gestion", title: "Azure DevOps — Boards y Pipelines", icon: "☁️",
+    color: "#0078D4", light: "#EFF6FC", border: "#82B4E8", text: "#004E8C",
+    functional: `Azure DevOps es el ecosistema completo de Microsoft para desarrollo y entrega de software. NTT Data lo usa intensamente con clientes del sector financiero, gobierno y empresas con ecosistema Microsoft. Para un Agile Coach, la parte más relevante es Azure Boards — el equivalente a Jira dentro del ecosistema Azure.
+
+¿QUÉ ES AZURE DEVOPS? (las 5 piezas):
+→ Azure Boards: gestión de trabajo ágil (el equivalente a Jira para el AC)
+→ Azure Repos: repositorio de código Git o TFVC
+→ Azure Pipelines: CI/CD — build, test y deploy automatizados
+→ Azure Test Plans: gestión de pruebas manuales y automatizadas
+→ Azure Artifacts: repositorio de paquetes (npm, NuGet, Maven)
+
+Como Agile Coach, tu foco principal es Azure Boards, pero necesitás entender el ecosistema completo para diagnosticar dónde están los cuellos de botella del flujo de delivery.
+
+AZURE BOARDS — TRES TIPOS DE PROCESOS:
+→ Scrum: usa "Product Backlog Items" (PBIs) y "Tasks". Sprint-based. Más cercano a Scrum puro.
+→ Agile: usa "User Stories" y "Tasks". Más flexible. El más común en NTT Data.
+→ CMMI: para organizaciones con procesos formales (gobierno, defensa). Más burocrático.
+
+LA JERARQUÍA DE WORK ITEMS (proceso Agile):
+Epic → Feature → User Story → Task / Bug / Test Case
+Cada nivel tiene campos específicos: Story Points en User Story, Effort en Feature, Business Value en Epic.`,
+
+    technical: `JIRA vs AZURE BOARDS — COMPARATIVA TÉCNICA:
+
+TERMINOLOGÍA (equivalencias):
+Jira Issue Type → Azure Work Item Type
+Jira Epic → Azure Epic / Feature
+Jira Story → Azure User Story (proceso Agile) / PBI (proceso Scrum)
+Jira Sprint → Azure Sprint / Iteration
+Jira Board → Azure Board (Kanban) / Sprint Board
+Jira Backlog → Azure Backlog
+Jira Dashboard → Azure Dashboard
+Jira Filter / JQL → Azure Query (WIQL — Work Item Query Language)
+
+WIQL (Work Item Query Language) — equivalente a JQL:
+SELECT [System.Id], [System.Title], [System.State]
+FROM WorkItems
+WHERE [System.TeamProject] = 'MiProyecto'
+AND [System.WorkItemType] = 'User Story'
+AND [System.IterationPath] UNDER 'MiProyecto\\Sprint 1'
+AND [System.State] <> 'Closed'
+ORDER BY [System.ChangedDate] DESC
+
+AZURE PIPELINES — LO QUE EL AC DEBE ENTENDER:
+Un pipeline tiene Stages → Jobs → Steps.
+Cada Stage puede corresponder a un ambiente: Dev, QA, Staging, Production.
+Los Quality Gates viven en los pipelines — no en los boards.
+
+EJEMPLO DE PIPELINE YAML (simplificado):
+trigger: [main]
+stages:
+  - stage: Build
+    jobs: [run unit tests → build artifact]
+  - stage: QA
+    jobs: [deploy to QA → run integration tests → Quality Gate]
+  - stage: Production
+    condition: manual approval
+    jobs: [deploy to prod → smoke tests]
+
+INTEGRACIÓN BOARDS + PIPELINES:
+Cuando un pipeline falla, puede crear automáticamente un Bug en Azure Boards.
+Los Work Items se pueden vincular a commits, pull requests y builds — trazabilidad completa.
+
+DASHBOARDS EN AZURE DEVOPS:
+Widgets disponibles: Sprint Burndown, Velocity, Cycle Time, Lead Time, Cumulative Flow Diagram, Query Results (configurable), Build History, Deployment Status.
+
+PERMISOS Y EQUIPOS:
+Stakeholder: solo puede ver y comentar — ideal para clientes del negocio en NTT Data.
+Basic: acceso completo a Boards y Repos.
+Basic + Test Plans: acceso a Azure Test Plans.
+Visual Studio Subscriber: acceso completo.`,
+
+    visual: { type: "azure-boards" },
+    questions: [
+      {
+        q: "Un cliente de NTT Data usa Azure DevOps y pide que el Agile Coach configure el seguimiento del trabajo para un equipo nuevo. ¿Por qué proceso empezarías?",
+        opts: [
+          "Crear directamente el Sprint Board y empezar a agregar tareas",
+          "Definir primero el tipo de proceso (Scrum, Agile o CMMI) según cómo trabaja el equipo, luego configurar la jerarquía de Work Items (Epic → Feature → Story), los Sprints/Iterations, y finalmente el Board con sus columnas y WIP limits",
+          "Migrar los tickets de Jira a Azure Boards directamente",
+          "Instalar el plugin de Scrum para Azure DevOps antes de cualquier configuración"
+        ],
+        correct: 1,
+        explanation: "La decisión del proceso es irreversible después de crear el proyecto — definirá toda la terminología y los tipos de Work Items disponibles. Para NTT Data con clientes de banca o gobierno, 'Agile' es el más común por su flexibilidad. Después de eso, la configuración fluye: jerarquía de work items → iterations/sprints → board columns → WIP limits → dashboards. Empezar por el board sin definir el proceso produce caos estructural difícil de corregir."
+      },
+      {
+        q: "¿Qué es un 'Quality Gate' en Azure Pipelines y por qué es relevante para un Agile Coach?",
+        opts: [
+          "Una función de Azure Boards para marcar las historias como 'listas para producción'",
+          "Un punto de control automático en el pipeline CI/CD que bloquea el avance al siguiente ambiente si no se cumplen criterios técnicos (cobertura mínima de tests, 0 vulnerabilidades críticas, build verde). Un AC necesita entenderlo para diagnosticar por qué el deployment se frena y facilitar la conversación técnica",
+          "Un tipo de reunión de revisión de calidad que el QA Lead organiza antes de cada release",
+          "Un reporte de Azure Test Plans sobre la calidad del sprint"
+        ],
+        correct: 1,
+        explanation: "Los Quality Gates son la implementación técnica del shift-left testing. Cuando un equipo dice 'no podemos deployar porque el pipeline falla', el AC necesita entender si es un problema de coverage insuficiente, tests rotos o una regla de quality gate mal configurada. No necesita implementarlo, pero sí diagnosticar el cuello de botella y facilitar la conversación entre el equipo de QA y los developers. Esto es lo que NTT Data espera de un AC con madurez técnica."
+      },
+      {
+        q: "Un desarrollador del equipo pregunta si puede usar el ID de Azure DevOps en el mensaje del commit para que el Work Item se actualice automáticamente. ¿Es posible y cómo funciona?",
+        opts: [
+          "No, Jira tiene esa funcionalidad pero Azure DevOps no",
+          "Sí, con Smart Commits: incluir '#ID' en el mensaje del commit (ej: 'fix login bug #1234') vincula automáticamente el commit al Work Item. Se puede configurar para que también cambie el estado del ítem",
+          "Solo funciona si el repositorio es Azure Repos — no con GitHub o GitLab",
+          "Sí, pero requiere instalar un plugin adicional de pago"
+        ],
+        correct: 1,
+        explanation: "Azure DevOps soporta la vinculación de commits a Work Items mediante referencias en el mensaje del commit. La sintaxis básica es '#ID' (ej: '#1234'). Se puede configurar que automáticamente cierre el Work Item ('fixes #1234', 'closes #1234') o solo lo vincule. Esta integración Repos + Boards crea trazabilidad completa: desde la User Story hasta el commit que la implementó — muy valorado en auditorías de proyectos para banca o gobierno."
+      }
+    ]
+  },
+
+  // ══════════ COLABORACIÓN VISUAL ══════════
+
+  {
+    id: "miro-facilitacion", group: "colaboracion", title: "Miro — Facilitación Remota", icon: "🟡",
+    color: "#FF5722", light: "#FFF3E0", border: "#FFCC80", text: "#BF360C",
+    functional: `Miro es el whiteboard digital más usado en NTT Data para facilitación remota. Es la herramienta donde ocurren los PI Planning, retrospectivas, story mapping, brainstorming y workshops de equipos distribuidos. Para un Agile Coach senior, Miro no es "un tablero online" — es el espacio donde se construye la cultura del equipo.
+
+¿POR QUÉ MIRO ES TAN IMPORTANTE EN NTT DATA?
+NTT Data trabaja con equipos distribuidos en múltiples países de LATAM. La facilitación presencial no siempre es posible. Un AC que sabe diseñar y facilitar sesiones en Miro puede hacer que un PI Planning de 30 personas funcione tan bien en remoto como en persona.
+
+LOS 5 USOS PRINCIPALES EN NTT DATA:
+
+1. PI PLANNING (el más complejo):
+Múltiples equipos, múltiples días, Product Owners, RTE, stakeholders. Miro permite tener un Program Board digital donde los equipos colocan sus features, marcan dependencias con flechas de colores y hacen ROAM de riesgos en tiempo real.
+
+2. RETROSPECTIVAS:
+Formatos interactivos con sticky notes, dot voting, timers. Miro tiene plantillas de Starfish, 4Ls, Sailboat que se pueden personalizar. El equipo puede votar y priorizar en tiempo real.
+
+3. USER STORY MAPPING:
+Trazar el journey del usuario horizontalmente y las historias verticalmente por prioridad/sprint. Miro permite moverlas, agruparlas y conectarlas con flechas — mucho más fluido que Jira para el proceso de descubrimiento.
+
+4. EVENT STORMING:
+Mapear el dominio del sistema con sticky notes de colores (eventos, comandos, actores). Para proyectos de arquitectura compleja con múltiples dominios.
+
+5. WORKSHOPS DE ÉQUIPO:
+Icebreakers, dinámicas de Team Building, Definition of Done collaborativa, Working Agreements.`,
+
+    technical: `MIRO PARA UN PI PLANNING REMOTO — Configuración paso a paso:
+
+PREPARACIÓN (1–2 días antes):
+→ Crear un tablero con zonas claramente delimitadas: Agenda del día, Program Board por equipo, Parking Lot, ROAM Board, Notas de acuerdos.
+→ Configurar permisos: Facilitadores (edit) · Participantes (edit) · Stakeholders de negocio (comment only).
+→ Cargar el Portfolio Backlog con las Epics/Features en sticky notes pre-cargados.
+→ Preparar el Program Board: columna por iteración del PI, fila por equipo.
+
+DURANTE EL PI PLANNING:
+→ Sprint Planning Part 1: cada equipo coloca sticky notes de sus Features comprometidas en las columnas de iteración correspondientes.
+→ Team Breakout: cada equipo tiene su propia zona del tablero para planificar internamente.
+→ Dependencias: usar flechas de colores entre equipos (rojo = bloqueante, amarillo = necesita coordinación).
+→ ROAM en tiempo real: 4 cuadrantes (Resolved · Owned · Accepted · Mitigated). Sticky notes rojos para riesgos sin dueño.
+
+CIERRE DEL PI:
+→ Captura de pantalla del Program Board final como artefacto.
+→ Exportar el ROAM Board como imagen o PDF para el reporte del RTE.
+→ Crear action items con dot voting para priorizarlos.
+
+FUNCIONALIDADES AVANZADAS DE MIRO:
+→ Frames: para organizar el tablero en "páginas" (cada frame = una sección)
+→ Timer integrado: timeboxear actividades sin salir de Miro
+→ Dot Voting: para priorizar opciones democráticamente
+→ Reactions: feedback anónimo en tiempo real
+→ Mindmap: para brainstorming estructurado
+→ Presenter Mode: para compartir pantalla sin mostrar el caos del tablero completo
+→ Smart Diagramming: conectores automáticos para diagramas de flujo
+
+INTEGRACIÓN MIRO + JIRA:
+El plugin nativo de Miro para Jira permite crear issues de Jira directamente desde una sticky note en Miro. Útil al final de un refinamiento o PI Planning para no perder ninguna acción identificada.
+
+ERRORES COMUNES EN MIRO:
+→ Tablero sin estructura previa: todos los participantes trabajando en el mismo espacio sin zonas definidas → caos visual
+→ Sin permisos claros: stakeholders que accidentalmente mueven o borran contenido del equipo
+→ Demasiados elementos sin agrupar: tablero ilegible después de 30 minutos de trabajo
+→ No usar Frames: todo en un solo scroll infinito en lugar de secciones navegables`,
+
+    visual: { type: "miro-board" },
+    questions: [
+      {
+        q: "Vas a facilitar un PI Planning remoto para 4 equipos en Miro. ¿Cuál es tu prioridad antes del evento?",
+        opts: [
+          "Crear un tablero en blanco el día del evento para que los equipos lo construyan juntos",
+          "Pre-estructurar el tablero con zonas definidas (Program Board por equipo, ROAM Board, Parking Lot, zonas de breakout por equipo), cargar las Features del Portfolio Backlog como sticky notes, configurar permisos diferenciados (facilitadores/participantes/stakeholders) y hacer un 'dry run' técnico con los co-facilitadores",
+          "Preparar una presentación de PowerPoint para compartir pantalla durante el evento",
+          "Instalar el plugin de Jira en Miro el mismo día del evento"
+        ],
+        correct: 1,
+        explanation: "Un PI Planning de 4 equipos con 30+ personas en Miro sin estructura previa es una receta para el caos. La preparación del tablero es trabajo del AC, no de los participantes. Las zonas predefinidas permiten que todos trabajen simultáneamente sin pisarse. Cargar las Features pre-cargadas ahorra tiempo valioso. Los permisos diferenciados evitan que stakeholders borren accidentalmente trabajo del equipo. El dry run técnico detecta problemas de acceso antes del evento real."
+      },
+      {
+        q: "¿Cómo usarías Miro para hacer visible el ROAM Board durante un PI Planning?",
+        opts: [
+          "Crear una tabla en Excel y compartirla en el chat mientras se trabaja en Miro",
+          "Crear 4 cuadrantes en Miro (Resolved · Owned · Accepted · Mitigated) donde los equipos arrastran sticky notes de riesgos en tiempo real, con código de colores: rojo (sin dueño, crítico), amarillo (con dueño, en seguimiento), verde (resuelto). Al final del PI el ROAM es un artefacto visual exportable",
+          "El ROAM Board solo funciona en pizarras físicas — en remoto se usa el chat de Teams",
+          "Crear un formulario de Google Forms para que los equipos reporten riesgos"
+        ],
+        correct: 1,
+        explanation: "El ROAM Board en Miro aprovecha todas las ventajas del digital: múltiples personas pueden agregar riesgos simultáneamente, las flechas de colores muestran el estado, el dot voting prioriza los más críticos, y al final del PI se exporta como imagen para el reporte del RTE. El ROAM digital en Miro es mucho más dinámico que uno físico porque permite actualizaciones en tiempo real de todos los equipos a la vez."
+      },
+      {
+        q: "Un stakeholder de negocio que no conoce Miro va a participar en el PI Planning. ¿Cómo lo preparás?",
+        opts: [
+          "Le mandás el link de Miro 5 minutos antes del evento",
+          "Le enviás el link con días de anticipación para que explore, le asignás permisos de 'comment only' para evitar que modifique el tablero accidentalmente, le explicás brevemente los 3 gestos básicos (scroll, zoom, click en sticky), y le asignás un co-facilitador de apoyo durante el evento",
+          "Le sugerís que observe en modo espectador sin participar activamente",
+          "Le preparás un PDF del tablero para que lo vea en su computadora mientras otros trabajan en Miro"
+        ],
+        correct: 1,
+        explanation: "Los stakeholders de negocio son los que más ansiedad tienen con herramientas nuevas y los que más pueden interrumpir una sesión si tienen problemas técnicos. La preparación anticipada es inversión, no gasto de tiempo. Los permisos 'comment only' dan seguridad al equipo de que el trabajo no se va a borrar. Los 3 gestos básicos (el mínimo necesario) reducen la curva de entrada. El co-facilitador de apoyo libera al facilitador principal para que se concentre en el contenido, no en el soporte técnico."
+      }
+    ]
+  },
+
+  {
+    id: "mural-workshops", group: "colaboracion", title: "Mural — Workshops y Design Thinking", icon: "🎨",
+    color: "#F5321D", light: "#FFF0EE", border: "#F5A090", text: "#8B1A10",
+    functional: `Mural es el competidor directo de Miro, con un foco particular en Design Thinking, metodologías de innovación y workshops estructurados. NTT Data lo incluye en su stack porque algunos clientes y prácticas de consultoría tienen licencias Mural y flujos de trabajo ya construidos en esa plataforma.
+
+¿EN QUÉ SE DIFERENCIA MURAL DE MIRO?
+
+MURAL tiene:
+→ Facilitator Superpowers: controles de facilitación más potentes (bloquear cursores, esconder trabajo hasta el momento de revelar, guiar al grupo por zonas)
+→ Outline: índice lateral para navegar tableros complejos
+→ Summon: llevar a todos los participantes a tu ubicación con un click
+→ Private Mode: el participante trabaja sin que otros vean hasta que lo revela
+→ Thinking Time: el facilitador puede bloquear que todos vean el trabajo de los demás para incentivar pensamiento independiente antes del debate
+
+MIRO tiene:
+→ Más integraciones nativas (Jira, GitHub, Figma, etc.)
+→ Smart diagramming más robusto
+→ Mejor para PI Planning y tableros de gestión continua
+→ Mayor adopción general en el mercado
+
+PARA NTT DATA:
+→ MIRAL: preferido para workshops de Design Thinking, ideación, Customer Journey Maps
+→ MIRO: preferido para PI Planning, retrospectivas, gestión de equipo continua
+
+CUÁNDO USAR CADA UNO:
+→ Sesión de ideación creativa con cliente de negocio → Mural (experiencia más visual y "premium")
+→ PI Planning con 4 equipos técnicos → Miro (más funcional, más integraciones)
+→ Retrospectiva de equipo quincenal → cualquiera, según la licencia del cliente
+→ Customer Journey Map con stakeholders de marketing → Mural`,
+
+    technical: `FUNCIONALIDADES CLAVE DE MURAL PARA UN AC:
+
+FACILITATOR SUPERPOWERS (la gran diferencia):
+→ "Lock Everything": congela todos los elementos del tablero para evitar modificaciones accidentales
+→ "Summon Everyone": mueve a todos los participantes a tu posición actual
+→ "Hide All Stickies": oculta las sticky notes hasta el momento de revelarlas (útil para Dot Voting después de que todos escribieron)
+→ "Set Timer": temporizador visible para todos en el tablero
+→ "Anonymous Mode": las sticky notes se crean sin nombre del autor hasta que el facilitador las revela
+
+PLANTILLAS CLAVE EN MURAL:
+→ Design Thinking Canvas (5 fases: Empatizar → Definir → Idear → Prototipar → Testear)
+→ Customer Journey Map (touchpoints, emociones, pain points)
+→ Business Model Canvas
+→ SWOT Analysis
+→ Lean Canvas (para startups y nuevos productos)
+→ Value Proposition Canvas
+→ Rose-Thorn-Bud (retrospectiva)
+→ Empathy Map (para definir el usuario)
+
+WORKSHOP DE DESIGN THINKING EN MURAL — estructura:
+
+ZONA 1 — EMPATIZAR (30 min):
+Cada participante llena sticky notes con: observaciones del usuario, entrevistas, pain points. Timer: 10 min de trabajo individual (modo oculto), 20 min de sharing.
+
+ZONA 2 — DEFINIR (20 min):
+Cluster de sticky notes similares → identificar patrones → construir el Problem Statement:
+"[Usuario] necesita [necesidad] porque [insight]"
+
+ZONA 3 — IDEAR (30 min):
+Brainstorming de soluciones. Regla: cantidad sobre calidad. Dot Voting al final para priorizar top 3.
+
+ZONA 4 — PROTOTIPAR / VALIDAR:
+Boceto de solución + hipótesis a testear.
+
+DIFERENCIAS EN PERMISOS MURAL vs MIRO:
+Mural: Visitor (solo ver), Member (editar), Facilitator (superpowers), Admin
+Miro: Viewer, Commenter, Editor, Admin
+La principal diferencia: el rol de Facilitator en Mural tiene superpowers que no existen en Miro.`,
+
+    visual: { type: "mural-vs-miro" },
+    questions: [
+      {
+        q: "¿Qué funcionalidad de Mural usarías para evitar el 'anchoring effect' en una sesión de ideación (que todos copien las ideas del primero que escribe)?",
+        opts: [
+          "Asignar turnos para que cada persona escriba sus ideas de forma secuencial",
+          "Activar 'Private Mode' o 'Hide All Stickies': cada participante escribe sus ideas en modo oculto. El facilitador las revela todas simultáneamente después del tiempo de ideación. Así cada persona genera ideas independientemente sin influencia de los demás",
+          "Usar Miro en lugar de Mural para esta actividad",
+          "Pedir a los participantes que escriban sus ideas en papel antes de ingresarlas al tablero"
+        ],
+        correct: 1,
+        explanation: "El anchoring effect es uno de los principales sesgos en sesiones de ideación: la primera idea que se expone influencia todas las demás. El Private Mode de Mural resuelve esto técnicamente: todos escriben en paralelo sin ver lo que los demás están escribiendo. Cuando el facilitador revela todo simultáneamente, el grupo tiene mucha más diversidad de ideas. Esta es la funcionalidad que diferencia a un facilitador de Mural básico de uno avanzado."
+      },
+      {
+        q: "Un cliente pide facilitar un Customer Journey Map para entender la experiencia de sus usuarios. ¿Miro o Mural? ¿Por qué?",
+        opts: [
+          "Miro — porque tiene más integraciones con Jira y es más conocido",
+          "Mural — porque sus plantillas de Design Thinking (Customer Journey Map, Empathy Map, Value Proposition Canvas) están más optimizadas para este tipo de workshop, y los Facilitator Superpowers permiten controlar mejor la experiencia de un cliente de negocio no técnico",
+          "Cualquiera — son idénticos para este caso de uso",
+          "Ni uno ni el otro — para Customer Journey Maps se usa Figma"
+        ],
+        correct: 1,
+        explanation: "Para Customer Journey Maps con stakeholders de negocio, Mural es la elección superior por dos razones: sus plantillas de Design Thinking son más ricas y visualmente orientadas a negocio (no a equipos técnicos), y los Facilitator Superpowers permiten al AC controlar la experiencia con precisión quirúrgica — activar timers, revelar ideas simultáneamente, llevar a todos al mismo punto del mapa. Un stakeholder de marketing o producto va a sentir Mural como una herramienta más profesional para este tipo de trabajo."
+      },
+      {
+        q: "¿Cuál es la diferencia práctica entre usar 'Summon Everyone' en Mural y compartir pantalla en un Teams/Zoom durante la misma sesión?",
+        opts: [
+          "Son exactamente lo mismo — ambos muestran el tablero al grupo",
+          "'Summon Everyone' mueve a todos los participantes a tu posición en el tablero manteniendo su propia vista — pueden seguir interactuando. Compartir pantalla es unidireccional: los demás solo miran, no pueden hacer click ni agregar contenido. Summon preserva la participación activa; compartir pantalla la elimina",
+          "Compartir pantalla es mejor porque consume menos ancho de banda",
+          "No hay diferencia práctica — el facilitador elige según su preferencia"
+        ],
+        correct: 1,
+        explanation: "Esta distinción es fundamental para la facilitación remota efectiva. Cuando compartes pantalla, el grupo pasa de participantes activos a audiencia pasiva — se pierde la dinámica colaborativa. 'Summon Everyone' mantiene a todos en el tablero, con sus propios cursores activos, solo los lleva a la misma zona. Pueden seguir agregando sticky notes, votando, respondiendo. La participación activa es lo que hace que los workshops produzcan compromisos reales, no solo acuerdos pasivos."
+      }
+    ]
+  },
+
+  // ══════════ ENTERPRISE ══════════
+
+  {
+    id: "servicenow", group: "enterprise", title: "ServiceNow — Contexto para Agile Coach", icon: "🟣",
+    color: "#6B4FBB", light: "#F0EEFF", border: "#C4B5FD", text: "#3B1A8A",
+    functional: `ServiceNow es la plataforma de gestión de servicios empresariales más usada en grandes corporaciones. NTT Data trabaja con ServiceNow porque muchos de sus clientes (banca, telecomunicaciones, sector público) lo usan como su sistema central de ITSM (IT Service Management). Para un Agile Coach, no es necesario ser experto técnico en ServiceNow — pero sí es crítico entender su rol en el flujo de valor y cómo se relaciona con el trabajo ágil.
+
+¿QUÉ ES SERVICENOW?
+Una plataforma en la nube que gestiona: incidentes, cambios, problemas, solicitudes de servicio, activos de TI, recursos humanos y flujos de trabajo empresariales. Es el "sistema nervioso" de las operaciones de TI en organizaciones grandes.
+
+¿POR QUÉ LE IMPORTA A UN AGILE COACH?
+
+1. EL FLUJO DE INCIDENTES LLEGA AL EQUIPO ÁGI:
+Los equipos ágiles en NTT Data reciben bugs y tickets de soporte desde ServiceNow. Si el equipo tiene demasiados incidentes no planificados, esto destruye la capacidad del sprint. El AC necesita diagnosticar cuánto trabajo no planificado entra desde ServiceNow y negociar con el cliente cómo manejarlo.
+
+2. CHANGE MANAGEMENT = APROBACIONES PARA EL PIPELINE:
+En entornos regulados (banca), los deploys deben aprobarse como "Change Requests" en ServiceNow antes de poder ejecutarse. Esto puede agregar días al Lead Time si el proceso no está automatizado. El AC facilita la conversación sobre cómo reducir esta fricción.
+
+3. MÉTRICAS DE OPERACIONES:
+ServiceNow tiene dashboards de MTTR (Mean Time to Resolve), SLA compliance, volumen de incidentes. Un AC los usa para correlacionar con las DORA Metrics — si el Change Failure Rate de Jira es alto, probablemente el MTTR de ServiceNow también.`,
+
+    technical: `MÓDULOS DE SERVICENOW RELEVANTES PARA UN AC:
+
+ITSM (IT Service Management):
+→ Incident Management: gestión de interrupciones del servicio. Los P1 (críticos) llegan al equipo de desarrollo como work items urgentes.
+→ Problem Management: análisis de causa raíz de incidentes recurrentes. El AC debería participar en los Problem Reviews como facilitador.
+→ Change Management: control de cambios en producción. Tipos: Normal (requiere aprobación del Change Advisory Board), Standard (pre-aprobado), Emergency (para hotfixes críticos).
+→ Service Catalog: menú de servicios que el equipo de TI ofrece a los usuarios internos.
+
+ITOM (IT Operations Management):
+→ Monitoreo de infraestructura y detección de anomalías. Alimenta los incidentes automáticamente.
+
+DEVOPS INTEGRATION (ServiceNow + Azure DevOps / Jira):
+ServiceNow tiene integraciones nativas con Jira y Azure DevOps:
+→ Un Change Request aprobado en ServiceNow puede disparar automáticamente el pipeline en Azure DevOps
+→ Un fallo en el pipeline puede crear automáticamente un Incident en ServiceNow
+→ Los Work Items de Jira/Azure se pueden vincular a Change Requests para trazabilidad
+
+EL PROBLEMA CLÁSICO EN ENTORNOS REGULADOS:
+El equipo terminó el desarrollo → el pipeline está listo → pero hay que crear un Change Request en ServiceNow → el Change Advisory Board se reúne 2 veces por semana → si el cambio no llegó antes del martes, espera hasta el jueves.
+
+RESULTADO: Lead Time para Changes de 7+ días por burocracia, no por trabajo técnico.
+
+CÓMO UN AC ABORDA ESTO:
+1. Hacer visible el costo: calcular cuántos días del Lead Time total son "tiempo de Change Management"
+2. Proponer Standard Changes: pre-aprobar tipos de cambio recurrentes (deploys a no-producción, patches de seguridad) para que no necesiten CAB
+3. Automatizar la integración: Change Request creado automáticamente desde el pipeline cuando los Quality Gates pasan
+4. Cambiar la frecuencia del CAB: de 2 veces por semana a diario (o asíncrono con 4 horas de ventana de aprobación)`,
+
+    visual: { type: "servicenow-flow" },
+    questions: [
+      {
+        q: "El equipo ágil de un cliente bancario reporta que el Lead Time para sus features es de 25 días, pero el tiempo de desarrollo activo es solo 5 días. ServiceNow está involucrado. ¿Cuál es probablemente la causa y cómo la abordás?",
+        opts: [
+          "El equipo necesita trabajar más rápido — 5 días de desarrollo es demasiado poco para features complejas",
+          "Los 20 días restantes probablemente son tiempo de espera en Change Management (CAB approvals en ServiceNow). Un AC hace visible este costo con un VSM, propone Standard Changes pre-aprobados para deploys rutinarios y facilita la conversación con el CAB para automatizar o agilizar el proceso de aprobación",
+          "Hay que migrar de ServiceNow a Jira para eliminar la fricción del proceso de cambios",
+          "El equipo debe hacer más releases por día para reducir el Lead Time"
+        ],
+        correct: 1,
+        explanation: "En entornos bancarios regulados, el Change Advisory Board (CAB) de ServiceNow es frecuentemente el cuello de botella más grande del Lead Time. El trabajo técnico termina rápido pero el cambio espera días para ser aprobado. La respuesta de un AC no es eliminar el control (que existe por regulación), sino hacerlo más inteligente: Standard Changes para deploys pre-aprobados, integración automática ServiceNow-pipeline, y CAB más frecuente o asíncrono."
+      },
+      {
+        q: "¿Cuál es la diferencia entre un Incident, un Problem y un Change Request en ServiceNow, y por qué un AC necesita entender la distinción?",
+        opts: [
+          "Son sinónimos — todos representan trabajo que interrumpe el sprint del equipo",
+          "Incident: interrupción actual del servicio (hay que resolverlo rápido). Problem: causa raíz de incidents recurrentes (análisis profundo). Change Request: solicitud formal para modificar el sistema (requiere aprobación). Un AC necesita saberlo para diagnosticar correctamente qué tipos de trabajo no planificado llegan al equipo y cómo gestionar cada uno sin destruir el sprint",
+          "Solo los Change Requests son relevantes para un AC — los demás son responsabilidad del equipo de Operaciones",
+          "Un Problem es más urgente que un Incident porque requiere análisis de causa raíz"
+        ],
+        correct: 1,
+        explanation: "La distinción es operacionalmente crítica para el sprint. Un P1 Incident puede justificar interrumpir el sprint inmediatamente. Un Problem (causa raíz) puede convertirse en una historia en el backlog del equipo para el próximo sprint. Un Change Request puede bloquear un deploy listo para producción. Si el AC no entiende estas diferencias, no puede facilitar la conversación sobre cómo el trabajo operativo coexiste con el trabajo planificado del sprint."
+      },
+      {
+        q: "Un cliente pide que el equipo ágil responda a todos los incidents de ServiceNow dentro del sprint. Esto significa que ~40% del sprint es trabajo no planificado. ¿Cuál es la respuesta del AC?",
+        opts: [
+          "Aceptar el requerimiento — el equipo debe adaptarse a las necesidades del cliente",
+          "Hacer visible el impacto cuantificado (40% de la capacidad del sprint = 2 personas equivalentes dedicadas a incidents), proponer un modelo de rotación (un 'guardián' por sprint que absorbe los incidents sin afectar al resto del equipo), y establecer un SLA explícito con el cliente que defina qué tipo de incidents pueden interrumpir el sprint y cuáles entran al backlog",
+          "Rechazar el requerimiento — los incidents son responsabilidad del equipo de Operaciones, no del equipo ágil",
+          "Agregar más personas al equipo para cubrir tanto el trabajo planificado como los incidents"
+        ],
+        correct: 1,
+        explanation: "El 40% de trabajo no planificado destruye la predictabilidad del equipo y genera burnout. La respuesta del AC no es ni aceptarlo ciegamente ni rechazarlo — es hacer el costo visible y proponer un modelo sostenible. El modelo de 'guardián rotativo' es una práctica probada: una persona por sprint es responsable de todos los incidents, el resto del equipo está protegido. La semana siguiente rota. El SLA explícito con el cliente define expectativas claras sobre tiempos de respuesta."
+      }
+    ]
+  },
+
+  // ══════════ ESTRATEGIA ══════════
+
+  {
+    id: "jamboard-alternativas", group: "estrategia", title: "Jamboard descontinuado y alternativas", icon: "⚰️",
+    color: "#0D9488", light: "#CCFBF1", border: "#5EEAD4", text: "#134E4A",
+    functional: `Google Jamboard fue discontinuado en octubre de 2024. Si NTT Data lo menciona en su oferta de empleo, es porque esa oferta es anterior a esa fecha o porque la organización no ha actualizado su stack oficial. Mencionar este hecho en la entrevista — con propuesta de alternativas — es una señal de actualización y criterio profesional.
+
+¿QUÉ ERA JAMBOARD?
+Una pizarra digital de Google integrada con Google Workspace. Simple, gratuita, con autenticación Google. Se usaba principalmente para retrospectivas rápidas, brainstorming informal y workshops simples con equipos que ya usaban Gmail/Drive.
+
+¿POR QUÉ FUE DISCONTINUADO?
+Google anunció en 2023 el cierre en octubre 2024. La razón oficial: consolidar herramientas. Jamboard nunca tuvo las funcionalidades avanzadas de Miro o Mural, y Google no invirtió en desarrollarlas.
+
+LAS ALTERNATIVAS DIRECTAS:
+
+GOOGLE JAMBOARD → FIGJAM (FigJam):
+Es la alternativa oficial que Google recomienda. Parte de Figma. Gratuita para uso básico. Más intuitiva que Miro para usuarios no técnicos. Integración nativa con Figma para equipos de diseño.
+
+GOOGLE JAMBOARD → MIRO:
+Para equipos que necesitan más funcionalidades. La alternativa más robusta para Agile Coaches.
+
+GOOGLE JAMBOARD → MURAL:
+Para equipos orientados a Design Thinking e innovación.
+
+GOOGLE JAMBOARD → GOOGLE SLIDES / CANVAS:
+Para casos de uso muy simples donde solo se necesita un espacio visual básico.
+
+CÓMO MENCIONAR ESTO EN ENTREVISTA:
+"Veo que mencionan Jamboard — quiero señalar que fue discontinuado en octubre de 2024. En la práctica actual uso Miro para PI Planning y retrospectivas de equipo, y FigJam para workshops de Design Thinking con stakeholders de negocio. Si el cliente tiene licencias de Google Workspace, FigJam es la migración natural."`,
+
+    technical: `COMPARATIVA DE HERRAMIENTAS COLABORATIVAS — DECISIÓN MATRIX:
+
+┌─────────────────┬──────────┬─────────┬──────────┬─────────────┐
+│ Caso de uso      │ Miro     │ Mural   │ FigJam   │ Jamboard    │
+├─────────────────┼──────────┼─────────┼──────────┼─────────────┤
+│ PI Planning      │ ★★★★★   │ ★★★★☆  │ ★★★☆☆  │ ✗ (out)     │
+│ Retrospectivas   │ ★★★★★   │ ★★★★☆  │ ★★★★☆  │ ✗ (out)     │
+│ Story Mapping    │ ★★★★★   │ ★★★★☆  │ ★★★☆☆  │ ✗ (out)     │
+│ Design Thinking  │ ★★★★☆   │ ★★★★★  │ ★★★★☆  │ ✗ (out)     │
+│ Workshop rápido  │ ★★★★☆   │ ★★★★☆  │ ★★★★★  │ ✗ (out)     │
+│ Integración Jira │ ★★★★★   │ ★★★☆☆  │ ★★★☆☆  │ ✗ (out)     │
+│ Integración Figma│ ★★★☆☆   │ ★★★☆☆  │ ★★★★★  │ ✗ (out)     │
+│ Precio (básico)  │ Freemium │ Freemium│ Gratis  │ ✗ (out)     │
+│ Curva de entrada │ Media    │ Media   │ Baja     │ N/A         │
+└─────────────────┴──────────┴─────────┴──────────┴─────────────┘
+
+FIGJAM — LO QUE UN AC NECESITA SABER:
+→ Es gratis para hasta 3 tableros con cuenta Figma gratuita
+→ Integración nativa con archivos Figma (para Design Sprints)
+→ Sticky notes, conectores, formas básicas, votación (desde FigJam Pro)
+→ No tiene Facilitator Superpowers como Mural
+→ Muy bueno para: brainstorming informal, retrospectivas simples, wireframing colaborativo
+
+ESTRATEGIA DE MIGRACIÓN JAMBOARD → FIGJAM (para clientes con Google Workspace):
+1. Exportar el contenido de Jamboard como imagen (antes de oct 2024 ya cerró)
+2. Crear plantillas equivalentes en FigJam
+3. Hacer una sesión de onboarding de 15 min con el equipo
+4. FigJam + Google SSO: el login con cuenta Google funciona nativo
+
+HERRAMIENTAS ADICIONALES QUE PUEDEN APARECER EN NTTDATA:
+→ Microsoft Whiteboard: alternativa si el cliente usa Azure/Teams. Integrado en Teams.
+→ Lucidspark: parte del ecosistema Lucid (misma empresa que Lucidchart). Para equipos que usan Lucidchart para diagramas.
+→ Confluence + Whiteboards: Atlassian tiene whiteboards integradas en Confluence Cloud.`,
+
+    visual: { type: "herramientas-matrix" },
+    questions: [
+      {
+        q: "En una entrevista con NTT Data, el entrevistador menciona 'Jamboard' como una de las herramientas requeridas. ¿Cuál es la respuesta más adecuada?",
+        opts: [
+          "Decir que conocés Jamboard perfectamente y seguir con la entrevista",
+          "Mencionar que Jamboard fue discontinuado por Google en octubre de 2024, y proponer las alternativas que usás actualmente (Miro para trabajo ágil continuo, FigJam para workshops de Design Thinking con equipos en ecosistema Google), señalando que podés onboardear al equipo a cualquiera de estas herramientas rápidamente",
+          "Preguntar si NTT Data planea re-lanzar Jamboard como producto interno",
+          "Ignorar el tema y enfocarte en hablar de Miro y Mural"
+        ],
+        correct: 1,
+        explanation: "Mencionar la discontinuación de Jamboard con datos concretos (octubre 2024) y proponer alternativas demuestra actualización técnica y criterio profesional. Es exactamente lo que distingue a un candidato que genuinamente trabaja con estas herramientas de uno que solo las lista en el CV. El entrevistador puede valorarlo como una señal de que el candidato se mantiene actualizado — o puede ser una prueba deliberada para ver si el candidato lo sabe."
+      },
+      {
+        q: "Un cliente tiene todo su ecosistema en Google Workspace (Gmail, Drive, Meet) y quiere adoptar una pizarra colaborativa para retrospectivas. ¿Cuál recomendás y por qué?",
+        opts: [
+          "Miro — porque es la herramienta más completa del mercado",
+          "FigJam — porque el login con cuenta Google funciona nativamente (sin crear cuentas nuevas), es gratuita para uso básico, tiene una curva de entrada muy baja para usuarios no técnicos, y es la recomendación oficial de Google como alternativa a Jamboard",
+          "Google Slides — porque ya lo conocen y no hay que aprender nada nuevo",
+          "Microsoft Whiteboard — porque es más robusto que FigJam"
+        ],
+        correct: 1,
+        explanation: "La fricción de adopción de una herramienta nueva es el mayor enemigo del cambio. Si el equipo ya usa Google Workspace, FigJam elimina la mayor barrera: el login. No hay que crear cuentas nuevas, recordar contraseñas distintas ni pedir licencias corporativas. El SSO de Google funciona directamente. Para retrospectivas y workshops simples, FigJam tiene exactamente las funcionalidades necesarias. Miro es superior en funcionalidad, pero esa superioridad no vale el costo de adopción si el caso de uso es básico."
+      },
+      {
+        q: "¿Cuál herramienta elegirías para un PI Planning remoto con 5 equipos distribuidos en 3 países, donde la integración con Jira es crítica?",
+        opts: [
+          "Mural — por sus Facilitator Superpowers",
+          "FigJam — por su interfaz simple",
+          "Miro — por su integración nativa bidireccional con Jira (crear issues desde sticky notes, visualizar épicas y sprints directamente en el tablero), sus plantillas específicas de PI Planning y su capacidad de manejar tableros de gran escala con múltiples zonas por equipo",
+          "Azure DevOps Boards — porque ya tiene toda la información del sprint"
+        ],
+        correct: 2,
+        explanation: "Para PI Planning con integración Jira crítica, Miro es la elección clara por tres razones: (1) su integración con Jira es bidireccional y nativa — podés ver epics, crear issues, y los cambios se sincronizan; (2) tiene plantillas específicas de PI Planning con Program Board digital; (3) escala bien con múltiples zonas para equipos grandes. Mural tiene mejor facilitación pero su integración Jira es más débil. FigJam no tiene integración Jira nativa. Azure DevOps no es una herramienta de facilitación visual."
+      }
+    ]
+  },
+
+  {
+    id: "herramienta-correcta", group: "estrategia", title: "Herramienta correcta para cada contexto", icon: "🧭",
+    color: "#0D9488", light: "#CCFBF1", border: "#5EEAD4", text: "#134E4A",
+    functional: `La pregunta más frecuente en entrevistas senior de NTT Data no es "¿sabés usar Jira?" — es "¿cómo decidís qué herramienta usar en cada situación?". La capacidad de elegir la herramienta correcta para el contexto correcto es una señal de madurez de un Agile Coach.
+
+EL PRINCIPIO CENTRAL:
+La herramienta debe servir al proceso, no al revés. Un equipo que adapta su forma de trabajar para encajar en una herramienta tiene el problema invertido.
+
+MAPA DE DECISIÓN POR CASO DE USO:
+
+GESTIÓN DE TRABAJO DIARIA:
+→ Equipo técnico con sprints → Jira Scrum Board
+→ Equipo técnico con flujo continuo → Jira Kanban Board
+→ Cliente en ecosistema Microsoft → Azure DevOps Boards
+→ Equipo no técnico (HR, Legal, Marketing) → Jira Business / Trello / Asana
+
+FACILITACIÓN VISUAL:
+→ PI Planning con múltiples equipos + integración Jira → Miro
+→ Workshop Design Thinking con cliente de negocio → Mural
+→ Retrospectiva rápida con equipo en Google Workspace → FigJam
+→ Workshop en ecosistema Microsoft Teams → Microsoft Whiteboard
+
+GESTIÓN DE SERVICIOS Y OPERACIONES:
+→ ITSM, Incidents, Change Management → ServiceNow
+→ Change Management liviano → Jira Service Management
+→ Documentación de procesos → Confluence + diagramas
+
+CRITERIOS DE DECISIÓN:
+1. ¿Qué herramientas ya usa el cliente? (fricción de adopción)
+2. ¿Qué integraciones necesita el flujo? (Jira + Miro vs. Azure + Teams)
+3. ¿Cuál es la madurez técnica del equipo? (Miro tiene curva más alta que FigJam)
+4. ¿Cuál es el presupuesto disponible? (FigJam gratis vs. Miro Enterprise)
+5. ¿Es una sesión puntual o una herramienta de largo plazo?`,
+
+    technical: `STACK TÍPICO DE HERRAMIENTAS EN PROYECTOS NTT DATA:
+
+PROYECTO BANCARIO (cliente grande, regulado):
+→ Gestión de trabajo: Jira Software (Company-managed, proceso Agile)
+→ Documentación: Confluence
+→ Código: Azure Repos o GitHub Enterprise
+→ CI/CD: Azure Pipelines o Jenkins
+→ Operaciones/ITSM: ServiceNow
+→ Colaboración visual: Miro (PI Planning) + Teams Whiteboard (reuniones rápidas)
+→ Comunicación: Microsoft Teams
+
+PROYECTO DE TRANSFORMACIÓN DIGITAL (cliente mediano, innovación):
+→ Gestión de trabajo: Jira Software (Team-managed para más velocidad)
+→ Código: GitHub
+→ CI/CD: GitHub Actions
+→ Colaboración visual: Miro + Mural (para Design Thinking con cliente)
+→ Comunicación: Slack
+
+PROYECTO DE GOBIERNO/SECTOR PÚBLICO:
+→ Gestión de trabajo: Azure DevOps (Boards + Pipelines completo)
+→ Operaciones: ServiceNow
+→ Colaboración visual: Microsoft Whiteboard + Teams
+→ Comunicación: Microsoft Teams
+
+CÓMO RESPONDER EN ENTREVISTA "¿qué herramientas usás?"
+NO DECIR: "Sé usar Jira, Miro, Mural, ServiceNow, Azure DevOps" (lista sin contexto)
+SÍ DECIR: "Mi stack principal es Jira para gestión del trabajo diario —tableros Scrum y Kanban— con Confluence para documentación. Para facilitación uso Miro en PI Planning y retrospectivas porque su integración con Jira es muy fluida, y Mural para workshops de Design Thinking donde necesito los Facilitator Superpowers para manejar grupos grandes. Con clientes en ecosistema Microsoft combino Azure DevOps Boards con Teams Whiteboard. Y en contextos de banca o regulados donde ServiceNow es el ITSM, trabajo con el equipo para optimizar el flujo entre los Change Requests y el pipeline de CI/CD."
+
+ESA RESPUESTA DEMUESTRA:
+→ Conocimiento contextual (no solo declarativo)
+→ Capacidad de integrar herramientas en un flujo
+→ Criterio para elegir según el cliente
+→ Vocabulario técnico preciso`,
+
+    visual: { type: "decision-matrix" },
+    questions: [
+      {
+        q: "Te incorporás a un proyecto de NTT Data en un cliente bancario que ya usa Azure DevOps, ServiceNow y Microsoft Teams. El equipo quiere hacer mejor sus retrospectivas. ¿Qué proponés?",
+        opts: [
+          "Proponer migrar a Jira y Miro porque son superiores",
+          "Dentro del ecosistema existente del cliente, proponer Microsoft Whiteboard (integrado en Teams, sin costo adicional, sin fricción de onboarding) para retrospectivas básicas. Si el cliente tiene presupuesto y el equipo quiere más funcionalidades, evaluar Miro — pero justificarlo con el valor agregado sobre lo que ya tienen",
+          "Hacer las retrospectivas en papel — las herramientas digitales no son necesarias",
+          "Usar FigJam porque es gratuita y fácil de aprender"
+        ],
+        correct: 1,
+        explanation: "El principio es no agregar fricción innecesaria. Si el cliente ya está comprometido con el ecosistema Microsoft, proponer Miro como primera opción implica: nueva licencia, onboarding del equipo, aprobación del departamento de seguridad (muchos bancos tienen procesos largos para aprobar nuevas herramientas SaaS). Microsoft Whiteboard elimina todos esos obstáculos — está dentro del perímetro de seguridad aprobado, sin costo adicional, sin curva de aprendizaje. Si después de usarlo el equipo quiere más funcionalidades, ahí se justifica el upgrade."
+      },
+      {
+        q: "Un nuevo Scrum Master del equipo pregunta por qué usáis Jira para gestión del trabajo y Miro para el PI Planning, en lugar de hacer todo en Jira. ¿Cómo lo explicás?",
+        opts: [
+          "Porque la empresa tiene licencias de ambas herramientas y hay que aprovecharlas",
+          "Porque cada herramienta tiene su rol en el flujo: Jira es excelente para gestión estructurada de work items, tracking, métricas y reportes (datos). Miro es excelente para trabajo visual colaborativo en tiempo real, pensamiento espacial y facilitación de grupos (co-creación). En el PI Planning necesitás que 30 personas trabajen simultáneamente en un espacio visual — Jira no está diseñado para eso. Después del PI, los compromisos se pasan a Jira como work items formales",
+          "Porque Jira es demasiado técnico para los stakeholders de negocio en el PI Planning",
+          "No hay una razón técnica — es solo costumbre del equipo"
+        ],
+        correct: 1,
+        explanation: "La integración Miro + Jira es un flujo, no una duplicación. Miro es el espacio de pensamiento colaborativo (divergente, visual, en tiempo real). Jira es el sistema de registro del trabajo (convergente, estructurado, trazable). El PI Planning ocurre en Miro porque necesita que 30 personas piensen juntas visualmente. Una vez definidos los compromisos, se formalizan como Epics, Features y Stories en Jira. Son herramientas complementarias, no competitivas."
+      },
+      {
+        q: "¿Cuáles son los criterios que usarías para elegir entre Jira y Azure DevOps para un cliente nuevo en NTT Data?",
+        opts: [
+          "Siempre Jira — es la herramienta estándar de NTT Data",
+          "Los criterios son: (1) ecosistema tecnológico del cliente (Azure → Azure DevOps, cloud-agnostic → Jira), (2) herramienta ya adoptada (migrar tiene un costo alto), (3) necesidad de integración con el pipeline (Azure Pipelines integra nativamente con Azure Boards), (4) regulación (proyectos de gobierno con Microsoft obligatorio), (5) presupuesto (Azure DevOps puede ser más económico en ecosistemas Microsoft enterprise)",
+          "Siempre Azure DevOps — es más moderno y Microsoft lo respalda",
+          "La elección la hace el equipo de desarrollo, no el Agile Coach"
+        ],
+        correct: 1,
+        explanation: "No hay una respuesta correcta universal entre Jira y Azure DevOps — hay una respuesta correcta para cada contexto. Un AC que siempre recomienda la misma herramienta sin analizar el contexto del cliente no está haciendo su trabajo. Los 5 criterios enumerados (ecosistema, adopción existente, integración CI/CD, regulación y presupuesto) son los que determinan la decisión. En NTT Data, ambas herramientas coexisten según el cliente — la habilidad está en saber cuándo usar cada una."
+      }
+    ]
+  }
+];
+
+const tabs = [
+  { id: "functional", label: "Funcional" },
+  { id: "technical",  label: "Técnico" },
+  { id: "visual",     label: "Visual" },
+  { id: "quiz",       label: "¿Lo entendí?" }
+];
+
+// ══════════════════ VISUALS ══════════════════
+
+function VisualJiraTableros() {
+  return (
+    <div style={{display:"flex",flexDirection:"column",gap:8}}>
+      <div style={{display:"grid",gridTemplateColumns:"1fr 1fr 1fr",gap:6}}>
+        {[
+          {n:"Scrum Board",d:"Sprints fijos · Burndown · Sprint Planning integrado",c:"#0052CC",bg:"#DEEBFF"},
+          {n:"Kanban Board",d:"Flujo continuo · WIP limits · CFD automático",c:"#00875A",bg:"#E3FCEF"},
+          {n:"Business Project",d:"Trabajo no técnico · Simple · Sin Story Points",c:"#6B37BF",bg:"#EAE6FF"},
+        ].map((t,i)=>(<div key={i} style={{background:t.bg,border:`1px solid ${t.c}40`,borderRadius:8,padding:"10px 12px",borderLeft:`3px solid ${t.c}`}}><div style={{fontSize:12,fontWeight:700,color:t.c,marginBottom:4}}>{t.n}</div><div style={{fontSize:10,color:"#374151",lineHeight:1.5}}>{t.d}</div></div>))}
+      </div>
+      <div style={{background:"#0f172a",borderRadius:8,padding:"10px 14px"}}>
+        <div style={{fontSize:10,fontWeight:700,color:"#fbbf24",marginBottom:6}}>JERARQUÍA DE WORK ITEMS EN JIRA</div>
+        {[
+          {n:"Initiative",c:"#DC2626",d:"Objetivo estratégico (múltiples trimestres)"},
+          {n:"Epic",c:"#D97706",d:"Capacidad de negocio completa (múltiples sprints)"},
+          {n:"Story / Task / Bug",c:"#16A34A",d:"Unidad de trabajo de un sprint"},
+          {n:"Sub-task",c:"#2563EB",d:"Tarea técnica de menos de 1 día"},
+        ].map((x,i)=>(<div key={i} style={{display:"flex",gap:8,marginBottom:5,alignItems:"center"}}><div style={{width:80,minWidth:80,background:x.c,color:"#fff",borderRadius:4,padding:"2px 6px",fontSize:10,fontWeight:600,textAlign:"center"}}>{x.n}</div><div style={{fontSize:10,color:"#94a3b8"}}>{x.d}</div></div>))}
+      </div>
+      <div style={{background:"#FEE2E2",border:"1px solid #FCA5A5",borderRadius:8,padding:"10px 12px"}}>
+        <div style={{fontSize:11,fontWeight:700,color:"#DC2626",marginBottom:5}}>ANTI-PATRONES FRECUENTES</div>
+        {["Workflow con 8+ columnas que nadie actualiza","Story Points de 1 para todo — sin diferenciación real","Backlog de 400+ issues sin priorizar ni grooming","Issues cerradas sin Definition of Done"].map((x,i)=>(<div key={i} style={{fontSize:10,color:"#7F1D1D",lineHeight:1.7}}>✗ {x}</div>))}
+      </div>
+    </div>
+  );
+}
+
+function VisualJiraMetricas() {
+  const charts = [
+    {n:"Burndown Chart",u:"Sprints",d:"Línea real vs ideal. Detecta bloqueos y last-minute rush",c:"#0052CC",bg:"#DEEBFF"},
+    {n:"Velocity Chart",u:"Planificación",d:"Story points por sprint. Promedio últimos 3 sprints = capacidad futura",c:"#00875A",bg:"#E3FCEF"},
+    {n:"CFD",u:"Flujo Kanban",d:"Bandas por estado. Una banda que se ensancha = cuello de botella",c:"#FF5722",bg:"#FFF3E0"},
+    {n:"Sprint Report",u:"Retrospectiva",d:"% issues completas vs incompletas. >20% arrastradas = sobrecompromiso",c:"#6B37BF",bg:"#EAE6FF"},
+    {n:"Epic Burndown",u:"Cliente",d:"Progreso de épica en múltiples sprints. Para reportes ejecutivos",c:"#0D9488",bg:"#E0F2F1"},
+    {n:"Release Burnup",u:"Release",d:"Trabajo completado + scope total. Muestra scope creep visualmente",c:"#DC2626",bg:"#FEE2E2"},
+  ];
+  return (
+    <div style={{display:"flex",flexDirection:"column",gap:8}}>
+      <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:6}}>
+        {charts.map((c,i)=>(<div key={i} style={{background:c.bg,border:`1px solid ${c.c}40`,borderRadius:8,padding:"10px 12px",borderLeft:`3px solid ${c.c}`}}><div style={{fontSize:12,fontWeight:700,color:c.c,marginBottom:2}}>{c.n}</div><div style={{fontSize:10,color:"#D97706",fontWeight:500,marginBottom:4}}>Usar en: {c.u}</div><div style={{fontSize:10,color:"#374151",lineHeight:1.5}}>{c.d}</div></div>))}
+      </div>
+      <div style={{background:"#0f172a",borderRadius:8,padding:"10px 14px"}}>
+        <div style={{fontSize:10,fontWeight:700,color:"#fbbf24",marginBottom:6}}>JQL QUERIES ESENCIALES</div>
+        {[
+          {label:"Issues sin asignar en sprint",q:"sprint in openSprints() AND assignee is EMPTY"},
+          {label:"Issues bloqueadas",q:"status = 'Blocked' ORDER BY created ASC"},
+          {label:"Sin Story Points",q:"issuetype = Story AND 'Story Points' is EMPTY"},
+          {label:"Sin movimiento >5 días",q:"sprint in openSprints() AND updated <= -5d AND status != Done"},
+        ].map((x,i)=>(<div key={i} style={{marginBottom:6}}><div style={{fontSize:9,color:"#64748b",marginBottom:1}}>{x.label}</div><div style={{fontSize:10,fontFamily:"monospace",color:"#4ade80"}}>{x.q}</div></div>))}
+      </div>
+    </div>
+  );
+}
+
+function VisualAzureBoards() {
+  const equiv = [
+    ["Epic","Epic / Feature"],["Story","User Story (Agile) / PBI (Scrum)"],
+    ["Sprint","Sprint / Iteration"],["Board","Kanban Board / Sprint Board"],
+    ["Dashboard","Dashboard"],["JQL","WIQL"],["Filter","Query"],
+  ];
+  return (
+    <div style={{display:"flex",flexDirection:"column",gap:8}}>
+      <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:6,marginBottom:4}}>
+        {[
+          {n:"Azure Boards",d:"Gestión de trabajo ágil",c:"#0078D4",bg:"#EFF6FC",icon:"📋"},
+          {n:"Azure Repos",d:"Repositorio Git / TFVC",c:"#0078D4",bg:"#EFF6FC",icon:"📁"},
+          {n:"Azure Pipelines",d:"CI/CD automatizado",c:"#0078D4",bg:"#EFF6FC",icon:"⚙️"},
+          {n:"Azure Test Plans",d:"Gestión de pruebas",c:"#0078D4",bg:"#EFF6FC",icon:"🧪"},
+        ].map((x,i)=>(<div key={i} style={{background:x.bg,border:`1px solid ${x.c}40`,borderRadius:7,padding:"8px 10px"}}><div style={{fontSize:14,marginBottom:3}}>{x.icon}</div><div style={{fontSize:11,fontWeight:700,color:x.c}}>{x.n}</div><div style={{fontSize:10,color:"#374151"}}>{x.d}</div></div>))}
+      </div>
+      <div style={{background:"#0f172a",borderRadius:8,padding:"10px 14px"}}>
+        <div style={{fontSize:10,fontWeight:700,color:"#fbbf24",marginBottom:6}}>JIRA → AZURE EQUIVALENCIAS</div>
+        <table style={{width:"100%",borderCollapse:"collapse",fontSize:10}}>
+          <thead><tr><th style={{color:"#64748b",textAlign:"left",padding:"3px 6px",borderBottom:"1px solid #1e293b"}}>Jira</th><th style={{color:"#64748b",textAlign:"left",padding:"3px 6px",borderBottom:"1px solid #1e293b"}}>Azure DevOps</th></tr></thead>
+          <tbody>{equiv.map((r,i)=>(<tr key={i} style={{background:i%2===0?"#1e293b":"transparent"}}><td style={{padding:"4px 6px",color:"#93C5FD"}}>{r[0]}</td><td style={{padding:"4px 6px",color:"#86EFAC"}}>{r[1]}</td></tr>))}</tbody>
+        </table>
+      </div>
+      <div style={{background:"#FEF3C7",border:"1px solid #FCD34D",borderRadius:7,padding:"8px 12px",fontSize:11,color:"#78350F"}}>
+        <strong>Quality Gate en pipeline:</strong> bloquea el deploy si no pasan cobertura mínima, 0 vulnerabilidades críticas y build verde. El AC diagnostica cuando el pipeline se frena, no lo implementa.
+      </div>
+    </div>
+  );
+}
+
+function VisualMiroBoard() {
+  const usos = [
+    {n:"PI Planning",d:"Program Board multi-equipo · dependencias · ROAM en tiempo real",c:"#FF5722",icon:"🗓️"},
+    {n:"Retrospectivas",d:"Starfish · 4Ls · Sailboat con dot voting y timers",c:"#E91E63",icon:"🔄"},
+    {n:"Story Mapping",d:"Journey horizontal · historias verticales por sprint",c:"#9C27B0",icon:"🗺️"},
+    {n:"Event Storming",d:"Mapeo de dominio con sticky notes de colores",c:"#3F51B5",icon:"⚡"},
+    {n:"Workshops",d:"Icebreakers · Working Agreements · DoD colaborativa",c:"#2196F3",icon:"🤝"},
+  ];
+  return (
+    <div style={{display:"flex",flexDirection:"column",gap:8}}>
+      {usos.map((u,i)=>(<div key={i} style={{display:"flex",alignItems:"center",gap:10,background:"#f8fafc",border:`1px solid ${u.c}30`,borderRadius:8,padding:"8px 12px",borderLeft:`3px solid ${u.c}`}}><span style={{fontSize:18}}>{u.icon}</span><div><div style={{fontSize:12,fontWeight:700,color:u.c}}>{u.n}</div><div style={{fontSize:11,color:"#374151"}}>{u.d}</div></div></div>))}
+      <div style={{background:"#0f172a",borderRadius:8,padding:"10px 14px"}}>
+        <div style={{fontSize:10,fontWeight:700,color:"#fbbf24",marginBottom:6}}>FUNCIONALIDADES CLAVE</div>
+        <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:4}}>
+          {["Frames → navegación por secciones","Timer → timeboxing integrado","Dot Voting → priorización democrática","Presenter Mode → compartir sin caos","Integración Jira → crear issues desde sticky notes","Reactions → feedback anónimo en tiempo real"].map((x,i)=>(<div key={i} style={{fontSize:10,color:"#94a3b8",padding:"3px 0"}}>→ {x}</div>))}
+        </div>
+      </div>
+    </div>
+  );
+}
+
+function VisualMuralVsMiro() {
+  const features = [
+    {f:"Facilitator Superpowers",miro:"Básico",mural:"★★★★★ (summon, hide, lock)"},
+    {f:"Integración Jira",miro:"★★★★★",mural:"★★★☆☆"},
+    {f:"PI Planning",miro:"★★★★★",mural:"★★★★☆"},
+    {f:"Design Thinking",miro:"★★★★☆",mural:"★★★★★"},
+    {f:"Curva de entrada",miro:"Media",mural:"Media"},
+    {f:"Presenter Mode",miro:"★★★★☆",mural:"★★★★☆"},
+  ];
+  return (
+    <div style={{display:"flex",flexDirection:"column",gap:8}}>
+      <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:6}}>
+        <div style={{background:"#FFF3E0",border:"1px solid #FFCC80",borderRadius:8,padding:"10px 12px"}}>
+          <div style={{fontSize:13,fontWeight:700,color:"#FF5722",marginBottom:5}}>🟡 Miro</div>
+          {["Más integraciones nativas","Mejor para PI Planning","Smart diagramming robusto","Mayor adopción en el mercado","Ideal para gestión ágil continua"].map((x,i)=>(<div key={i} style={{fontSize:10,color:"#374151",lineHeight:1.7}}>→ {x}</div>))}
+        </div>
+        <div style={{background:"#FFF0EE",border:"1px solid #F5A090",borderRadius:8,padding:"10px 12px"}}>
+          <div style={{fontSize:13,fontWeight:700,color:"#F5321D",marginBottom:5}}>🎨 Mural</div>
+          {["Facilitator Superpowers únicos","Mejor para Design Thinking","Thinking Time y Private Mode","Plantillas de innovación ricas","Ideal para workshops creativos"].map((x,i)=>(<div key={i} style={{fontSize:10,color:"#374151",lineHeight:1.7}}>→ {x}</div>))}
+        </div>
+      </div>
+      <div style={{background:"#0f172a",borderRadius:8,padding:"10px 14px"}}>
+        <div style={{fontSize:10,fontWeight:700,color:"#fbbf24",marginBottom:6}}>COMPARATIVA DE FEATURES</div>
+        <table style={{width:"100%",borderCollapse:"collapse",fontSize:10}}>
+          <thead><tr><th style={{color:"#64748b",textAlign:"left",padding:"3px 4px"}}>Feature</th><th style={{color:"#FBBF24",textAlign:"center",padding:"3px 4px"}}>Miro</th><th style={{color:"#F87171",textAlign:"center",padding:"3px 4px"}}>Mural</th></tr></thead>
+          <tbody>{features.map((r,i)=>(<tr key={i} style={{background:i%2===0?"#1e293b":"transparent"}}><td style={{padding:"4px",color:"#94a3b8"}}>{r.f}</td><td style={{padding:"4px",textAlign:"center",color:"#4ade80"}}>{r.miro}</td><td style={{padding:"4px",textAlign:"center",color:"#93C5FD"}}>{r.mural}</td></tr>))}</tbody>
+        </table>
+      </div>
+    </div>
+  );
+}
+
+function VisualServiceNowFlow() {
+  return (
+    <div style={{display:"flex",flexDirection:"column",gap:8}}>
+      <div style={{background:"#0f172a",borderRadius:8,padding:"10px 14px"}}>
+        <div style={{fontSize:10,fontWeight:700,color:"#fbbf24",marginBottom:6}}>MÓDULOS RELEVANTES PARA UN AGILE COACH</div>
+        {[
+          {m:"Incident Management",d:"Interrupciones del servicio → llegan al equipo como work items urgentes",c:"#DC2626"},
+          {m:"Problem Management",d:"Causa raíz de incidents recurrentes → puede convertirse en Story en el backlog",c:"#D97706"},
+          {m:"Change Management",d:"Aprobación de deploys → CAB puede ser el cuello de botella del Lead Time",c:"#7C3AED"},
+          {m:"Service Catalog",d:"Menú de servicios TI → define el flujo de solicitudes al equipo",c:"#0D9488"},
+        ].map((x,i)=>(<div key={i} style={{display:"flex",gap:8,marginBottom:7,alignItems:"flex-start"}}><div style={{minWidth:140,background:x.c,color:"#fff",borderRadius:4,padding:"3px 6px",fontSize:9,fontWeight:600,textAlign:"center"}}>{x.m}</div><div style={{fontSize:10,color:"#94a3b8",lineHeight:1.4}}>{x.d}</div></div>))}
+      </div>
+      <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:6}}>
+        <div style={{background:"#FEE2E2",border:"1px solid #FCA5A5",borderRadius:8,padding:"10px 12px"}}>
+          <div style={{fontSize:11,fontWeight:700,color:"#DC2626",marginBottom:5}}>PROBLEMA TÍPICO</div>
+          <div style={{fontSize:10,color:"#374151",lineHeight:1.6}}>Dev termina → Pipeline verde → Change Request en ServiceNow → CAB se reúne martes y jueves → esperan 5 días para aprobar → <strong>Lead Time +5 días por burocracia</strong></div>
+        </div>
+        <div style={{background:"#DCFCE7",border:"1px solid #86EFAC",borderRadius:8,padding:"10px 12px"}}>
+          <div style={{fontSize:11,fontWeight:700,color:"#14532D",marginBottom:5}}>SOLUCIÓN DEL AC</div>
+          <div style={{fontSize:10,color:"#374151",lineHeight:1.6}}>Proponer Standard Changes pre-aprobados para deploys rutinarios. Automatizar el CR desde el pipeline cuando Quality Gates pasan. CAB diario o asíncrono con ventana de 4h.</div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+function VisualHerramientasMatrix() {
+  const tools = [
+    {n:"Jira",uso:"Gestión sprint/kanban técnico",eco:"Cloud-agnostic",icon:"🔵"},
+    {n:"Azure Boards",uso:"Gestión en ecosistema Microsoft",eco:"Azure/Microsoft",icon:"☁️"},
+    {n:"Miro",uso:"PI Planning + retros + integ. Jira",eco:"Agnóstico",icon:"🟡"},
+    {n:"Mural",uso:"Design Thinking + workshops innovación",eco:"Agnóstico",icon:"🎨"},
+    {n:"FigJam",uso:"Workshops simples + ecosistema Google",eco:"Google Workspace",icon:"✏️"},
+    {n:"ServiceNow",uso:"ITSM + Change Management enterprise",eco:"Enterprise/Banca",icon:"🟣"},
+    {n:"Jamboard",uso:"DISCONTINUADO oct 2024",eco:"—",icon:"⚰️"},
+  ];
+  return (
+    <div style={{display:"flex",flexDirection:"column",gap:6}}>
+      {tools.map((t,i)=>(<div key={i} style={{display:"flex",alignItems:"center",gap:10,background:t.n==="Jamboard"?"#FEE2E2":"#f8fafc",border:`1px solid ${t.n==="Jamboard"?"#FCA5A5":"#e2e8f0"}`,borderRadius:7,padding:"8px 12px",opacity:t.n==="Jamboard"?0.6:1}}><span style={{fontSize:16,minWidth:24}}>{t.icon}</span><div style={{flex:1}}><div style={{fontSize:12,fontWeight:700,color:t.n==="Jamboard"?"#DC2626":"#1e293b"}}>{t.n}{t.n==="Jamboard"?" ☠️":""}</div><div style={{fontSize:10,color:"#374151"}}>{t.uso}</div></div><div style={{background:"#e2e8f0",borderRadius:4,padding:"2px 6px",fontSize:9,color:"#64748b",fontWeight:600,whiteSpace:"nowrap"}}>{t.eco}</div></div>))}
+    </div>
+  );
+}
+
+function VisualDecisionMatrix() {
+  const decisions = [
+    {ctx:"Equipo técnico + sprints",tool:"Jira Scrum Board",why:"Burndown, velocity, sprint planning integrado"},
+    {ctx:"Equipo técnico + flujo continuo",tool:"Jira Kanban",why:"WIP limits, CFD, Cycle Time"},
+    {ctx:"Ecosistema Microsoft",tool:"Azure DevOps Boards",why:"Integración nativa con Pipelines y Teams"},
+    {ctx:"PI Planning multi-equipo",tool:"Miro",why:"Program Board, integración Jira, escala"},
+    {ctx:"Workshop Design Thinking",tool:"Mural",why:"Facilitator Superpowers, plantillas DT"},
+    {ctx:"Google Workspace + retro simple",tool:"FigJam",why:"SSO Google, gratis, curva baja"},
+    {ctx:"ITSM + Change Management (banca)",tool:"ServiceNow",why:"Estándar regulatorio en banca y gobierno"},
+    {ctx:"Ecosistema Teams + retro rápida",tool:"Teams Whiteboard",why:"Sin licencia extra, dentro del perímetro IT"},
+  ];
+  return (
+    <div style={{display:"flex",flexDirection:"column",gap:6}}>
+      <div style={{fontSize:10,fontWeight:700,color:"#64748b",marginBottom:4}}>MAPA DE DECISIÓN — CONTEXTO → HERRAMIENTA</div>
+      {decisions.map((d,i)=>(<div key={i} style={{display:"flex",gap:8,alignItems:"flex-start",background:i%2===0?"#f8fafc":"#fff",border:"1px solid #e2e8f0",borderRadius:7,padding:"7px 10px"}}><div style={{flex:"0 0 170px",fontSize:10,color:"#374151",fontWeight:500}}>{d.ctx}</div><div style={{flex:"0 0 130px",fontSize:10,fontWeight:700,color:"#0052CC"}}>→ {d.tool}</div><div style={{flex:1,fontSize:9,color:"#64748b"}}>{d.why}</div></div>))}
+    </div>
+  );
+}
+
+function Visual({ chapter }) {
+  const t = chapter.visual.type;
+  if (t === "jira-tableros")      return <VisualJiraTableros />;
+  if (t === "jira-metricas")      return <VisualJiraMetricas />;
+  if (t === "azure-boards")       return <VisualAzureBoards />;
+  if (t === "miro-board")         return <VisualMiroBoard />;
+  if (t === "mural-vs-miro")      return <VisualMuralVsMiro />;
+  if (t === "servicenow-flow")    return <VisualServiceNowFlow />;
+  if (t === "herramientas-matrix") return <VisualHerramientasMatrix />;
+  if (t === "decision-matrix")    return <VisualDecisionMatrix />;
+  return null;
+}
+
+// ══════════════════ QUIZ ══════════════════
+
+function Quiz({ questions, color, light, onComplete }) {
+  const [answers, setAnswers] = useState({});
+  const [submitted, setSubmitted] = useState(false);
+  function answer(qi, oi) { if (submitted || answers[qi] !== undefined) return; setAnswers(a => ({ ...a, [qi]: oi })); }
+  function submit() {
+    if (Object.keys(answers).length < questions.length) return;
+    const score = questions.reduce((s, q, i) => s + (answers[i] === q.correct ? 1 : 0), 0);
+    setSubmitted(true); onComplete(score);
+  }
+  return (
+    <div>
+      {questions.map((q, qi) => (
+        <div key={qi} style={{ marginBottom: 16 }}>
+          <div style={{ fontSize: 13, fontWeight: 500, color: "#1e293b", marginBottom: 8, lineHeight: 1.5 }}>{qi + 1}. {q.q}</div>
+          <div style={{ display: "flex", flexDirection: "column", gap: 5 }}>
+            {q.opts.map((o, oi) => {
+              let bg = "#f8fafc", border = "1px solid #e2e8f0", tc = "#374151";
+              if (answers[qi] === oi)     { bg = light; border = `1px solid ${color}`; tc = "#1e293b"; }
+              if (submitted && oi === q.correct) { bg = "#f0fdf4"; border = "1px solid #86efac"; tc = "#14532d"; }
+              if (submitted && answers[qi] === oi && oi !== q.correct) { bg = "#fef2f2"; border = "1px solid #fca5a5"; tc = "#7f1d1d"; }
+              return (
+                <div key={oi} onClick={() => answer(qi, oi)}
+                  style={{ padding: "9px 13px", borderRadius: 7, border, background: bg, cursor: submitted || answers[qi] !== undefined ? "default" : "pointer", fontSize: 12, color: tc, transition: ".15s", lineHeight: 1.4 }}>
+                  {o}
+                </div>
+              );
+            })}
+          </div>
+          {submitted && (
+            <div style={{ marginTop: 8, padding: "8px 12px", background: answers[qi] === q.correct ? "#f0fdf4" : "#fef2f2", border: `1px solid ${answers[qi] === q.correct ? "#86efac" : "#fca5a5"}`, borderRadius: 6, fontSize: 12, color: answers[qi] === q.correct ? "#14532d" : "#7f1d1d", lineHeight: 1.6 }}>
+              {answers[qi] === q.correct ? "✓ " : "✗ "}{q.explanation}
+            </div>
+          )}
+        </div>
+      ))}
+      {!submitted && (
+        <button onClick={submit} disabled={Object.keys(answers).length < questions.length}
+          style={{ marginTop: 4, padding: "9px 20px", borderRadius: 7, border: "none", background: Object.keys(answers).length < questions.length ? "#e2e8f0" : color, color: Object.keys(answers).length < questions.length ? "#94a3b8" : "#fff", fontSize: 13, fontWeight: 600, cursor: Object.keys(answers).length < questions.length ? "not-allowed" : "pointer" }}>
+          Verificar respuestas
+        </button>
+      )}
+    </div>
+  );
+}
+
+// ══════════════════ APP ══════════════════
+
+function HerramientasNTTData() {
+  const [chapter, setChapter] = useState(0);
+  const [tab, setTab] = useState("functional");
+  const [quizDone, setQuizDone] = useState({});
+  const [totalScore, setTotalScore] = useState(0);
+  const [totalQ, setTotalQ] = useState(0);
+  const [quizKey, setQuizKey] = useState(0);
+
+  const ch = CHAPTERS[chapter];
+  const pct = totalQ > 0 ? Math.round((totalScore / totalQ) * 100) : 0;
+  const doneCh = Object.keys(quizDone).length;
+  const totalChapters = CHAPTERS.length;
+  const totalQuestions = CHAPTERS.reduce((s, c) => s + c.questions.length, 0);
+
+  function handleQuizComplete(score) {
+    const prev = quizDone[chapter];
+    if (!prev) { setTotalScore(s => s + score); setTotalQ(t => t + ch.questions.length); }
+    setQuizDone(d => ({ ...d, [chapter]: { done: true, score, total: ch.questions.length } }));
+  }
+  function goChapter(idx) { setChapter(idx); setTab("functional"); setQuizKey(k => k + 1); }
+
+  return (
+    <div style={{ fontFamily: "var(--font-sans)", maxWidth: 780, margin: "0 auto" }}>
+
+      {/* TOP BAR */}
+      <div style={{ background: "#0f172a", borderRadius: "12px 12px 0 0", padding: "12px 16px", display: "flex", alignItems: "center", gap: 10 }}>
+        <div style={{ width: 32, height: 32, borderRadius: 8, background: "rgba(0,82,204,.25)", border: "1px solid rgba(76,154,255,.4)", display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0, fontSize: 16 }}>🛠️</div>
+        <div style={{ flex: 1 }}>
+          <div style={{ fontSize: 13, fontWeight: 500, color: "#f1f5f9" }}>Herramientas NTT Data · Jira · Azure · Miro · Mural · ServiceNow</div>
+          <div style={{ fontSize: 11, color: "#64748b" }}>{totalChapters} secciones · {totalQuestions} preguntas · Stack oficial de la vacante</div>
+        </div>
+        {doneCh > 0 && (
+          <div style={{ textAlign: "right" }}>
+            <div style={{ fontSize: 18, fontWeight: 700, color: pct >= 80 ? "#4ade80" : pct >= 60 ? "#fbbf24" : "#f87171" }}>{pct}%</div>
+            <div style={{ fontSize: 10, color: "#64748b" }}>{doneCh}/{totalChapters} secciones</div>
+          </div>
+        )}
+      </div>
+
+      {/* GROUP + CHAPTER NAV */}
+      <div style={{ background: "#1e293b", padding: "8px 12px", borderBottom: "1px solid #0f172a" }}>
+        {GROUPS.map(group => {
+          const gc = CHAPTERS.filter(c => c.group === group.id);
+          return (
+            <div key={group.id} style={{ marginBottom: 6 }}>
+              <div style={{ fontSize: 10, fontWeight: 700, color: group.color, letterSpacing: ".05em", marginBottom: 4, paddingLeft: 2 }}>
+                {group.label.toUpperCase()}
+              </div>
+              <div style={{ display: "flex", gap: 4, flexWrap: "wrap" }}>
+                {gc.map(c => {
+                  const idx = CHAPTERS.indexOf(c);
+                  return (
+                    <button key={idx} onClick={() => goChapter(idx)}
+                      style={{ fontSize: 11, padding: "5px 10px", borderRadius: 6, cursor: "pointer", background: chapter === idx ? c.color : "transparent", color: chapter === idx ? "#fff" : "#94a3b8", border: `1px solid ${chapter === idx ? c.color : "#334155"}`, fontWeight: chapter === idx ? 600 : 400, display: "flex", alignItems: "center", gap: 4, transition: ".15s" }}>
+                      {quizDone[idx] && <span style={{ fontSize: 9 }}>{quizDone[idx].score === quizDone[idx].total ? "✓" : "~"}</span>}
+                      {c.icon} {c.title}
+                    </button>
+                  );
+                })}
+              </div>
+            </div>
+          );
+        })}
+      </div>
+
+      {/* MAIN */}
+      <div style={{ background: "#fff", border: "1px solid #e2e8f0", borderTop: "none" }}>
+
+        {/* Chapter header */}
+        <div style={{ background: ch.light, borderBottom: `2px solid ${ch.border}`, padding: "14px 18px" }}>
+          <div style={{ display: "flex", alignItems: "center", gap: 10, flexWrap: "wrap" }}>
+            <div style={{ width: 42, height: 42, borderRadius: 10, background: ch.color, display: "flex", alignItems: "center", justifyContent: "center", fontSize: 20, flexShrink: 0 }}>{ch.icon}</div>
+            <div style={{ flex: 1 }}>
+              <div style={{ fontSize: 15, fontWeight: 700, color: ch.text }}>{ch.title}</div>
+              <div style={{ fontSize: 11, color: ch.color, marginTop: 2 }}>
+                {ch.questions.length} preguntas
+                {quizDone[chapter] && ` · ${quizDone[chapter].score}/${quizDone[chapter].total} correctas`}
+              </div>
+            </div>
+            <div style={{ display: "flex", gap: 5, flexWrap: "wrap" }}>
+              {tabs.map(t => (
+                <button key={t.id} onClick={() => setTab(t.id)}
+                  style={{ fontSize: 11, padding: "5px 12px", borderRadius: 6, cursor: "pointer", background: tab === t.id ? ch.color : "transparent", color: tab === t.id ? "#fff" : ch.text, border: `1px solid ${tab === t.id ? ch.color : ch.border}`, fontWeight: tab === t.id ? 600 : 400, transition: ".15s" }}>
+                  {t.label}
+                </button>
+              ))}
+            </div>
+          </div>
+        </div>
+
+        {/* Tab content */}
+        <div style={{ padding: "16px 18px" }}>
+          {tab === "functional" && (
+            <div>
+              <div style={{ fontSize: 10, fontWeight: 700, color: "#94a3b8", letterSpacing: ".5px", marginBottom: 10 }}>¿QUÉ ES Y POR QUÉ IMPORTA?</div>
+              <div style={{ fontSize: 13, color: "#374151", lineHeight: 1.85, whiteSpace: "pre-line" }}>{ch.functional}</div>
+              <div style={{ marginTop: 14, padding: "10px 14px", background: ch.light, border: `1px solid ${ch.border}`, borderRadius: 8, fontSize: 12, color: ch.text }}>
+                Orden recomendado: <strong>Funcional → Técnico → Visual → ¿Lo entendí?</strong>
+              </div>
+            </div>
+          )}
+          {tab === "technical" && (
+            <div>
+              <div style={{ fontSize: 10, fontWeight: 700, color: "#94a3b8", letterSpacing: ".5px", marginBottom: 10 }}>CÓMO SE USA — DETALLES Y CONFIGURACIÓN</div>
+              <div style={{ background: "#0f172a", borderRadius: 8, padding: "14px 16px" }}>
+                <div style={{ fontSize: 12, color: "#e2e8f0", lineHeight: 1.9, whiteSpace: "pre-line", fontFamily: "monospace" }}>{ch.technical}</div>
+              </div>
+            </div>
+          )}
+          {tab === "visual" && (
+            <div>
+              <div style={{ fontSize: 10, fontWeight: 700, color: "#94a3b8", letterSpacing: ".5px", marginBottom: 10 }}>MAPA VISUAL / REFERENCIA RÁPIDA</div>
+              <Visual chapter={ch} />
+              <div style={{ fontSize: 12, color: "#64748b", marginTop: 10, lineHeight: 1.6 }}>
+                Referencia visual para la entrevista — estudiá la estructura antes del quiz.
+              </div>
+            </div>
+          )}
+          {tab === "quiz" && (
+            <div>
+              <div style={{ fontSize: 10, fontWeight: 700, color: "#94a3b8", letterSpacing: ".5px", marginBottom: 12 }}>VALIDA TU COMPRENSIÓN</div>
+              {quizDone[chapter] ? (
+                <div>
+                  <div style={{ background: quizDone[chapter].score === quizDone[chapter].total ? "#f0fdf4" : "#fffbeb", border: `1px solid ${quizDone[chapter].score === quizDone[chapter].total ? "#86efac" : "#fcd34d"}`, borderRadius: 8, padding: "12px 14px", marginBottom: 12 }}>
+                    <div style={{ fontSize: 13, fontWeight: 600, color: "#1e293b" }}>{quizDone[chapter].score === quizDone[chapter].total ? "🎯 ¡Sección dominada!" : "✅ Sección completada"}</div>
+                    <div style={{ fontSize: 12, color: "#64748b", marginTop: 4 }}>{quizDone[chapter].score}/{quizDone[chapter].total} correctas</div>
+                  </div>
+                  <button onClick={() => { setQuizDone(d => { const nd = { ...d }; delete nd[chapter]; return nd; }); setQuizKey(k => k + 1); }}
+                    style={{ fontSize: 12, padding: "8px 16px", borderRadius: 7, border: "1px solid #e2e8f0", background: "#f8fafc", cursor: "pointer", color: "#64748b" }}>
+                    Repetir quiz
+                  </button>
+                </div>
+              ) : (
+                <Quiz key={quizKey} questions={ch.questions} color={ch.color} light={ch.light} onComplete={handleQuizComplete} />
+              )}
+            </div>
+          )}
+        </div>
+
+        {/* Navigation */}
+        <div style={{ padding: "10px 18px 14px", borderTop: "1px solid #f1f5f9", display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+          <button onClick={() => goChapter(chapter - 1)} disabled={chapter === 0}
+            style={{ fontSize: 12, padding: "8px 16px", borderRadius: 7, border: "1px solid #e2e8f0", background: "#f8fafc", cursor: chapter === 0 ? "not-allowed" : "pointer", color: chapter === 0 ? "#cbd5e1" : "#374151" }}>
+            ← Anterior
+          </button>
+          <div style={{ fontSize: 11, color: "#94a3b8" }}>{chapter + 1} / {totalChapters}</div>
+          <button onClick={() => goChapter(chapter + 1)} disabled={chapter === totalChapters - 1}
+            style={{ fontSize: 12, padding: "8px 16px", borderRadius: 7, border: `1px solid ${ch.color}`, background: ch.color, color: "#fff", cursor: chapter === totalChapters - 1 ? "not-allowed" : "pointer", opacity: chapter === totalChapters - 1 ? .5 : 1 }}>
+            Siguiente →
+          </button>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+const root = ReactDOM.createRoot(document.getElementById("root"));
+root.render(<HerramientasNTTData />);
