@@ -1,0 +1,958 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#2563eb">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<title>LeSS · TDD · BDD · Guía Interactiva</title>
+<link rel="manifest" href="./manifest.json">
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;1,9..40,300&display=swap" rel="stylesheet">
+<script src="https://unpkg.com/react@18/umd/react.production.min.js" crossorigin></script>
+<script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js" crossorigin></script>
+<script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    font-family: 'DM Sans', system-ui, sans-serif;
+    background: #f8fafc;
+    --font-sans: 'DM Sans', system-ui, sans-serif;
+  }
+  .pwa-nav {
+    background: #0f172a;
+    padding: 10px 16px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    border-bottom: 1px solid rgba(255,255,255,0.06);
+  }
+  .pwa-nav a {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    color: rgba(255,255,255,0.5);
+    font-size: 12px;
+    text-decoration: none;
+    transition: color 0.2s;
+  }
+  .pwa-nav a:hover { color: white; }
+  .pwa-nav .sep { color: rgba(255,255,255,0.15); font-size: 12px; }
+  .pwa-nav .current { color: rgba(255,255,255,0.4); font-size: 12px; }
+  .content-wrap {
+    padding: 16px;
+    max-width: 820px;
+    margin: 0 auto;
+  }
+  #loading {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 60vh;
+    flex-direction: column;
+    gap: 12px;
+    color: #64748b;
+    font-size: 13px;
+  }
+  .spinner {
+    width: 32px; height: 32px;
+    border: 3px solid #e2e8f0;
+    border-top-color: #2563eb;
+    border-radius: 50%;
+    animation: spin 0.8s linear infinite;
+  }
+  @keyframes spin { to { transform: rotate(360deg); } }
+</style>
+</head>
+<body>
+
+<nav class="pwa-nav">
+  <a href="./index.html">← Inicio</a>
+  <span class="sep">/</span>
+  <span class="current">🔵 LeSS · TDD · BDD</span>
+</nav>
+
+<div id="loading">
+  <div class="spinner"></div>
+  Cargando guía interactiva...
+</div>
+
+<div class="content-wrap" id="root" style="display:none"></div>
+
+<script type="text/babel">
+const { useState } = React;
+
+const CHAPTERS = [
+  // ─────────────────────────────── LeSS ───────────────────────────────
+  {
+    id: "less-intro",
+    title: "¿Qué es LeSS?",
+    icon: "🔵",
+    color: "#2563EB",
+    light: "#DBEAFE",
+    border: "#93C5FD",
+    text: "#1D4ED8",
+    group: "LeSS",
+
+    functional: `LeSS (Large-Scale Scrum) es un framework de escalamiento ágil que aplica los principios de Scrum a múltiples equipos trabajando en el mismo producto. La idea central es radical: en lugar de agregar procesos y roles para coordinar equipos, LeSS los elimina.
+
+Sin LeSS: organizaciones grandes tienden a crear capas de coordinación — Project Managers, Coordinadores, Scrum of Scrums formales, Release Managers — que agregan burocracia sin agregar valor.
+
+Con LeSS: múltiples equipos comparten un único Product Backlog, un único Product Owner y un único producto. La coordinación ocurre directamente entre equipos — no a través de intermediarios. LeSS confía en que los equipos maduros pueden coordinarse solos.
+
+Diferencia clave con SAFe: SAFe agrega estructura y prescripción para escalar. LeSS reduce estructura y confía en los principios de Scrum.`,
+
+    technical: `Dos variantes según el tamaño:
+
+LeSS (básico) — hasta 8 equipos:
+• 1 Product Owner único para todos los equipos
+• 1 Product Backlog compartido
+• 1 Sprint sincronizado para todos los equipos
+• 1 Sprint Review integrada
+• 1 Retrospectiva general + retrospectivas por equipo
+• Múltiples Daily Scrums coordinados entre equipos
+
+LeSS Huge — más de 8 equipos:
+• Introduce Requirement Areas (áreas de requerimientos)
+• Cada área tiene un Area Product Owner
+• El Product Owner principal coordina los Area POs
+• Escala hasta cientos de equipos
+
+Roles en LeSS:
+→ Product Owner: gestiona el Product Backlog único. Trabaja directamente con todos los equipos.
+→ Scrum Master: puede facilitar 1–3 equipos. Rol de coaching organizacional, no solo de equipo.
+→ NO existe: Project Manager, Release Manager, Chief SM, coordinadores intermedios.`,
+
+    visual: { type: "less-structure" },
+
+    questions: [
+      {
+        q: "¿Cuál es la diferencia filosófica central entre LeSS y SAFe?",
+        opts: [
+          "LeSS es para empresas pequeñas; SAFe es para empresas grandes",
+          "SAFe agrega estructura para escalar; LeSS elimina estructura y confía en Scrum",
+          "LeSS requiere más certificaciones que SAFe",
+          "SAFe usa sprints; LeSS usa iteraciones de diferente duración"
+        ],
+        correct: 1,
+        explanation: "Esta es la distinción más importante. SAFe prescribe roles, eventos y artefactos adicionales para coordinar equipos. LeSS hace lo opuesto: aplica Scrum básico a múltiples equipos con mínima estructura adicional."
+      },
+      {
+        q: "En LeSS básico (hasta 8 equipos), ¿cuántos Product Owners hay?",
+        opts: [
+          "Uno por equipo",
+          "Uno por cada 2–3 equipos",
+          "Un único Product Owner para todos los equipos",
+          "Depende del tamaño del producto"
+        ],
+        correct: 2,
+        explanation: "LeSS mantiene un único Product Owner que gestiona un único Product Backlog para todos los equipos. Esto es deliberado — evita la fragmentación de la visión del producto que ocurre cuando cada equipo tiene su propio PO."
+      },
+      {
+        q: "¿Cuándo usarías LeSS en lugar de SAFe?",
+        opts: [
+          "Cuando la organización necesita mucha prescripción y roles definidos",
+          "Cuando los equipos tienen alta madurez ágil y querés escalar sin agregar burocracia",
+          "Cuando hay más de 200 personas trabajando en el mismo producto",
+          "Cuando el cliente exige certificación SAFe específicamente"
+        ],
+        correct: 1,
+        explanation: "LeSS funciona mejor con equipos ágiles maduros que ya practican Scrum bien y quieren escalar sin agregar capas de coordinación. SAFe es mejor para organizaciones que necesitan más guía y prescripción en la transición."
+      }
+    ]
+  },
+
+  {
+    id: "less-eventos",
+    title: "LeSS: Eventos y coordinación",
+    icon: "📆",
+    color: "#2563EB",
+    light: "#DBEAFE",
+    border: "#93C5FD",
+    text: "#1D4ED8",
+    group: "LeSS",
+
+    functional: `LeSS mantiene los eventos de Scrum pero los adapta para múltiples equipos. La clave es que todos los equipos trabajan en el mismo Sprint sincronizado — no en ciclos independientes.
+
+Sprint Planning en LeSS tiene dos partes:
+Parte 1: todos los equipos juntos con el PO para entender las prioridades del Product Backlog compartido y seleccionar ítems.
+Parte 2: cada equipo por separado para planificar cómo va a entregar sus ítems seleccionados.
+
+Sprint Review en LeSS es un evento integrado donde todos los equipos muestran su trabajo juntos — no demos por separado. Stakeholders pueden moverse entre áreas y ver el producto completo.
+
+Retrospectiva tiene dos niveles: primero cada equipo hace su retrospectiva interna, luego hay una retrospectiva general del sistema ("Overall Retrospective") donde representantes de todos los equipos identifican impedimentos organizacionales.`,
+
+    technical: `Mecanismos de coordinación entre equipos en LeSS:
+
+Multi-Team Sprint Planning Part 1:
+Todos los equipos juntos seleccionan ítems del Product Backlog. Los equipos negocian directamente qué toma cada uno. Sin intermediarios.
+
+Component Communities / CoPs:
+Equipos con expertise similar se coordinan en comunidades de práctica. No son roles formales — son coordinación voluntaria.
+
+Traveler (Viajero):
+Un desarrollador que visita temporalmente otro equipo para transferir conocimiento o resolver una dependencia específica. Mecanismo lightweight de coordinación técnica.
+
+Overall Retrospective:
+Participan: Scrum Masters, Product Owner, managers, representantes de equipos. Objetivo: identificar y resolver impedimentos del sistema — no del equipo individual.
+
+Sprint Review bazaar-style:
+Los equipos muestran su trabajo en "estaciones" y los stakeholders se mueven libremente. Formato de feria o bazar — más dinámico que presentaciones secuenciales.`,
+
+    visual: { type: "less-sprint" },
+
+    questions: [
+      {
+        q: "¿Cuál es el propósito de la Overall Retrospective en LeSS?",
+        opts: [
+          "Reemplazar las retrospectivas individuales de cada equipo",
+          "Identificar y resolver impedimentos organizacionales que trascienden a un solo equipo",
+          "Evaluar el desempeño del Product Owner",
+          "Planificar el próximo Sprint para todos los equipos"
+        ],
+        correct: 1,
+        explanation: "La Overall Retrospective atiende impedimentos del sistema — problemas organizacionales, de coordinación o de proceso que ningún equipo puede resolver solo. Las retrospectivas individuales atienden el equipo; la Overall atiende la organización."
+      },
+      {
+        q: "En el Sprint Planning de LeSS, ¿qué ocurre en la Parte 1?",
+        opts: [
+          "Cada equipo planifica internamente sus tareas técnicas",
+          "Todos los equipos juntos con el PO seleccionan ítems del Product Backlog compartido",
+          "El PO asigna ítems a cada equipo según su capacidad",
+          "Los Scrum Masters coordinan las dependencias entre equipos"
+        ],
+        correct: 1,
+        explanation: "La Parte 1 es un evento multi-equipo donde todos, junto al PO, entienden las prioridades y negocian qué ítems toma cada equipo. La Parte 2 es cuando cada equipo planifica internamente cómo entregar sus ítems."
+      },
+      {
+        q: "¿Qué es un 'Traveler' en LeSS?",
+        opts: [
+          "Un consultor externo que evalúa la madurez ágil del ART",
+          "Un desarrollador que visita temporalmente otro equipo para transferir conocimiento o resolver una dependencia",
+          "El Product Owner cuando visita al cliente",
+          "Un Scrum Master asignado a múltiples equipos simultáneamente"
+        ],
+        correct: 1,
+        explanation: "El Traveler es un mecanismo lightweight de coordinación técnica — un developer visita otro equipo temporalmente para resolver una dependencia específica o transferir conocimiento. Es voluntario, no prescrito."
+      }
+    ]
+  },
+
+  // ─────────────────────────────── TDD ───────────────────────────────
+  {
+    id: "tdd-intro",
+    title: "¿Qué es TDD?",
+    icon: "🔴",
+    color: "#DC2626",
+    light: "#FEE2E2",
+    border: "#FCA5A5",
+    text: "#7F1D1D",
+    group: "TDD",
+
+    functional: `TDD (Test-Driven Development) es una práctica de desarrollo donde escribís el test ANTES de escribir el código. El ciclo es contraintuitivo pero poderoso: primero el test falla (rojo), luego escribís el mínimo código para que pase (verde), luego mejorás el código sin cambiar el comportamiento (refactor).
+
+Sin TDD: el código crece sin cobertura de tests. Los desarrolladores prueban manualmente, los bugs llegan a producción, refactorizar es arriesgado porque "algo puede romperse", y el diseño del código tiende a ser complejo porque no fue pensado para ser testeable.
+
+Con TDD: cada comportamiento tiene un test que lo documenta. El código es más simple porque el diseño está guiado por lo que necesita el test. Refactorizar es seguro porque los tests detectan regresiones. Los bugs se encuentran en segundos, no en producción.
+
+Como SM: tu rol no es implementar TDD — es crear las condiciones para que el equipo lo adopte. Eso significa entender qué es, cuándo aplica y cómo facilitar la conversación cuando el equipo dice "no tenemos tiempo para tests".`,
+
+    technical: `El ciclo Red-Green-Refactor:
+
+RED: escribís un test que describe el comportamiento esperado. El test falla porque el código no existe aún. Esto confirma que el test está bien escrito y que el comportamiento no estaba implementado.
+
+GREEN: escribís el mínimo código posible para que el test pase. No importa si es "feo" — solo que el test pase. No anticipés funcionalidad que no está siendo testeada ahora.
+
+REFACTOR: con el test en verde, mejorás el código — eliminas duplicación, mejorás nombres, aplicás patrones — sin cambiar el comportamiento. Si algo se rompe, los tests te lo dicen inmediatamente.
+
+Tipos de tests en TDD:
+→ Unit tests: prueban una función o clase aislada. Rápidos (milisegundos). El 70-80% de la cobertura.
+→ Integration tests: prueban la interacción entre componentes. Más lentos.
+→ E2E tests: prueban el flujo completo. Los más lentos y frágiles.
+
+Test coverage no es el objetivo — es una consecuencia. El objetivo es diseño guiado por comportamiento.`,
+
+    visual: { type: "tdd-cycle" },
+
+    questions: [
+      {
+        q: "En TDD, ¿qué escribís primero?",
+        opts: [
+          "El código de producción, luego el test para validarlo",
+          "El test que describe el comportamiento esperado, luego el código para hacerlo pasar",
+          "La documentación técnica, luego el test, luego el código",
+          "El refactor, luego el test, luego el código mínimo"
+        ],
+        correct: 1,
+        explanation: "TDD invierte el orden tradicional: primero el test (que falla — Red), luego el código mínimo para que pase (Green), luego la mejora del código (Refactor). El test escrito antes actúa como especificación del comportamiento."
+      },
+      {
+        q: "Como SM, el equipo te dice 'TDD nos hace más lentos, no tenemos tiempo'. ¿Cómo respondés?",
+        opts: [
+          "Les explicás que TDD es obligatorio según el framework ágil",
+          "Les preguntás cuánto tiempo pasan actualmente debuggeando y arreglando bugs en producción",
+          "Aceptás que tienen razón y lo dejás para el próximo sprint",
+          "Llevás el problema al Product Owner para que decida"
+        ],
+        correct: 1,
+        explanation: "La respuesta correcta es cuantificar el costo actual de no tener tests. TDD tiene una curva de aprendizaje, pero el tiempo que 'se pierde' en tests se recupera en menos debugging, menos regresiones y mayor confianza para refactorizar."
+      },
+      {
+        q: "¿Qué significa la fase 'Refactor' en el ciclo Red-Green-Refactor?",
+        opts: [
+          "Reescribir el test para que sea más robusto",
+          "Agregar más funcionalidad al código que ya está verde",
+          "Mejorar la estructura del código sin cambiar su comportamiento, con los tests como red de seguridad",
+          "Eliminar los tests que ya no son necesarios"
+        ],
+        correct: 2,
+        explanation: "Refactor = mejorar el diseño del código (eliminar duplicación, mejorar nombres, aplicar patrones) sin cambiar el comportamiento. Los tests en verde son la red de seguridad que te dice si algo se rompe durante la mejora."
+      }
+    ]
+  },
+
+  {
+    id: "tdd-sm",
+    title: "TDD: rol del SM",
+    icon: "🛠️",
+    color: "#DC2626",
+    light: "#FEE2E2",
+    border: "#FCA5A5",
+    text: "#7F1D1D",
+    group: "TDD",
+
+    functional: `Como SM, tu trabajo con TDD no es hacer pair programming ni revisar tests. Es crear las condiciones organizacionales y culturales para que TDD sea posible.
+
+El principal obstáculo de TDD no es técnico — es cultural. Los equipos tienen presión de velocidad, el negocio pide features rápido, y los tests "se sienten" como trabajo adicional que no entrega valor directo. Tu rol es hacer visible el costo de no tener tests.
+
+Las tres conversaciones que tenés que poder facilitar:
+1. Con el equipo: ¿cuánto tiempo pasamos arreglando bugs que podrían haberse detectado antes?
+2. Con el PO: ¿cuánto vale para el negocio que podamos refactorizar sin miedo a romper producción?
+3. Con management: ¿cuál es el costo de la deuda técnica acumulada sin cobertura de tests?
+
+TDD es parte de la Definition of Done cuando el equipo lo adopta. Eso es algo que facilitás — no imponés.`,
+
+    technical: `Cómo integrar TDD en el proceso como SM:
+
+En la Definition of Done:
+Agregar "unit tests escritos y pasando" y "cobertura mínima del 80% para código nuevo" como criterios de Done. Esto hace que TDD sea parte del flujo, no una actividad opcional.
+
+En el refinamiento:
+Facilitar que el equipo discuta qué comportamientos van a testear por cada historia. Las historias con criterios de aceptación claros son más fáciles de testear — conectá TDD con buenas prácticas de escritura de historias.
+
+En la retrospectiva:
+Medir el ratio de bugs encontrados en desarrollo vs en producción. Si la mayoría aparecen en producción, es una señal de falta de cobertura. Usá el dato para facilitar la conversación, no para acusar.
+
+En los impedimentos:
+Si el equipo no puede adoptar TDD porque el código legacy no es testeable, ese es un impedimento técnico real. Escalalo, priorizá Enablers técnicos para refactorizar el legacy, asigná tiempo en el Sprint para trabajo de infraestructura de tests.`,
+
+    visual: { type: "tdd-sm-actions" },
+
+    questions: [
+      {
+        q: "¿Dónde encaja TDD en el proceso ágil como SM?",
+        opts: [
+          "Es responsabilidad del Tech Lead — el SM no interviene",
+          "Se incluye en la Definition of Done como criterio de calidad del código",
+          "Se gestiona en un sprint separado de 'calidad técnica'",
+          "Es opcional y queda a criterio de cada desarrollador"
+        ],
+        correct: 1,
+        explanation: "La Definition of Done es el lugar correcto para incluir TDD. Al definir 'unit tests escritos y pasando' como criterio de Done, TDD se convierte en parte del flujo normal — no en una actividad extra que se hace 'si hay tiempo'."
+      },
+      {
+        q: "El equipo no puede escribir tests porque el código legacy no tiene interfaces testeables. ¿Cómo lo manejás como SM?",
+        opts: [
+          "Le decís al equipo que igual deben implementar TDD",
+          "Lo identificás como impedimento técnico y priorizás Enablers de refactoring en el backlog con el PO",
+          "Dejás de pedir TDD hasta que el código esté más limpio",
+          "Contratás un QA especializado para que escriba los tests"
+        ],
+        correct: 1,
+        explanation: "El código legacy no testeable es un impedimento técnico real. Como SM lo escalaras y trabajás con el PO para priorizar historias técnicas (Enablers) que refactoricen el legacy haciéndolo testeable. No es culpa del equipo — es deuda técnica a gestionar."
+      },
+      {
+        q: "¿Cómo medís si TDD está aportando valor al equipo?",
+        opts: [
+          "Midiendo el porcentaje de cobertura de código alcanzado",
+          "Contando cuántos tests se escriben por sprint",
+          "Midiendo el ratio de bugs detectados en desarrollo vs bugs escapados a producción",
+          "Evaluando cuánto tiempo tarda cada desarrollador en escribir sus tests"
+        ],
+        correct: 2,
+        explanation: "El indicador de valor de TDD es cuántos bugs se detectan temprano (en desarrollo, con el test) vs cuántos escapan a producción. Una reducción del escape rate es evidencia directa de que la práctica está funcionando."
+      }
+    ]
+  },
+
+  // ─────────────────────────────── BDD ───────────────────────────────
+  {
+    id: "bdd-intro",
+    title: "¿Qué es BDD?",
+    icon: "🟢",
+    color: "#16A34A",
+    light: "#DCFCE7",
+    border: "#86EFAC",
+    text: "#14532D",
+    group: "BDD",
+
+    functional: `BDD (Behavior-Driven Development) extiende TDD hacia el negocio. En lugar de escribir tests técnicos que solo entienden los developers, BDD define el comportamiento del sistema en lenguaje que pueden leer negocio, QA y desarrollo juntos.
+
+Sin BDD: los criterios de aceptación son ambiguos ("el sistema debe funcionar correctamente"), los developers asumen comportamientos que el negocio no esperaba, y los bugs de "funcionamiento incorrecto" son frecuentes — no porque el código esté mal, sino porque se entendió mal el requerimiento.
+
+Con BDD: el comportamiento se define antes de escribir una línea de código, usando el formato Given-When-Then que cualquier stakeholder puede entender y validar. El test de aceptación automatizado ES la especificación — no hay brecha entre lo documentado y lo que se testea.
+
+Como SM: BDD es directamente relevante para tu rol. Facilitás el refinamiento donde se escriben los criterios de aceptación — si esos criterios tienen formato Given-When-Then, ya tenés la base de BDD.`,
+
+    technical: `El formato Given-When-Then (Gherkin):
+
+GIVEN (Dado que): el estado inicial del sistema o el contexto previo a la acción.
+WHEN (Cuando): la acción o evento que ocurre.
+THEN (Entonces): el resultado esperado verificable.
+
+Ejemplo concreto:
+Feature: Login de usuario
+  Scenario: Login exitoso con credenciales válidas
+    Given que el usuario "luis@mail.com" existe en el sistema
+    And su contraseña es "12345"
+    When ingresa sus credenciales en el formulario de login
+    Then es redirigido al dashboard
+    And ve el mensaje "Bienvenido, Luis"
+
+Herramientas BDD populares:
+→ Cucumber (Java, Ruby, JS): el más popular. Parsea archivos .feature en Gherkin.
+→ SpecFlow (.NET): Cucumber para el ecosistema Microsoft.
+→ Behave (Python): implementación Python de BDD.
+→ Pytest-BDD (Python): integración BDD con pytest.
+
+El archivo .feature es legible por el negocio. El step definition es el código que implementa cada paso.`,
+
+    visual: { type: "bdd-flow" },
+
+    questions: [
+      {
+        q: "¿Cuál es la diferencia principal entre TDD y BDD?",
+        opts: [
+          "TDD es para backend; BDD es para frontend",
+          "TDD usa tests técnicos para guiar el diseño del código; BDD define comportamiento en lenguaje legible por negocio y técnicos",
+          "TDD es más rápido; BDD es más preciso",
+          "Son lo mismo — BDD es solo otro nombre para TDD"
+        ],
+        correct: 1,
+        explanation: "TDD guía el diseño técnico del código con tests unitarios. BDD define el comportamiento del sistema en lenguaje compartido (Given-When-Then) que negocio, QA y dev pueden leer y validar juntos. BDD opera a nivel de comportamiento de negocio; TDD a nivel de unidad técnica."
+      },
+      {
+        q: "¿Qué parte del proceso ágil ya estás haciendo que se conecta directamente con BDD?",
+        opts: [
+          "El Daily Scrum donde el equipo sincroniza",
+          "La Sprint Review donde se muestra el producto",
+          "El refinamiento donde se escriben los criterios de aceptación de las historias",
+          "La retrospectiva donde se mejoran los procesos"
+        ],
+        correct: 2,
+        explanation: "Los criterios de aceptación de una historia de usuario en formato Given-When-Then son la base de BDD. Si ya facilitás refinamientos donde se definen ACs claros, ya estás haciendo el primer paso de BDD. El siguiente es automatizar esos ACs como tests ejecutables."
+      },
+      {
+        q: "Un desarrollador te dice que los archivos .feature de Gherkin 'son para el negocio pero nadie del negocio los lee'. ¿Qué respondés?",
+        opts: [
+          "Tenés razón — los archivos .feature son solo para los testers",
+          "El valor está en que negocio y técnicos los escriben juntos en el refinamiento, antes de codificar — no en que los lean después",
+          "Hay que entrenar mejor al negocio para que lea los archivos .feature",
+          "Le decís que igual es una práctica obligatoria del framework"
+        ],
+        correct: 1,
+        explanation: "El mayor valor de BDD no es el archivo .feature como documentación — es la conversación que genera al escribirlo. Negocio y técnicos alineando qué significa 'funcionar correctamente' ANTES de codificar evita los malentendidos más costosos."
+      }
+    ]
+  },
+
+  {
+    id: "bdd-sm",
+    title: "BDD: rol del SM",
+    icon: "🤝",
+    color: "#16A34A",
+    light: "#DCFCE7",
+    border: "#86EFAC",
+    text: "#14532D",
+    group: "BDD",
+
+    functional: `Como SM, BDD conecta directamente con tu trabajo de facilitar el refinamiento y mejorar la calidad de los criterios de aceptación. No necesitás saber Cucumber — necesitás entender qué problema resuelve y cómo facilitarlo.
+
+El problema que BDD resuelve para vos: la brecha entre lo que el negocio pide, lo que el developer entiende y lo que QA testea. Cuando esas tres perspectivas están desalineadas, el bug llega a producción aunque "el código funcione bien".
+
+Three Amigos (Los Tres Amigos) es la práctica BDD que más directamente podés facilitar como SM. Es una conversación entre:
+→ Product Owner / Negocio: ¿qué necesitamos que el sistema haga?
+→ Developer: ¿cómo lo voy a implementar?
+→ QA / Tester: ¿cómo voy a verificar que está bien?
+
+Esta conversación ocurre ANTES de que el developer empiece a codificar — idealmente en el refinamiento. Tu rol es facilitar que los tres roles estén en la sala (o en la llamada) y que la conversación produzca criterios de aceptación claros y testeables.`,
+
+    technical: `Cómo introducir BDD progresivamente como SM:
+
+Paso 1 — Mejorar los ACs sin mencionar BDD:
+Facilita que en el refinamiento los criterios de aceptación usen formato Given-When-Then. No necesitás llamarlo BDD — solo pedís que los ACs sean más específicos y testeables.
+
+Paso 2 — Introducir Three Amigos:
+Antes de que el developer empiece una historia, agendá una sesión corta (30 min) con PO + Dev + QA para alinear el comportamiento esperado. Facilitá la sesión vos.
+
+Paso 3 — Definition of Ready con ACs testeables:
+Agregá a la DoR: "los criterios de aceptación tienen formato Given-When-Then y fueron revisados por QA". Esto hace que BDD sea parte del flujo, no una actividad adicional.
+
+Paso 4 — Automatización (responsabilidad del equipo técnico):
+Si el equipo quiere automatizar los ACs como tests ejecutables, ese es el paso técnico que QA y Dev lideran. Tu trabajo fue crear las condiciones — no la implementación.
+
+Métricas para medir el impacto:
+→ % de historias con ACs en formato GWT al entrar al sprint
+→ Bugs encontrados en QA que se originaron por ACs ambiguos
+→ Retrabajo post-sprint por malentendidos de requerimiento`,
+
+    visual: { type: "bdd-three-amigos" },
+
+    questions: [
+      {
+        q: "¿Qué son los 'Three Amigos' en BDD y cuándo ocurre esa conversación?",
+        opts: [
+          "Dev + SM + PO que se reúnen en el Daily Scrum",
+          "PO + Developer + QA que alinean el comportamiento esperado ANTES de que el developer empiece a codificar",
+          "Tres developers haciendo code review juntos",
+          "SM + RTE + Product Manager planificando el sprint"
+        ],
+        correct: 1,
+        explanation: "Three Amigos = PO (qué necesita el negocio) + Developer (cómo lo implemento) + QA (cómo lo verifico). La conversación ocurre ANTES del desarrollo — típicamente en el refinamiento o justo antes de que el developer tome la historia."
+      },
+      {
+        q: "¿Cómo introducís BDD en un equipo sin llamarlo BDD ni agregar overhead?",
+        opts: [
+          "Comprando licencias de Cucumber e instalándolo en el repositorio",
+          "Pidiendo en el refinamiento que los criterios de aceptación usen formato Given-When-Then para ser más específicos y testeables",
+          "Contratando un QA Engineer especializado en BDD",
+          "Añadiendo una ceremonia semanal de revisión de tests de aceptación"
+        ],
+        correct: 1,
+        explanation: "La forma más efectiva es mejorar la calidad de los ACs en el refinamiento usando GWT — sin mencionar BDD. Los criterios más específicos ya generan el valor principal: alineación entre negocio, dev y QA antes de codificar."
+      },
+      {
+        q: "¿Cuál es la señal de que la práctica de BDD/Three Amigos está generando valor en el equipo?",
+        opts: [
+          "Que el 100% de los tests pasen en cada build",
+          "Que el equipo tardé más en el refinamiento",
+          "Que disminuyan los bugs originados por malentendidos de requerimiento y el retrabajo post-sprint",
+          "Que los archivos .feature aumenten en número por sprint"
+        ],
+        correct: 2,
+        explanation: "El valor de BDD se mide en la reducción de bugs y retrabajo causados por requerimientos mal entendidos. Si el equipo está invirtiendo tiempo en Three Amigos y los malentendidos siguen apareciendo en producción, la práctica no está generando valor real."
+      }
+    ]
+  }
+];
+
+const GROUPS = ["LeSS", "TDD", "BDD"];
+const GROUP_COLORS = { LeSS: "#2563EB", TDD: "#DC2626", BDD: "#16A34A" };
+
+const tabs = [
+  { id: "functional", label: "Funcional" },
+  { id: "technical", label: "Técnico" },
+  { id: "visual", label: "Visual" },
+  { id: "quiz", label: "¿Lo entendí?" }
+];
+
+// ── VISUALS ──────────────────────────────────────────────────────────────────
+
+function VisualLessStructure() {
+  return (
+    <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
+      <div style={{ background: "#DBEAFE", border: "1px solid #93C5FD", borderRadius: 8, padding: "12px 16px", borderLeft: "4px solid #2563EB" }}>
+        <div style={{ fontSize: 13, fontWeight: 600, color: "#1D4ED8", marginBottom: 4 }}>1 Product Owner · 1 Product Backlog</div>
+        <div style={{ fontSize: 11, color: "#64748b" }}>Visión única del producto — sin fragmentación entre equipos</div>
+      </div>
+      <div style={{ display: "grid", gridTemplateColumns: "repeat(3,1fr)", gap: 6 }}>
+        {["Equipo 1", "Equipo 2", "Equipo 3"].map((t, i) => (
+          <div key={i} style={{ background: "#EFF6FF", border: "1px solid #BFDBFE", borderRadius: 8, padding: "10px 12px", textAlign: "center" }}>
+            <div style={{ fontSize: 12, fontWeight: 600, color: "#1D4ED8" }}>{t}</div>
+            <div style={{ fontSize: 10, color: "#64748b", marginTop: 3 }}>SM + Devs</div>
+          </div>
+        ))}
+      </div>
+      <div style={{ background: "#FEF3C7", border: "1px solid #FCD34D", borderRadius: 8, padding: "10px 14px" }}>
+        <div style={{ fontSize: 12, fontWeight: 600, color: "#78350F", marginBottom: 3 }}>vs SAFe</div>
+        <div style={{ fontSize: 11, color: "#92400E", lineHeight: 1.6 }}>SAFe agrega: RTE, Program Manager, PI Planning, ROAM Board, Program Board. LeSS elimina esas capas y confía en que los equipos se coordinen directamente.</div>
+      </div>
+    </div>
+  );
+}
+
+function VisualLessSprint() {
+  const events = [
+    { name: "Sprint Planning Pt. 1", who: "Todos los equipos + PO", color: "#2563EB" },
+    { name: "Sprint Planning Pt. 2", who: "Cada equipo por separado", color: "#2563EB" },
+    { name: "Daily Scrum", who: "Cada equipo · coordinación directa", color: "#0D9488" },
+    { name: "Sprint Review (bazaar)", who: "Todos los equipos + stakeholders", color: "#7C3AED" },
+    { name: "Retrospectiva de equipo", who: "Cada equipo por separado", color: "#D97706" },
+    { name: "Overall Retrospective", who: "SMs + PO + representantes + managers", color: "#DC2626" },
+  ];
+  return (
+    <div style={{ display: "flex", flexDirection: "column", gap: 6 }}>
+      {events.map((e, i) => (
+        <div key={i} style={{ display: "flex", alignItems: "center", gap: 10, padding: "9px 12px", background: "#f8fafc", border: "1px solid #e2e8f0", borderRadius: 7, borderLeft: `3px solid ${e.color}` }}>
+          <div style={{ flex: 1 }}>
+            <div style={{ fontSize: 12, fontWeight: 600, color: "#1e293b" }}>{e.name}</div>
+            <div style={{ fontSize: 11, color: "#64748b", marginTop: 2 }}>{e.who}</div>
+          </div>
+        </div>
+      ))}
+    </div>
+  );
+}
+
+function VisualTDDCycle() {
+  return (
+    <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
+      {[
+        { step: "1. RED", desc: "Escribís el test — falla porque el código no existe. Confirma que el test está bien escrito.", bg: "#FEE2E2", border: "#FCA5A5", color: "#DC2626", accent: "#7F1D1D" },
+        { step: "2. GREEN", desc: "Escribís el mínimo código posible para que el test pase. No anticipés funcionalidad extra.", bg: "#DCFCE7", border: "#86EFAC", color: "#16A34A", accent: "#14532D" },
+        { step: "3. REFACTOR", desc: "Mejorás el diseño del código sin cambiar su comportamiento. Los tests detectan si algo se rompe.", bg: "#DBEAFE", border: "#93C5FD", color: "#2563EB", accent: "#1D4ED8" },
+      ].map((s, i) => (
+        <div key={i} style={{ background: s.bg, border: `1px solid ${s.border}`, borderRadius: 8, padding: "12px 16px", borderLeft: `4px solid ${s.color}` }}>
+          <div style={{ fontSize: 13, fontWeight: 700, color: s.accent, marginBottom: 4 }}>{s.step}</div>
+          <div style={{ fontSize: 12, color: "#374151", lineHeight: 1.6 }}>{s.desc}</div>
+        </div>
+      ))}
+      <div style={{ padding: "8px 12px", background: "#f8fafc", border: "1px solid #e2e8f0", borderRadius: 6, fontSize: 11, color: "#64748b", textAlign: "center" }}>
+        El ciclo se repite por cada comportamiento nuevo — puede durar minutos, no horas
+      </div>
+    </div>
+  );
+}
+
+function VisualTDDSMActions() {
+  const actions = [
+    { where: "Definition of Done", action: "Agregar 'unit tests escritos y pasando' como criterio", icon: "✓" },
+    { where: "Refinamiento", action: "Facilitar que los ACs sean específicos y testeables", icon: "✓" },
+    { where: "Retrospectiva", action: "Medir bugs en dev vs bugs en producción — hacer visible el costo", icon: "✓" },
+    { where: "Impedimentos", action: "Escalar si el legacy no es testeable — priorizar Enablers técnicos", icon: "✓" },
+  ];
+  return (
+    <div style={{ display: "flex", flexDirection: "column", gap: 6 }}>
+      {actions.map((a, i) => (
+        <div key={i} style={{ display: "grid", gridTemplateColumns: "140px 1fr", gap: 10, padding: "10px 12px", background: "#FEF2F2", border: "1px solid #FECACA", borderRadius: 7 }}>
+          <div style={{ fontSize: 11, fontWeight: 600, color: "#DC2626" }}>{a.where}</div>
+          <div style={{ fontSize: 12, color: "#374151", lineHeight: 1.5 }}>{a.action}</div>
+        </div>
+      ))}
+    </div>
+  );
+}
+
+function VisualBDDFlow() {
+  return (
+    <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
+      <div style={{ background: "#0f172a", borderRadius: 8, padding: "14px 16px" }}>
+        <div style={{ fontSize: 10, color: "#4ade80", marginBottom: 8, fontWeight: 600 }}>EJEMPLO GHERKIN</div>
+        {[
+          { label: "Feature:", val: "Login de usuario", color: "#c4b5fd" },
+          { label: "  Scenario:", val: "Login exitoso", color: "#93c5fd" },
+          { label: "    Given", val: "el usuario 'luis@mail.com' existe en el sistema", color: "#86efac" },
+          { label: "    And", val: "su contraseña es '12345'", color: "#86efac" },
+          { label: "    When", val: "ingresa sus credenciales en el formulario", color: "#fde68a" },
+          { label: "    Then", val: "es redirigido al dashboard", color: "#fca5a5" },
+          { label: "    And", val: "ve el mensaje 'Bienvenido, Luis'", color: "#fca5a5" },
+        ].map((line, i) => (
+          <div key={i} style={{ fontFamily: "monospace", fontSize: 12, lineHeight: 1.8 }}>
+            <span style={{ color: "#64748b" }}>{line.label} </span>
+            <span style={{ color: line.color }}>{line.val}</span>
+          </div>
+        ))}
+      </div>
+      <div style={{ display: "grid", gridTemplateColumns: "repeat(3,1fr)", gap: 6 }}>
+        {[
+          { label: "Given", desc: "Estado inicial · contexto previo", color: "#16A34A", bg: "#DCFCE7", border: "#86EFAC" },
+          { label: "When", desc: "Acción o evento que ocurre", color: "#D97706", bg: "#FEF3C7", border: "#FCD34D" },
+          { label: "Then", desc: "Resultado esperado verificable", color: "#DC2626", bg: "#FEE2E2", border: "#FCA5A5" },
+        ].map((p, i) => (
+          <div key={i} style={{ background: p.bg, border: `1px solid ${p.border}`, borderRadius: 7, padding: "10px 12px", textAlign: "center" }}>
+            <div style={{ fontSize: 13, fontWeight: 700, color: p.color }}>{p.label}</div>
+            <div style={{ fontSize: 10, color: "#64748b", marginTop: 3, lineHeight: 1.4 }}>{p.desc}</div>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+}
+
+function VisualBDDThreeAmigos() {
+  return (
+    <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
+      <div style={{ display: "grid", gridTemplateColumns: "repeat(3,1fr)", gap: 8 }}>
+        {[
+          { role: "PO / Negocio", question: "¿Qué necesita hacer el sistema?", color: "#7C3AED", bg: "#EDE9FE", border: "#C4B5FD" },
+          { role: "Developer", question: "¿Cómo lo voy a implementar?", color: "#2563EB", bg: "#DBEAFE", border: "#93C5FD" },
+          { role: "QA / Tester", question: "¿Cómo voy a verificar que está bien?", color: "#16A34A", bg: "#DCFCE7", border: "#86EFAC" },
+        ].map((a, i) => (
+          <div key={i} style={{ background: a.bg, border: `1px solid ${a.border}`, borderRadius: 8, padding: "12px", textAlign: "center" }}>
+            <div style={{ fontSize: 12, fontWeight: 700, color: a.color, marginBottom: 6 }}>{a.role}</div>
+            <div style={{ fontSize: 11, color: "#374151", fontStyle: "italic", lineHeight: 1.5 }}>"{a.question}"</div>
+          </div>
+        ))}
+      </div>
+      <div style={{ background: "#f8fafc", border: "1px solid #e2e8f0", borderRadius: 8, padding: "12px 14px" }}>
+        <div style={{ fontSize: 12, fontWeight: 600, color: "#1e293b", marginBottom: 4 }}>¿Cuándo ocurre?</div>
+        <div style={{ fontSize: 12, color: "#64748b", lineHeight: 1.6 }}>En el refinamiento, ANTES de que el developer tome la historia al sprint. La conversación produce criterios de aceptación en formato Given-When-Then que los tres roles validaron.</div>
+      </div>
+      <div style={{ background: "#DCFCE7", border: "1px solid #86EFAC", borderRadius: 8, padding: "10px 14px" }}>
+        <div style={{ fontSize: 11, color: "#14532D", lineHeight: 1.6 }}><strong>Rol del SM:</strong> facilitás la sesión. No participás como experto de negocio ni técnico — asegurás que los tres roles hablen y que el output sea un AC claro y testeable.</div>
+      </div>
+    </div>
+  );
+}
+
+function Visual({ chapter }) {
+  const t = chapter.visual.type;
+  if (t === "less-structure") return <VisualLessStructure />;
+  if (t === "less-sprint") return <VisualLessSprint />;
+  if (t === "tdd-cycle") return <VisualTDDCycle />;
+  if (t === "tdd-sm-actions") return <VisualTDDSMActions />;
+  if (t === "bdd-flow") return <VisualBDDFlow />;
+  if (t === "bdd-three-amigos") return <VisualBDDThreeAmigos />;
+  return null;
+}
+
+// ── QUIZ ─────────────────────────────────────────────────────────────────────
+
+function Quiz({ questions, color, light, onComplete }) {
+  const [answers, setAnswers] = useState({});
+  const [submitted, setSubmitted] = useState(false);
+
+  function answer(qi, oi) {
+    if (submitted || answers[qi] !== undefined) return;
+    setAnswers(a => ({ ...a, [qi]: oi }));
+  }
+
+  function submit() {
+    if (Object.keys(answers).length < questions.length) return;
+    const score = questions.reduce((s, q, i) => s + (answers[i] === q.correct ? 1 : 0), 0);
+    setSubmitted(true);
+    onComplete(score);
+  }
+
+  return (
+    <div>
+      {questions.map((q, qi) => (
+        <div key={qi} style={{ marginBottom: 16 }}>
+          <div style={{ fontSize: 13, fontWeight: 500, color: "#1e293b", marginBottom: 8, lineHeight: 1.5 }}>{qi + 1}. {q.q}</div>
+          <div style={{ display: "flex", flexDirection: "column", gap: 5 }}>
+            {q.opts.map((o, oi) => {
+              let bg = "#f8fafc", border = "#e2e8f0", textColor = "#374151";
+              if (answers[qi] === oi) { bg = light; border = color; textColor = "#1e293b"; }
+              if (submitted && oi === q.correct) { bg = "#f0fdf4"; border = "#86efac"; textColor = "#14532d"; }
+              if (submitted && answers[qi] === oi && oi !== q.correct) { bg = "#fef2f2"; border = "#fca5a5"; textColor = "#7f1d1d"; }
+              return (
+                <div key={oi} onClick={() => answer(qi, oi)} style={{ padding: "9px 13px", borderRadius: 7, border: `1px solid ${border}`, background: bg, cursor: submitted || answers[qi] !== undefined ? "default" : "pointer", fontSize: 12, color: textColor, transition: ".15s", lineHeight: 1.4 }}>
+                  {o}
+                </div>
+              );
+            })}
+          </div>
+          {submitted && (
+            <div style={{ marginTop: 8, padding: "8px 12px", background: answers[qi] === q.correct ? "#f0fdf4" : "#fef2f2", border: `1px solid ${answers[qi] === q.correct ? "#86efac" : "#fca5a5"}`, borderRadius: 6, fontSize: 12, color: answers[qi] === q.correct ? "#14532d" : "#7f1d1d", lineHeight: 1.6 }}>
+              {answers[qi] === q.correct ? "✓ " : "✗ "}{q.explanation}
+            </div>
+          )}
+        </div>
+      ))}
+      {!submitted && (
+        <button onClick={submit} disabled={Object.keys(answers).length < questions.length} style={{ marginTop: 4, padding: "9px 20px", borderRadius: 7, border: "none", background: Object.keys(answers).length < questions.length ? "#e2e8f0" : color, color: Object.keys(answers).length < questions.length ? "#94a3b8" : "#fff", fontSize: 13, fontWeight: 600, cursor: Object.keys(answers).length < questions.length ? "not-allowed" : "pointer" }}>
+          Verificar respuestas
+        </button>
+      )}
+    </div>
+  );
+}
+
+// ── APP ───────────────────────────────────────────────────────────────────────
+
+function LeSSTDDBDDGuia() {
+  const [chapter, setChapter] = useState(0);
+  const [tab, setTab] = useState("functional");
+  const [quizDone, setQuizDone] = useState({});
+  const [totalScore, setTotalScore] = useState(0);
+  const [totalQ, setTotalQ] = useState(0);
+  const [quizKey, setQuizKey] = useState(0);
+
+  const ch = CHAPTERS[chapter];
+  const pct = totalQ > 0 ? Math.round((totalScore / totalQ) * 100) : 0;
+  const doneCh = Object.keys(quizDone).length;
+
+  function handleQuizComplete(score) {
+    const prev = quizDone[chapter];
+    if (!prev) {
+      setTotalScore(s => s + score);
+      setTotalQ(t => t + ch.questions.length);
+    }
+    setQuizDone(d => ({ ...d, [chapter]: { done: true, score, total: ch.questions.length } }));
+  }
+
+  function goChapter(idx) {
+    setChapter(idx);
+    setTab("functional");
+    setQuizKey(k => k + 1);
+  }
+
+  return (
+    <div style={{ fontFamily: "var(--font-sans)", maxWidth: 760, margin: "0 auto" }}>
+
+      {/* Top bar */}
+      <div style={{ background: "#0f172a", borderRadius: "12px 12px 0 0", padding: "12px 16px", display: "flex", alignItems: "center", gap: 10 }}>
+        <div style={{ width: 32, height: 32, borderRadius: 8, background: "rgba(22,163,74,.25)", border: "1px solid rgba(134,239,172,.4)", display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0, fontSize: 16 }}>📚</div>
+        <div style={{ flex: 1 }}>
+          <div style={{ fontSize: 13, fontWeight: 500, color: "#f1f5f9" }}>LeSS · TDD · BDD — Guía interactiva · NTT DATA prep</div>
+          <div style={{ fontSize: 11, color: "#64748b" }}>Explora cada sección · responde preguntas · valida tu comprensión</div>
+        </div>
+        {doneCh > 0 && (
+          <div style={{ textAlign: "right" }}>
+            <div style={{ fontSize: 18, fontWeight: 700, color: pct >= 80 ? "#4ade80" : pct >= 60 ? "#fbbf24" : "#f87171" }}>{pct}%</div>
+            <div style={{ fontSize: 10, color: "#64748b" }}>{doneCh}/{CHAPTERS.length} secciones</div>
+          </div>
+        )}
+      </div>
+
+      {/* Group + chapter nav */}
+      <div style={{ background: "#1e293b", padding: "8px 12px" }}>
+        {GROUPS.map(group => (
+          <div key={group} style={{ marginBottom: 4 }}>
+            <div style={{ fontSize: 10, fontWeight: 700, color: GROUP_COLORS[group], letterSpacing: ".05em", marginBottom: 4, paddingLeft: 2 }}>{group}</div>
+            <div style={{ display: "flex", gap: 4, flexWrap: "wrap" }}>
+              {CHAPTERS.filter(c => c.group === group).map((c) => {
+                const idx = CHAPTERS.indexOf(c);
+                return (
+                  <button key={idx} onClick={() => goChapter(idx)} style={{ fontSize: 11, padding: "5px 10px", borderRadius: 6, cursor: "pointer", background: chapter === idx ? c.color : "transparent", color: chapter === idx ? "#fff" : "#94a3b8", border: `1px solid ${chapter === idx ? c.color : "#334155"}`, fontWeight: chapter === idx ? 600 : 400, display: "flex", alignItems: "center", gap: 5, transition: ".15s" }}>
+                    {quizDone[idx] && <span style={{ fontSize: 9 }}>{quizDone[idx].score === quizDone[idx].total ? "✓" : "~"}</span>}
+                    {c.icon} {c.title}
+                  </button>
+                );
+              })}
+            </div>
+          </div>
+        ))}
+      </div>
+
+      {/* Main content */}
+      <div style={{ background: "#fff", border: "1px solid #e2e8f0", borderTop: "none" }}>
+
+        {/* Chapter header */}
+        <div style={{ background: ch.light, borderBottom: `2px solid ${ch.border}`, padding: "14px 18px" }}>
+          <div style={{ display: "flex", alignItems: "center", gap: 10, flexWrap: "wrap" }}>
+            <div style={{ width: 42, height: 42, borderRadius: 10, background: ch.color, display: "flex", alignItems: "center", justifyContent: "center", fontSize: 20, flexShrink: 0 }}>{ch.icon}</div>
+            <div style={{ flex: 1 }}>
+              <div style={{ fontSize: 15, fontWeight: 700, color: ch.text }}>{ch.title}</div>
+              <div style={{ fontSize: 11, color: ch.color, marginTop: 2 }}>
+                {ch.questions.length} preguntas de comprensión
+                {quizDone[chapter] && ` · ${quizDone[chapter].score}/${quizDone[chapter].total} correctas`}
+              </div>
+            </div>
+            <div style={{ display: "flex", gap: 5, flexWrap: "wrap" }}>
+              {tabs.map(t => (
+                <button key={t.id} onClick={() => setTab(t.id)} style={{ fontSize: 11, padding: "5px 12px", borderRadius: 6, cursor: "pointer", background: tab === t.id ? ch.color : "transparent", color: tab === t.id ? "#fff" : ch.text, border: `1px solid ${tab === t.id ? ch.color : ch.border}`, fontWeight: tab === t.id ? 600 : 400, transition: ".15s" }}>{t.label}</button>
+              ))}
+            </div>
+          </div>
+        </div>
+
+        {/* Tab content */}
+        <div style={{ padding: "16px 18px" }}>
+          {tab === "functional" && (
+            <div>
+              <div style={{ fontSize: 10, fontWeight: 700, color: "#94a3b8", letterSpacing: ".5px", marginBottom: 10 }}>¿QUÉ ES Y POR QUÉ IMPORTA?</div>
+              <div style={{ fontSize: 13, color: "#374151", lineHeight: 1.8, whiteSpace: "pre-line" }}>{ch.functional}</div>
+              <div style={{ marginTop: 14, padding: "10px 14px", background: ch.light, border: `1px solid ${ch.border}`, borderRadius: 8, fontSize: 12, color: ch.text }}>
+                Orden recomendado: <strong>Funcional → Técnico → Visual → ¿Lo entendí?</strong> · Completá las 4 pestañas antes de pasar a la siguiente sección.
+              </div>
+            </div>
+          )}
+          {tab === "technical" && (
+            <div>
+              <div style={{ fontSize: 10, fontWeight: 700, color: "#94a3b8", letterSpacing: ".5px", marginBottom: 10 }}>IMPLEMENTACIÓN Y DETALLES</div>
+              <div style={{ background: "#0f172a", borderRadius: 8, padding: "14px 16px" }}>
+                <div style={{ fontSize: 12, color: "#e2e8f0", lineHeight: 1.9, whiteSpace: "pre-line", fontFamily: "monospace" }}>{ch.technical}</div>
+              </div>
+            </div>
+          )}
+          {tab === "visual" && (
+            <div>
+              <div style={{ fontSize: 10, fontWeight: 700, color: "#94a3b8", letterSpacing: ".5px", marginBottom: 10 }}>REPRESENTACIÓN VISUAL</div>
+              <Visual chapter={ch} />
+              <div style={{ fontSize: 12, color: "#64748b", marginTop: 10, lineHeight: 1.6 }}>
+                Usá este diagrama para visualizar la estructura o el flujo. Es el mapa mental para la entrevista.
+              </div>
+            </div>
+          )}
+          {tab === "quiz" && (
+            <div>
+              <div style={{ fontSize: 10, fontWeight: 700, color: "#94a3b8", letterSpacing: ".5px", marginBottom: 12 }}>VALIDA TU COMPRENSIÓN</div>
+              {quizDone[chapter] ? (
+                <div>
+                  <div style={{ background: quizDone[chapter].score === quizDone[chapter].total ? "#f0fdf4" : "#fffbeb", border: `1px solid ${quizDone[chapter].score === quizDone[chapter].total ? "#86efac" : "#fcd34d"}`, borderRadius: 8, padding: "12px 14px", marginBottom: 12 }}>
+                    <div style={{ fontSize: 13, fontWeight: 600, color: "#1e293b" }}>{quizDone[chapter].score === quizDone[chapter].total ? "🎯 ¡Sección dominada!" : "✅ Sección completada"}</div>
+                    <div style={{ fontSize: 12, color: "#64748b", marginTop: 4 }}>{quizDone[chapter].score}/{quizDone[chapter].total} correctas</div>
+                  </div>
+                  <button onClick={() => { setQuizDone(d => { const nd = { ...d }; delete nd[chapter]; return nd; }); setQuizKey(k => k + 1); }} style={{ fontSize: 12, padding: "8px 16px", borderRadius: 7, border: "1px solid #e2e8f0", background: "#f8fafc", cursor: "pointer", color: "#64748b" }}>
+                    Repetir quiz
+                  </button>
+                </div>
+              ) : (
+                <Quiz key={quizKey} questions={ch.questions} color={ch.color} light={ch.light} onComplete={handleQuizComplete} />
+              )}
+            </div>
+          )}
+        </div>
+
+        {/* Nav */}
+        <div style={{ padding: "10px 18px 14px", borderTop: "1px solid #f1f5f9", display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+          <button onClick={() => goChapter(chapter - 1)} disabled={chapter === 0} style={{ fontSize: 12, padding: "8px 16px", borderRadius: 7, border: "1px solid #e2e8f0", background: "#f8fafc", cursor: chapter === 0 ? "not-allowed" : "pointer", color: chapter === 0 ? "#cbd5e1" : "#374151" }}>
+            ← Anterior
+          </button>
+          <div style={{ fontSize: 11, color: "#94a3b8" }}>{chapter + 1} / {CHAPTERS.length}</div>
+          <button onClick={() => goChapter(chapter + 1)} disabled={chapter === CHAPTERS.length - 1} style={{ fontSize: 12, padding: "8px 16px", borderRadius: 7, border: `1px solid ${ch.color}`, background: ch.color, color: "#fff", cursor: chapter === CHAPTERS.length - 1 ? "not-allowed" : "pointer", opacity: chapter === CHAPTERS.length - 1 ? .5 : 1 }}>
+            Siguiente →
+          </button>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+
+const root = ReactDOM.createRoot(document.getElementById("root"));
+root.render(<LeSSTDDBDDGuia />);
+</script>
+
+<script>
+// Hide loading, show content when React renders
+window.addEventListener('load', () => {
+  setTimeout(() => {
+    const root = document.getElementById('root');
+    const loading = document.getElementById('loading');
+    if (root && root.children.length > 0) {
+      loading.style.display = 'none';
+      root.style.display = 'block';
+    } else {
+      const observer = new MutationObserver(() => {
+        if (root.children.length > 0) {
+          loading.style.display = 'none';
+          root.style.display = 'block';
+          observer.disconnect();
+        }
+      });
+      observer.observe(root, { childList: true });
+    }
+  }, 100);
+});
+
+// Register SW
+if ('serviceWorker' in navigator) {
+  navigator.serviceWorker.register('./sw.js');
+}
+</script>
+</body>
+</html>

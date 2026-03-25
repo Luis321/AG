@@ -1,0 +1,1442 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#7c5cbf">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<title>SAFe Guía Completa · Big Picture 2025</title>
+<link rel="manifest" href="./manifest.json">
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;1,9..40,300&display=swap" rel="stylesheet">
+<script src="https://unpkg.com/react@18/umd/react.production.min.js" crossorigin></script>
+<script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js" crossorigin></script>
+<script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    font-family: 'DM Sans', system-ui, sans-serif;
+    background: #f8fafc;
+    --font-sans: 'DM Sans', system-ui, sans-serif;
+  }
+  .pwa-nav {
+    background: #0f172a;
+    padding: 10px 16px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    border-bottom: 1px solid rgba(255,255,255,0.06);
+  }
+  .pwa-nav a {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    color: rgba(255,255,255,0.5);
+    font-size: 12px;
+    text-decoration: none;
+    transition: color 0.2s;
+  }
+  .pwa-nav a:hover { color: white; }
+  .pwa-nav .sep { color: rgba(255,255,255,0.15); font-size: 12px; }
+  .pwa-nav .current { color: rgba(255,255,255,0.4); font-size: 12px; }
+  .content-wrap {
+    padding: 16px;
+    max-width: 820px;
+    margin: 0 auto;
+  }
+  #loading {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 60vh;
+    flex-direction: column;
+    gap: 12px;
+    color: #64748b;
+    font-size: 13px;
+  }
+  .spinner {
+    width: 32px; height: 32px;
+    border: 3px solid #e2e8f0;
+    border-top-color: #7c5cbf;
+    border-radius: 50%;
+    animation: spin 0.8s linear infinite;
+  }
+  @keyframes spin { to { transform: rotate(360deg); } }
+</style>
+</head>
+<body>
+
+<nav class="pwa-nav">
+  <a href="./index.html">← Inicio</a>
+  <span class="sep">/</span>
+  <span class="current">🏗️ SAFe — Guía Completa</span>
+</nav>
+
+<div id="loading">
+  <div class="spinner"></div>
+  Cargando guía interactiva...
+</div>
+
+<div class="content-wrap" id="root" style="display:none"></div>
+
+<script type="text/babel">
+const { useState } = React;
+
+const GROUPS = [
+  { id: "fundamentos",   label: "Fundamentos",   color: "#7C3AED" },
+  { id: "estructura",    label: "Estructura",     color: "#16A34A" },
+  { id: "planificacion", label: "Planificación",  color: "#0D9488" },
+  { id: "delivery",      label: "Delivery",       color: "#D97706" },
+  { id: "avanzado",     label: "Avanzado",       color: "#DC2626" },
+];
+
+const CHAPTERS = [
+
+  // ══════════ FUNDAMENTOS ══════════
+
+  {
+    id:"lean-agile", group:"fundamentos", title:"Mentalidad Lean-Agile", icon:"🧠",
+    color:"#7C3AED", light:"#EDE9FE", border:"#C4B5FD", text:"#4C1D95",
+    functional:`La Mentalidad Lean-Agile es la base filosófica de SAFe — antes de entender cualquier ceremonia, rol o artefacto, necesitás entender por qué existen.
+
+LEAN busca entregar el máximo valor al cliente en el menor Lead Time posible, eliminando todo desperdicio. Sus 5 principios son:
+1. Especificar el valor por cada producto (solo el cliente final puede definirlo)
+2. Identificar la cadena de valor (todos los pasos para entregar esa solución)
+3. Lograr que el valor fluya sin interrupciones (eliminar esperas y cuellos de botella)
+4. Permitir que el cliente "arrastre" valor (demanda real, no producción especulativa)
+5. Buscar la perfección (mejora continua — es un viaje sin destino final)
+
+AGILE es una mentalidad, no un conjunto rígido de reglas. El Manifiesto Ágil valora:
+→ Individuos e interacciones SOBRE procesos y herramientas
+→ Software que funciona SOBRE documentación extensiva
+→ Colaboración con el cliente SOBRE negociación contractual
+→ Respuesta ante el cambio SOBRE seguir un plan
+
+Combinados, Lean y Agile crean un sistema que optimiza el flujo, responde al cambio y entrega valor al cliente de manera continua y eficiente.`,
+    technical:`Los 8 principios de FLUJO Lean aplicados al Big Picture de SAFe:
+
+1. Visualizar y limitar el WIP: demasiado trabajo simultáneo bloquea el flujo
+2. Abordar cuellos de botella: el eslabón más lento define la velocidad del sistema
+3. Minimizar traspasos y dependencias: cada traspaso introduce demora y pérdida de contexto
+4. Obtener feedback rápido: ciclos cortos permiten corregir antes de que el error escale
+5. Trabajar en lotes pequeños: reduce Lead Time y acelera el aprendizaje
+6. Gestionar la longitud de las colas: colas largas = Lead Time largo
+7. Optimizar tiempo "en estado de flow": eliminar interrupciones y cambios de contexto
+8. Corregir políticas obsoletas: los procesos que frenan el valor deben cambiar
+
+CONEXIÓN CON EL BIG PICTURE:
+→ Flecha verde de "Flow": objetivo de todos estos principios — trabajo fluyendo sin interrupciones
+→ Flecha amarilla de "Feedback" (derecha a izquierda): cierra el ciclo de aprendizaje
+→ "Release on Demand": principio 4 — el cliente arrastra el valor cuando lo necesita
+
+Dato oficial del PDF SAFe 2025:
+"Adoptar Lean puede duplicar la productividad, reducir el Time to Market a la mitad y permitir una oferta más variada a bajo costo adicional." — Womack y Jones, Lean Thinking`,
+    visual:{ type:"lean-agile-mindset" },
+    questions:[
+      {
+        q:"¿Cuál es la diferencia entre Lean y Agile según el e-book oficial de SAFe 2025?",
+        opts:["Lean es para hardware; Agile es para software","Lean elimina desperdicios y optimiza el flujo; Agile garantiza adaptabilidad y respuesta al cambio — juntos crean un sistema de mejora continua","Son sinónimos — SAFe los usa indistintamente","Lean es un framework; Agile es una técnica más específica"],
+        correct:1,
+        explanation:"El SAFe Explained 2025: 'Lean se centra en entregar el máximo valor con el mínimo desperdicio posible, mientras que Agile garantiza la adaptabilidad y la capacidad de respuesta al cambio. Juntos, crean un sistema que mejora continuamente, aprende y entrega valor al cliente de manera eficiente.'"
+      },
+      {
+        q:"¿Cuál de estos es un valor del lado IZQUIERDO del Manifiesto Ágil (los que se priorizan)?",
+        opts:["Documentación extensiva","Negociación contractual","Colaboración con el cliente","Seguir un plan"],
+        correct:2,
+        explanation:"Los 4 valores priorizados (izquierda): Individuos e interacciones, Software que funciona, Colaboración con el cliente, Respuesta ante el cambio. Los de la derecha tienen valor pero menor prioridad."
+      },
+      {
+        q:"¿Qué principio Lean aplica cuando SAFe usa 'Release on Demand' en lugar de releases programadas fijas?",
+        opts:["Especificar el valor por cada producto","Identificar la cadena de valor","Permitir que el cliente arrastre valor del productor","Buscar la perfección"],
+        correct:2,
+        explanation:"Release on Demand aplica el principio Lean de 'pull': el cliente activa el release cuando lo necesita, en lugar de que la organización lance productos especulativamente. Elimina el desperdicio de construir sin demanda real."
+      }
+    ]
+  },
+
+  {
+    id:"big-picture", group:"fundamentos", title:"El Big Picture", icon:"🗺️",
+    color:"#7C3AED", light:"#EDE9FE", border:"#C4B5FD", text:"#4C1D95",
+    functional:`El Big Picture de SAFe es el mapa visual completo del framework. Es la guía de implementación que muestra cómo la estrategia empresarial y la ejecución de equipos se conectan en una sola cadena de valor.
+
+CÓMO LEERLO de arriba hacia abajo:
+→ Portfolio (cima): estrategia, financiamiento, Epics, Value Streams
+→ Program / ART (medio): coordinación de múltiples equipos, PI Planning
+→ Team / CDP (base): ejecución en sprints de 2 semanas
+
+CÓMO LEERLO de izquierda a derecha:
+Enterprise/Government → Portfolio Leadership → Portfolio Strategy → Portfolio Backlog → Epics → Value Streams → ART → Iterations → Release on Demand → Cliente
+
+FLECHA DE FLOW (verde, izq→der): objetivo Lean de flujo continuo sin interrupciones.
+FLECHA DE FEEDBACK (amarilla, der→izq): el cliente retroalimenta, cerrando el ciclo.
+BUSINESS VALUE (curva verde ascendente): el valor de negocio crece a medida que se entregan Features y se acerca el Release on Demand al cliente.
+
+BARRA INFERIOR (fondo oscuro teal): los elementos transversales — Mindset & Values, SPCs, Implementation Roadmap, Customizing SAFe, Measure & Grow — sostienen filosófica y operativamente todo lo demás.`,
+    technical:`LAS 4 CONFIGURACIONES de SAFe según complejidad:
+
+ESSENTIAL SAFe: mínimo viable. Team + Program (1 ART). Para organizaciones que recién empiezan o tienen pocos equipos.
+
+LARGE SOLUTION SAFe: agrega el nivel de Solución Grande. Para múltiples ARTs coordinados en un mismo sistema complejo. Incluye Solution Train, Solution Architect, Solution Management.
+
+PORTFOLIO SAFe: agrega gestión de portfolio. Para organizaciones que necesitan alinear múltiples Value Streams con la estrategia empresarial.
+
+FULL SAFe: los 4 niveles completos. Para las organizaciones más grandes y complejas del mundo.
+
+Los 5 ELEMENTOS TRANSVERSALES del Big Picture (barra inferior):
+1. Mindset, Values & Principles: la base filosófica sin la cual todo lo demás es "agilidad cosmética"
+2. SPCs & ASPCs: los coaches certificados que implementan SAFe (SAFe Program Consultants)
+3. Implementation Roadmap: 13 pasos para implementar SAFe en una organización
+4. Customizing SAFe: cómo adaptar el framework al contexto específico
+5. Measure & Grow: métricas para evaluar la madurez y el impacto de la implementación`,
+    visual:{ type:"big-picture-map" },
+    questions:[
+      {
+        q:"¿Qué representa la flecha de 'Feedback' (amarilla, de derecha a izquierda) en el Big Picture?",
+        opts:["El flujo de dinero del Portfolio hacia los equipos","El aprendizaje del cliente y el mercado que retroalimenta el backlog y mejora el próximo ciclo de planificación","La comunicación del RTE hacia los equipos durante el PI","El retorno de inversión que evalúa el Portfolio Leadership"],
+        correct:1,
+        explanation:"La flecha de Feedback cierra el ciclo Lean: el cliente usa el producto, genera datos y aprendizaje, ese aprendizaje vuelve al Portfolio y al ART Backlog para mejorar el próximo ciclo. Es la manifestación del 5° principio Lean: buscar la perfección continuamente."
+      },
+      {
+        q:"¿Qué configuración de SAFe usarías en una empresa con 3 ARTs coordinando el mismo sistema pero sin necesidad de gestión de portfolio formal?",
+        opts:["Essential SAFe — siempre empezar por lo mínimo","Large Solution SAFe — para múltiples ARTs coordinados","Portfolio SAFe — cualquier empresa con más de 1 ART lo necesita","Full SAFe — usar siempre la configuración más completa"],
+        correct:1,
+        explanation:"Large Solution SAFe es para múltiples ARTs que necesitan coordinarse (Solution Train) pero sin la capa de Portfolio todavía. Essential SAFe es para 1 solo ART. Portfolio SAFe agrega la gestión estratégica de inversiones y Value Streams."
+      },
+      {
+        q:"¿Qué problema resuelve SAFe que Scrum no puede resolver por sí solo?",
+        opts:["La velocidad de un equipo individual","La coordinación de dependencias, planificación sincronizada y alineación estratégica entre múltiples equipos trabajando hacia el mismo producto","La estimación de historias de usuario","La relación directa con el cliente final en cada sprint"],
+        correct:1,
+        explanation:"Scrum es excelente para un equipo de 7–10 personas. SAFe resuelve los problemas que emergen cuando hay docenas de equipos: coordinar dependencias, sincronizar releases, alinear estrategia con ejecución y gestionar el portfolio de inversiones."
+      }
+    ]
+  },
+
+  {
+    id:"cinco-disciplinas", group:"fundamentos", title:"Las 5 Disciplinas", icon:"🎯",
+    color:"#7C3AED", light:"#EDE9FE", border:"#C4B5FD", text:"#4C1D95",
+    functional:`Las 5 Disciplinas de SAFe son la estructura de conocimiento del framework. Cada una describe las habilidades, prácticas y herramientas necesarias para operar en ese nivel.
+
+1. LIDERAZGO Y CULTURA (L&C): LA BASE.
+Los líderes moldean la cultura con sus decisiones y comportamientos. 4 patrones de liderazgo: Liderar con el ejemplo, Desarrollar líderes (coaching no microgestión), Liderar el cambio (visión e inspiración), Adaptarse e innovar. La cultura generativa (Westrum) fomenta trabajo en equipo, comunicación abierta y aprendizaje.
+
+2. AGILIDAD TÉCNICA Y DE EQUIPO (TTA):
+Equipos multifuncionales que incorporan calidad en todo lo que entregan. SAFe Scrum, SAFe Kanban, DevOps, Calidad Incorporada, CI/CD, Plataforma de Arquitectura.
+
+3. FLUJO DE DESARROLLO DEL PRODUCTO (PDF):
+Visión clara → Roadmap flexible → Design Thinking → Entrega continua → Marketing de producto → Sistemas de feedback. La innovación es un proceso gestionado, no un accidente.
+
+4. INTEGRACIÓN Y ENTREGA DE SOLUCIONES GRANDES (LSID):
+Para sistemas ciberfísicos complejos (defensa, satélites, vehículos autónomos). Múltiples ARTs + Proveedores. Solution Trains coordinados.
+
+5. GESTIÓN LEAN DEL PORTAFOLIO (LPM):
+Conecta estrategia con ejecución. Reemplaza financiación por proyectos con financiación por Value Streams. Kanban de Portfolio para Epics.`,
+    technical:`RESULTADOS DE NEGOCIO documentados en el PDF oficial de SAFe 2025:
+→ 30–75% de reducción en Time to Market
+→ 20–50% de aumento en productividad
+→ 25–75% de mejoras en calidad
+→ 10–50% de empleados más comprometidos
+
+LA VMO (Value Management Office / Oficina de Gestión de Valor):
+→ Gobernanza y operaciones diarias del portfolio
+→ Reporta y comunica el desempeño del portfolio
+→ Mide contra OKRs y KPIs definidos
+→ Si los datos indican cambio de rumbo, se ajusta la estrategia
+
+EL ROADMAP DE IMPLEMENTACIÓN (13 pasos resumidos):
+1. Capacitar agentes de cambio Lean-Agile (SPCs)
+2. Capacitar ejecutivos, managers y líderes
+3. Crear Centro de Excelencia Lean-Agile
+4. Identificar Value Streams y ARTs
+5. Preparar lanzamiento del ART
+6. Capacitar equipos y lanzar el ART
+7. Ejecutar iteraciones (usar SAFe)
+8. Lanzar más ARTs y Value Streams
+9. Ampliar el portfolio
+10. Acelerar con mejora continua
+
+SEGÚN EL PDF: "SAFe es reconocido por Gartner como el framework más considerado y adoptado para escalar Agile." Más de 20.000 organizaciones lo usan, incluidas 70 de la Fortune 100.`,
+    visual:{ type:"cinco-disciplinas" },
+    questions:[
+      {
+        q:"¿Cuál es la Disciplina que el PDF oficial identifica como la base fundamental para la adopción exitosa de SAFe?",
+        opts:["Agilidad Técnica y de Equipo — sin CI/CD no funciona nada","Gestión Lean del Portfolio — sin estrategia no hay dirección","Liderazgo y Cultura — los líderes crean el 'circuito social' que hace posible SAFe","Flujo de Desarrollo del Producto — sin entrega continua no hay valor"],
+        correct:2,
+        explanation:"El PDF: 'Implementar esta cultura garantiza el circuito social que es fundamental para el éxito en la adopción de SAFe como la manera de trabajar de la organización.' L&C es la base de la pirámide de las 5 Disciplinas — sin ella, las otras cuatro son superficiales."
+      },
+      {
+        q:"¿Por qué SAFe financia Value Streams en lugar de proyectos?",
+        opts:["Porque los proyectos son conceptos obsoletos eliminados de SAFe","Porque la financiación por Value Stream da flexibilidad continua para priorizar el trabajo más importante, sin la rigidez del alcance fijo de un proyecto","Porque los Value Streams son más fáciles de auditar financieramente","Porque el presupuesto por proyecto no cumple regulaciones ágiles modernas"],
+        correct:1,
+        explanation:"El PDF: 'El presupuesto se asigna directamente a las cadenas de valor (...). Esto garantiza que cada cadena de valor tenga la flexibilidad para establecer sus prioridades, asegurando que siempre se entrega el trabajo más importante.' La financiación por proyecto ata presupuesto a alcance fijo, imposibilitando la adaptación."
+      },
+      {
+        q:"¿Qué define Ron Westrum como cultura 'generativa' en el contexto del Liderazgo SAFe?",
+        opts:["Cultura donde los managers generan todas las ideas y los equipos ejecutan","Cultura que fomenta trabajo en equipo, comunicación abierta y orientación común a los objetivos, basada en confianza, transparencia y mentalidad de aprendizaje","Cultura orientada a generar el máximo retorno financiero con mínimo costo","Cultura donde se generan muchos procesos y documentación para garantizar consistencia"],
+        correct:1,
+        explanation:"Westrum define cultura generativa como la que fomenta trabajo en equipo, comunicación abierta y un enfoque común en los objetivos. La confianza, la transparencia y la mentalidad de aprendizaje impulsan la colaboración y la mejora continua — lo opuesto a las culturas patológicas o burocráticas."
+      }
+    ]
+  },
+
+  // ══════════ ESTRUCTURA ══════════
+
+  {
+    id:"portfolio", group:"estructura", title:"Nivel Portfolio", icon:"🏛️",
+    color:"#16A34A", light:"#DCFCE7", border:"#86EFAC", text:"#14532D",
+    functional:`El nivel Portfolio es la franja superior del Big Picture — donde la estrategia empresarial se convierte en trabajo concreto. Las "vías" horizontales (Value Streams) conectan el Portfolio con Products & Solutions.
+
+INPUTS del Portfolio en el Big Picture:
+→ Enterprise (empresas privadas) y Government (organizaciones públicas) definen la dirección estratégica.
+→ Portfolio Leadership (líderes senior: CTO, CPO, CFO) toman decisiones de inversión.
+
+EL FLUJO del Portfolio (izquierda a derecha en el Big Picture):
+Portfolio Leadership → Portfolio Strategy → Portfolio Backlog → Epics → Value Streams → "Coordinate and Deliver" → Products & Solutions
+
+ÉPICAS — la unidad del Portfolio:
+Es la iniciativa más significativa de negocio o técnica. Puede durar meses o años. Requiere un Lean Business Case.
+→ Business Epic: valor directo al cliente ("nueva plataforma de pagos internacional")
+→ Enabler Epic: capacidad técnica necesaria ("migración a microservicios")
+
+VALUE STREAMS — las "vías" del Big Picture:
+Secuencia de actividades que crea y entrega valor al cliente.
+→ Operational Value Streams: flujos que entregan valor directamente (vender, procesar pedidos)
+→ Development Value Streams: crean los sistemas que soportan a los operacionales`,
+    technical:`EL KANBAN DE PORTFOLIO — cómo fluyen las Épicas:
+
+ESTADOS: Funnel → Revisión → Análisis → Listo → Implementación → Terminado
+
+Funnel: ideas capturadas de múltiples fuentes
+Revisión: evaluación del potencial estratégico
+Análisis: desarrollo del Lean Business Case (hipótesis, costo estimado, MVP)
+Listo: aprobada para implementación en el próximo PI
+Implementación: los ARTs la ejecutan en sus PIs
+Terminado: completada — o decisión de STOP si el MVP no valida la hipótesis
+
+LEAN STARTUP en el Portfolio:
+El MVP permite testear la hipótesis antes de comprometerse con implementación completa.
+En cualquier punto un Epic puede detenerse con decisión explícita de STOP.
+Esto aplica el pensamiento Lean de "reducir lotes" y "obtener feedback rápido" al nivel de portfolio.
+
+ROLES DEL PORTFOLIO:
+→ Portfolio Leadership: formulan y comunican la estrategia
+→ Epic Owners: guían las Épicas por el Kanban de Portfolio
+→ Enterprise Architect: visión tecnológica y roadmap del portfolio
+→ VMO: gobernanza y operaciones diarias del portfolio
+→ Business Owners: participan en los ARTs y aseguran alineación estratégica
+
+FINANCIACIÓN LEAN: presupuesto asignado a Value Streams (no a proyectos).
+Esto da flexibilidad continua para priorizar — la cadena de valor siempre entrega lo más importante.`,
+    visual:{ type:"portfolio-flow" },
+    questions:[
+      {
+        q:"¿Qué contiene el Lean Business Case de una Épica en SAFe y para qué sirve?",
+        opts:["Un documento de 50 páginas con especificaciones detalladas y presupuesto fijo","Una hipótesis de valor con costo estimado y MVP para testear antes de comprometerse con implementación completa","El cronograma de implementación dividido en sprints y milestones","El acuerdo contractual entre el Portfolio y los ARTs sobre qué se va a entregar"],
+        correct:1,
+        explanation:"El Lean Business Case aplica pensamiento Lean Startup: hipótesis de valor + costo estimado + MVP testeable. Si el MVP no valida la hipótesis, se puede hacer STOP sin haber invertido el presupuesto completo. Es lo opuesto a especificaciones detalladas con alcance fijo."
+      },
+      {
+        q:"¿Cuál es la diferencia entre un Business Epic y un Enabler Epic?",
+        opts:["Los Business Epics son más grandes; los Enabler Epics son más pequeños","Los Business Epics entregan valor directo al cliente; los Enabler Epics crean capacidad técnica (arquitectura, infra, deuda técnica) necesaria para futuras features","Los Business Epics son del Portfolio; los Enabler Epics son del ART","Son lo mismo — la diferencia es solo de nomenclatura interna"],
+        correct:1,
+        explanation:"Business Epic = iniciativa con valor directo y visible para el negocio o cliente. Enabler Epic = inversión en infraestructura, arquitectura o reducción de deuda técnica. Ambos requieren Lean Business Case y fluyen por el Portfolio Kanban — los Enablers son tan estratégicos como los de negocio."
+      },
+      {
+        q:"¿Cuál es la función de los Business Owners en el ART según el PDF de SAFe 2025?",
+        opts:["Gestionan el backlog del equipo junto al Product Owner","Son las principales partes interesadas del ART — participan activamente en sus eventos y tienen responsabilidad de negocio sobre ROI y aptitud para el uso","Son equivalentes al RTE representando al negocio","Solo participan en el PI Planning y no tienen rol durante la ejecución"],
+        correct:1,
+        explanation:"El PDF: 'Los Business Owners son las principales partes interesadas del ART y participan activamente en sus eventos. Tienen la responsabilidad técnica y de negocio de garantizar la aptitud para el uso, la gobernanza y el retorno de la inversión (ROI) de los productos.'"
+      }
+    ]
+  },
+
+  {
+    id:"art-roles", group:"estructura", title:"ART, Roles y Equipos", icon:"👥",
+    color:"#16A34A", light:"#DCFCE7", border:"#86EFAC", text:"#14532D",
+    functional:`El ART (Agile Release Train / Tren de Liberación Ágil) es la unidad operacional central del nivel Program. Aparece como la "locomotora" horizontal en el Big Picture coordinando múltiples equipos.
+
+EL ART en números: 50–125 personas, 8–12 equipos, PI de 8–12 semanas.
+
+3 ROLES DE LIDERAZGO DEL ART (los mismos 3 tipos de autoridad en cada nivel de SAFe):
+→ Product Management: define y prioriza el ART Backlog (Features). AUTORIDAD DE CONTENIDO.
+→ System Architect: arquitectura del sistema, NFRs, interfaces técnicas. AUTORIDAD TÉCNICA.
+→ RTE (Release Train Engineer): facilita el ART completo, coach, líder servicial. ENTREGA DE VALOR.
+
+3 ROLES DEL EQUIPO ÁGIL (la misma estructura en miniatura, nivel Team):
+→ Product Owner: gestiona Team Backlog, acepta historias. AUTORIDAD DE CONTENIDO del equipo.
+→ Miembros del equipo (10 o menos): definen, crean, prueban y liberan el incremento.
+→ Scrum Master: elimina obstáculos, facilita eventos, promueve autogestión. ENTREGA DE VALOR.
+
+EVENTOS DEL EQUIPO (cada 2 semanas / iteración):
+1. Planificación de la Iteración: equipo selecciona backlog y define metas
+2. Revisión de la Iteración: inspecciona el incremento y actualiza el backlog
+3. Retrospectiva de la Iteración: reflexiona e identifica mejoras
++ Daily Syncs para coordinar y abordar bloqueos`,
+    technical:`3 EVENTOS DEL ART — los más importantes:
+
+1. PLANIFICACIÓN DEL PI: todos los equipos se alinean en una misión común y crean un plan de PI Objectives comprometidos. El evento más importante de SAFe.
+
+2. DEMOSTRACIÓN DEL SISTEMA (System Demo): al final de CADA iteración, muestra el trabajo INTEGRADO de todos los equipos del ART. Requiere CI real. Los Business Owners y stakeholders dan feedback.
+
+3. INSPECCIÓN Y ADAPTACIÓN (I&A): al final del PI. PI System Demo + Quantitative Measurement + Problem-Solving Workshop. Produce mejoras concretas con owner y fecha.
+
+EVENTOS ADICIONALES de coordinación del ART:
+→ PO Sync: Product Owners + Product Management alinean backlog y resuelven dependencias
+→ Scrum of Scrums (Coach Sync): SMs y coaches coordinan impedimentos entre equipos
+→ IP Iteration: sprint especial al final del PI para innovación, planning del próximo PI y deuda técnica
+
+SHARED SERVICES (Servicios Compartidos):
+Aparecen en el Big Picture. Especialistas (seguridad, UX, datos) que no pertenecen a un equipo específico pero sirven a múltiples equipos del ART según la demanda.
+
+SYSTEM TEAM:
+Equipo especializado en crear y mantener la Plataforma de Arquitectura y los entornos de integración que hacen posible el System Demo en cada iteración.`,
+    visual:{ type:"art-structure" },
+    questions:[
+      {
+        q:"Según el PDF oficial de SAFe 2025, ¿cómo define el RTE?",
+        opts:["El jefe del ART que toma las decisiones finales de priorización","Un líder servicial y coach del ART que facilita activamente los procesos y eventos mientras empodera a los equipos a liberar valor constantemente","El equivalente del Product Owner pero para el nivel de Programa","Un rol temporal que solo activa durante el PI Planning"],
+        correct:1,
+        explanation:"El PDF textualmente: 'Release Train Engineer (RTE): Un líder servicial y coach del ART que facilita activamente los procesos y eventos del ART mientras empodera y ayuda a los equipos a liberar valor de manera constante.' Líder servicial = facilita, no controla."
+      },
+      {
+        q:"¿Cuándo ocurre la Demostración del Sistema (System Demo) en un PI de SAFe?",
+        opts:["Solo al final del PI, como parte del Inspect & Adapt","Al final de CADA iteración (cada 2 semanas), mostrando el trabajo integrado de todos los equipos del ART","Al inicio de cada PI para establecer el baseline de integración","Solo cuando lo solicitan los Business Owners o stakeholders clave"],
+        correct:1,
+        explanation:"El PDF: 'Una demostración, realizada al final de cada Iteración o PI, en la que se expone el trabajo integrado de todos los equipos.' El System Demo iterativo (cada 2 semanas) es distinto del PI System Demo final. Requiere integración continua real — sin CI, no se puede mostrar el sistema integrado en cada iteración."
+      },
+      {
+        q:"¿Qué son los 'Shared Services' que aparecen en el Big Picture de SAFe?",
+        opts:["Los servicios de nube compartidos que usan los equipos de desarrollo","Personas con expertise especializado (seguridad, UX, datos) que sirven a múltiples equipos del ART sin pertenecer a uno específico","El equipo de infraestructura que gestiona los entornos de CI/CD","Los proveedores externos que participan en el Solution Train"],
+        correct:1,
+        explanation:"Shared Services son especialistas con skills poco frecuentes que no justifican estar en un equipo dedicado. Por ejemplo: un experto en seguridad o en arquitectura de datos. Participan en eventos del ART cuando son necesarios y sirven a múltiples equipos según la demanda, sin bloquear el flujo."
+      }
+    ]
+  },
+
+  {
+    id:"backlog-hierarchy", group:"estructura", title:"Jerarquía del Backlog", icon:"📋",
+    color:"#16A34A", light:"#DCFCE7", border:"#86EFAC", text:"#14532D",
+    functional:`En SAFe el trabajo se organiza en una jerarquía de 3 niveles que conecta la estrategia del Portfolio con la ejecución diaria. Esta jerarquía es visible en el Big Picture.
+
+EPIC (nivel Portfolio):
+Iniciativa estratégica de meses o años. Requiere Lean Business Case. Se descompone en Features.
+→ Business Epic: valor directo y visible al cliente
+→ Enabler Epic: capacidad técnica que habilita futuras capacidades
+
+FEATURE (nivel Program / ART):
+Capacidad que el sistema debe proveer para satisfacer una necesidad de usuario o negocio. Se implementa en 1 PI (8–12 semanas). Vive en el ART Backlog gestionado por Product Management.
+→ Feature de negocio (tarjetas AZULES en el Big Picture)
+→ Enabler Feature: infra, arquitectura, investigación técnica (tarjetas ROJAS en el Big Picture)
+
+STORY (nivel Team):
+Unidad de trabajo del equipo. Comportamiento desde la perspectiva del usuario. Se implementa en 1 iteración (2 semanas). Vive en el Team Backlog del Product Owner.
+→ Historia de usuario
+→ Enabler Story: trabajo técnico que habilita futuras features
+
+LA CADENA COMPLETA visible en el Big Picture:
+Visión → Roadmap → ART Backlog (Features) → Team Backlogs (Stories) → Iterations → System Demos → Release on Demand`,
+    technical:`CRITERIOS DE TAMAÑO:
+→ Epic: múltiples PIs (meses). Si cabe en 1 PI → probablemente es Feature grande.
+→ Feature: 1 PI (8–12 semanas). Si no cabe → dividir o convertir en Epic.
+→ Story: 1 iteración (2 semanas). Si no cabe → slice (descomponer verticalmente).
+
+VISIÓN Y ROADMAP (inputs del ART Backlog en el Big Picture):
+→ Visión: estado futuro del producto. Creada por Product Management. Alinea a todos los equipos.
+→ Roadmap: plan de alto nivel de PIs con Features clave. NO es un Gantt — es una secuencia de compromisos aproximados que evoluciona.
+
+NFRs (Non-Functional Requirements):
+Aparecen junto al ART Backlog en el Big Picture. Restricciones del sistema (performance, seguridad, escalabilidad) que aplican a todas las Features. System Architect los identifica y gestiona.
+
+Ejemplo completo de descomposición:
+Epic: "Plataforma de pagos internacional" (6 meses, 2 PIs)
+  └─ Feature: "Pago con tarjeta en 5 monedas" (1 PI)
+       └─ Story: "Como usuario, selecciono USD al pagar" (1 sprint)
+       └─ Story: "Como usuario, veo el tipo de cambio en tiempo real" (1 sprint)
+       └─ Enabler Story: "Integrar API de conversión de divisas" (1 sprint)
+  └─ Enabler Feature: "Migrar módulo de pagos a microservicio" (1 PI)`,
+    visual:{ type:"backlog-hierarchy" },
+    questions:[
+      {
+        q:"¿Qué son los Enablers (tarjetas ROJAS) en el Continuous Delivery Pipeline del Big Picture de SAFe?",
+        opts:["Features urgentes con máxima prioridad en el sprint","Trabajo técnico (arquitectura, infra, deuda técnica, investigación) que no entrega valor directo al usuario pero habilita futuras features y mantiene la sostenibilidad del sistema","Features bloqueadas que necesitan resolución inmediata del RTE","Historias que pertenecen a otro equipo y fueron delegadas temporalmente"],
+        correct:1,
+        explanation:"Los Enablers son inversiones técnicas en arquitectura, infraestructura, exploración o reducción de deuda técnica. No son visibles para el cliente pero son esenciales para la sostenibilidad. En el Big Picture aparecen en ROJO para diferenciarlos visualmente de las Features de negocio (AZUL)."
+      },
+      {
+        q:"¿Quién gestiona el ART Backlog y quién gestiona el Team Backlog en SAFe?",
+        opts:["El RTE gestiona el ART Backlog; el SM gestiona el Team Backlog","Product Management gestiona el ART Backlog (Features); el Product Owner gestiona el Team Backlog (Stories)","El Product Owner gestiona ambos coordinando con el equipo completo","Los backlogs son responsabilidad colectiva del equipo sin un dueño único"],
+        correct:1,
+        explanation:"La separación es deliberada: Product Management = ART Backlog (Features, nivel Program). Product Owner = Team Backlog (Stories, nivel Team). Esta estructura garantiza que cada nivel tenga un responsable de priorización alineado con su audiencia específica."
+      },
+      {
+        q:"¿Qué son los NFRs en SAFe y quién es el responsable principal de identificarlos?",
+        opts:["Non-Functional Requirements: restricciones del sistema como performance, seguridad y escalabilidad. Responsable: System Architect","New Feature Requests: solicitudes de nuevas features del cliente. Responsable: Product Management","Non-Formal Relationships: dependencias informales entre equipos. Responsable: RTE","Next Feature Roadmap: plan de features del próximo PI. Responsable: Product Owner"],
+        correct:0,
+        explanation:"NFRs = Non-Functional Requirements (Requisitos No Funcionales). Son restricciones que aplican al sistema completo: performance bajo carga, uptime, seguridad, escalabilidad, accesibilidad. El System Architect los identifica, los prioriza junto con Product Management y los incluye en el ART Backlog como Enablers."
+      }
+    ]
+  },
+
+  // ══════════ PLANIFICACIÓN ══════════
+
+  {
+    id:"pi-planning", group:"planificacion", title:"PI Planning", icon:"📅",
+    color:"#0D9488", light:"#CCFBF1", border:"#5EEAD4", text:"#134E4A",
+    functional:`El PI Planning es EL evento más importante de SAFe. Dos días donde todos los equipos del ART se reúnen para planificar el próximo Program Increment juntos. En el Big Picture aparece en la base del CDP marcando el inicio de cada ciclo.
+
+¿QUÉ RESUELVE?
+Sin PI Planning: cada equipo planifica en silos, las dependencias se descubren durante la ejecución, y los releases se retrasan porque nadie anticipó el bloqueo.
+Con PI Planning: compromisos negociados, dependencias visibles en el Program Board, riesgos clasificados en el ROAM Board, y PI Objectives medibles para cada equipo.
+
+¿QUÉ PRODUCE?
+→ PI Objectives: 3–5 compromisos por equipo (Committed = alta confianza, Uncommitted = stretch goals)
+→ Program Board: dependencias entre equipos mapeadas visualmente
+→ ROAM Board: riesgos clasificados con dueños individuales
+→ Team Iteration Plans: plan detallado de cada sprint del PI por equipo
+→ Confidence Vote: validación colectiva (mínimo 3/5 para cerrar el PI Planning)
+
+CONEXIÓN CON EL BIG PICTURE:
+El PI Planning conecta los 3 niveles verticalmente: Business Owners del Portfolio presentan la visión, Product Management presenta Features, los equipos Team planifican sus Iterations.`,
+    technical:`AGENDA COMPLETA DE 2 DÍAS:
+
+DÍA 1:
+• Visión de negocio: Business Owners + Product Management presentan visión del PI y top 10 de Features
+• Visión de arquitectura: System Architect presenta Enablers técnicos y decisiones de arquitectura
+• Breakout Parte 1: cada equipo planifica sus iteraciones (draft), identifica dependencias, negocia con otros equipos directamente
+• Revisión de dependencias en el Program Board
+• Management Review: management revisa los planes agregados y ajusta scope/recursos si es necesario
+
+DÍA 2:
+• Ajuste de planes según el feedback del Management Review
+• ROAMing: el RTE facilita la clasificación de todos los riesgos identificados
+• PI Objectives finales: cada equipo presenta sus Committed y Uncommitted
+• Confidence Vote: todo el ART vota 1–5, promedio mínimo 3 para cerrar
+• Cierre: el RTE comunica los resultados, el plan queda comprometido públicamente
+
+PRODUCTO FINAL DEL PI PLANNING:
+Los PI Objectives son el contrato interno del ART para el PI. Los Business Owners asignan Business Value (1–10) a cada objetivo comprometido. Al final del PI, ese Business Value se compara con lo entregado para calcular el ART Predictability.`,
+    visual:{ type:"pi-flow" },
+    questions:[
+      {
+        q:"¿Cuál es el propósito del Confidence Vote al cerrar el PI Planning y qué acción tomar si el promedio es 2/5?",
+        opts:["Mide la satisfacción del equipo con el proceso de PI Planning — 2/5 indica insatisfacción leve, se documenta y continúa","Cada persona vota del 1 al 5 su confianza en que el ART puede cumplir los PI Objectives — un promedio de 2 indica problemas graves que obligan a identificar causas y replanificar antes de cerrar","Es una votación de calidad técnica del producto — 2/5 indica alta deuda técnica","Mide el compromiso del equipo con SAFe — 2/5 indica resistencia cultural al framework"],
+        correct:1,
+        explanation:"El Confidence Vote es una medición honesta de la confianza colectiva en el plan. SAFe requiere promedio mínimo 3/5 para cerrar el PI Planning. Un promedio de 2 obliga a abrir problemas (habitualmente por scope excesivo, dependencias sin resolución o impedimentos no escalados), ajustar el plan y volver a votar."
+      },
+      {
+        q:"¿Cuál es la diferencia entre un PI Objective Committed y uno Uncommitted?",
+        opts:["Committed son objetivos del equipo A; Uncommitted son de equipo B pero asignados por error","Committed tiene alta confianza de entrega y compromiso formal del equipo; Uncommitted son stretch goals que se intentan si hay capacidad extra, sin compromiso formal","Committed tiene fecha fija inamovible; Uncommitted puede entregarse en cualquier sprint del PI","Committed ya está parcialmente hecho; Uncommitted no se ha comenzado todavía"],
+        correct:1,
+        explanation:"Committed = el equipo se compromete formalmente con alta confianza (generalmente 80%+). Uncommitted = stretch goals de alto valor que el equipo intentará si tiene capacidad sobrante, pero sin compromiso formal. Los Uncommitted son transparentes — comunican aspiraciones sin prometer lo que podría no ser alcanzable."
+      },
+      {
+        q:"En el PI Planning, el Equipo A identifica que depende del Equipo B para una Feature crítica del Sprint 2, pero el Equipo B dice que no puede comprometerse hasta el Sprint 3. ¿Cuál es la acción correcta?",
+        opts:["Quitar la Feature del PI — si hay dependencia sin compromiso no puede incluirse en el plan","Asumir que el Equipo B resolverá el timing durante la ejecución — es responsabilidad de los SMs","Marcar la dependencia en el Program Board, llevarla al ROAM Board como riesgo, escalarla al RTE y negociar si la Feature del Equipo A puede moverse al Sprint 3 o si el Equipo B puede adelantar su entrega","Mover el trabajo de la dependencia del Equipo B al Equipo A para resolverla internamente"],
+        correct:2,
+        explanation:"El proceso completo: (1) Program Board — visualizar la dependencia con la fecha de necesidad; (2) ROAM Board — clasificarla como riesgo Owned con un nombre; (3) Escalar al RTE para facilitar la negociación; (4) Explorar opciones: mover la Feature del Equipo A al Sprint 3, o que el Equipo B adelante su entrega. Ignorarla garantiza el bloqueo."
+      }
+    ]
+  },
+
+  {
+    id:"program-board", group:"planificacion", title:"Program Board", icon:"📌",
+    color:"#2563EB", light:"#DBEAFE", border:"#93C5FD", text:"#1D4ED8",
+    functional:`El Program Board es el artefacto visual central del PI Planning. Muestra qué Features entrega cada equipo en cada sprint del PI y las dependencias entre equipos.
+
+¿QUÉ PROBLEMA RESUELVE?
+Sin Program Board: las dependencias son invisibles hasta que bloquean. Un equipo espera algo de otro que nunca supo que era necesario para esa fecha.
+Con Program Board: las dependencias se convierten en acuerdos explícitos y compromisos públicos visibles para todo el ART.
+
+ANATOMÍA DEL TABLERO:
+→ FILAS: un equipo por fila
+→ COLUMNAS: Sprint 1, Sprint 2, Sprint 3, Sprint 4, IP Sprint
+→ TARJETAS AZULES: Features de negocio
+→ TARJETAS ROJAS: Enablers técnicos
+→ HILOS / FLECHAS ROJAS: dependencias entre equipos (acuerdos explícitos)
+→ MILESTONE MARKERS: hitos fijos del negocio (release dates, demos contractuales)
+→ PI OBJECTIVES: cada equipo documenta sus Committed y Uncommitted
+
+¿CÓMO SE DIFERENCIA DEL ROAM BOARD?
+→ Program Board = QUÉ entrega quién, CUÁNDO, y DEPENDENCIAS entre equipos
+→ ROAM Board = RIESGOS clasificados en 4 categorías con dueños individuales`,
+    technical:`SEÑALES DE ALERTA en el Program Board:
+
+🔴 Muchas líneas convergiendo en el mismo sprint:
+Cuello de botella — demasiadas dependencias en el mismo punto temporal. Acción: redistribuir Features o negociar timing.
+
+🔴 Líneas que van hacia atrás en el tiempo (Sprint 3 → Sprint 2):
+Dependencia imposible — el equipo que necesita algo lo necesita ANTES de que el otro pueda entregarlo. Acción: replanificar quién entrega qué y cuándo.
+
+🔴 Equipos grandes sin ninguna dependencia marcada:
+Señal de dependencias ocultas. En un sistema integrado, raramente hay equipos 100% independientes.
+
+🔴 Múltiples Features en un sprint para un equipo con capacidad limitada:
+Sobrecarga. Acción: mover Features a sprints posteriores o redistribuir.
+
+MILESTONE MARKERS — conexión con el Portfolio:
+Los milestones fijos (fechas contractuales, demos regulatorios, releases de mercado) vienen del Portfolio Leadership. El Program Board los hace visibles para todos los equipos que planifican sus Features respetando esas fechas. SAFe recomienda pocos milestones fijos — demasiados destruyen la flexibilidad ágil.
+
+PRODUCTIVIDAD EN EL PI PLANNING:
+El Program Board se construye en tiempo real durante los breakouts del Día 1. Los equipos negocian directamente entre sí — sin intermediarios. El RTE facilita la sesión general pero no decide las dependencias: son los equipos quienes las acuerdan.`,
+    visual:{ type:"program-board" },
+    questions:[
+      {
+        q:"¿Qué representa una línea (o hilo) entre dos tarjetas en el Program Board?",
+        opts:["Una tarea compartida que ambos equipos desarrollan simultáneamente en el mismo sprint","Una dependencia — un acuerdo explícito donde un equipo necesita la entrega del otro para poder continuar con su trabajo en la fecha acordada","Una feature duplicada en dos equipos que debe consolidarse en uno","Un riesgo que debe trasladarse automáticamente al ROAM Board"],
+        correct:1,
+        explanation:"Cada línea en el Program Board es un acuerdo formal y público: 'El Equipo A entregará X en el Sprint N para que el Equipo B pueda continuar con Y en el Sprint N+1.' Al hacerlo visible para todo el ART, se convierte en un compromiso verificable — no una suposición informal."
+      },
+      {
+        q:"¿Cuál es la diferencia entre el Program Board y el ROAM Board en el PI Planning?",
+        opts:["El Program Board es digital; el ROAM Board siempre es físico y manual","El Program Board muestra QUÉ entrega quién y CUÁNDO con sus DEPENDENCIAS; el ROAM Board clasifica los RIESGOS identificados en 4 categorías con dueños","El Program Board es para el RTE; el ROAM Board es para los SMs de cada equipo","Son lo mismo con diferente nombre según la empresa o contexto cultural"],
+        correct:1,
+        explanation:"Son complementarios, no intercambiables. Program Board = compromisos de entrega y dependencias entre equipos. ROAM Board = riesgos del ART clasificados en Resolved, Owned, Accepted o Mitigated. Un riesgo sin resolver puede aparecer en el Program Board como dependencia Y en el ROAM Board como riesgo simultáneamente."
+      },
+      {
+        q:"Detectás en el Program Board una dependencia donde el Equipo B necesita en Sprint 2 algo que el Equipo A entregará en Sprint 3. ¿Qué tipo de problema es y cómo lo resolvés?",
+        opts:["Es normal — el Equipo B puede trabajar en paralelo mientras espera","Es una dependencia imposible de ejecutar tal como está — el Equipo B necesita el input ANTES de que el Equipo A lo entregue. Se replanifica: mover la Feature de A al Sprint 1-2, o mover la Feature de B al Sprint 3-4","Es un milestone del negocio representado de forma invertida — solo hay que cambiarlo de color","Es responsabilidad del RTE resolverlo sin involucrar a los equipos durante el PI Planning"],
+        correct:1,
+        explanation:"Una dependencia invertida en el tiempo es una contradicción lógica — el Equipo B no puede esperar algo que llega después de que lo necesita. La solución es replanificar: adelantar la entrega del Equipo A (¿puede entregarlo antes?) o retrasar la Feature del Equipo B (¿puede esperar al Sprint 3?). Si ninguna opción es viable, se convierte en riesgo ROAM."
+      }
+    ]
+  },
+
+  {
+    id:"roam", group:"planificacion", title:"ROAM Board", icon:"⚠️",
+    color:"#D97706", light:"#FEF3C7", border:"#FCD34D", text:"#78350F",
+    functional:`El ROAM Board es la herramienta de gestión de riesgos del PI Planning. Cada riesgo identificado durante la planificación se clasifica en una de 4 categorías. Ocurre en el Día 2 del PI Planning.
+
+ROAM = Resolved · Owned · Accepted · Mitigated
+
+R — RESOLVED: el riesgo YA NO EXISTE — fue resuelto durante el PI Planning mismo. El equipo encontró la información o confirmación que lo elimina.
+
+O — OWNED: alguien ESPECÍFICO tomó el riesgo. Es personalmente responsable de gestionarlo y reportar su estado durante todo el PI. "El equipo" como dueño = nadie.
+
+A — ACCEPTED: el riesgo existe, no puede mitigarse, y el ART acepta CONSCIENTEMENTE el impacto potencial. Es una decisión explícita documentada, no una omisión.
+
+M — MITIGATED: existe un plan CONCRETO y documentado que reduce la probabilidad o el impacto del riesgo. No lo elimina, pero lo hace manejable.
+
+¿QUÉ PROBLEMA RESUELVE?
+Sin ROAM Board: los riesgos se mencionan en reuniones y se olvidan, apareciendo como sorpresas en Sprint 3.
+Con ROAM Board: cada riesgo tiene un destino explícito con una decisión documentada y visible.`,
+    technical:`EJEMPLOS PRÁCTICOS por categoría:
+
+RESOLVED: "El equipo de infraestructura confirmó esta mañana que el entorno de staging estará disponible antes del Sprint 1." → Ya no es un riesgo. Se retira del tablero activo.
+
+OWNED: "La dependencia con el proveedor de pagos externo la toma Carlos García (Product Manager) — reporta su estado al RTE todos los martes." → Nombre específico + cadencia de reporte.
+
+ACCEPTED: "Si el equipo legal no aprueba los términos del contrato antes del Sprint 2, el módulo de pagos internacionales no entrará en producción este PI. Lo aceptamos como consecuencia conocida." → Decisión explícita del ART con impacto documentado.
+
+MITIGATED: "Si la API del proveedor principal falla la integración, tenemos un plan B documentado: API alternativa con las mismas interfaces ya evaluadas y contratadas." → Plan concreto, no especulativo.
+
+SEÑALES DE UN ROAM MAL FACILITADO:
+→ 80%+ de riesgos en Accepted: nadie quiere responsabilidad → el RTE debe facilitar Owned
+→ Owned sin nombre propio: "el equipo" = nadie → escalar al RTE antes de cerrar
+→ Mitigated sin plan escrito: "lo resolveremos durante el PI" = no es mitigación
+→ ROAM Board vacío: planificación superficial — el ART no identificó riesgos reales
+
+PREGUNTA DE ENTREVISTA FRECUENTE (NTT DATA):
+"¿Qué hacés si hay una dependencia crítica sin owner en el PI Planning?"
+RESPUESTA: la marcás en el Program Board + la ROAMeás como O (Owned, pendiente de asignación) + escalás al RTE para que asigne un owner individual antes de cerrar el PI Planning.`,
+    visual:{ type:"roam" },
+    questions:[
+      {
+        q:"Un equipo identifica que su microservicio de autenticación puede fallar bajo carga alta. Tienen documentado un plan de auto-scaling configurado y probado. ¿Cómo se clasifica en el ROAM Board?",
+        opts:["Resolved — ya tienen la solución técnica lista","Owned — alguien del equipo debe monitorear la carga durante el PI","Accepted — los riesgos de performance siempre se aceptan","Mitigated — tienen un plan concreto y documentado que reduce el impacto potencial"],
+        correct:3,
+        explanation:"Mitigated: el riesgo existe pero tienen un plan concreto (auto-scaling documentado y probado) que reduce el impacto. Resolved sería si el riesgo ya no existiera. Owned sería si no tienen plan todavía pero alguien asume la responsabilidad de encontrarlo. Accepted sería si no pueden hacer nada al respecto."
+      },
+      {
+        q:"Al cerrar el PI Planning, 4 riesgos están clasificados como Owned pero todos dicen 'El squad de backend' como dueño. ¿Por qué es un problema?",
+        opts:["No es un problema — el equipo colectivo puede ser responsable de un riesgo","Es un problema porque 'el equipo' equivale a nadie: cuando todos son responsables, nadie lo es. Cada riesgo Owned necesita una persona nombrada individualmente","Solo es un problema si el riesgo tiene impacto de negocio alto (nivel A o B)","Se resuelve haciendo que el Scrum Master sea automáticamente el dueño de todos los riesgos del equipo"],
+        correct:1,
+        explanation:"Owned sin nombre específico = responsabilidad difusa = el riesgo no se gestiona en la práctica. El principio de SAFe es accountability individual: cada riesgo Owned debe tener UNA persona específica responsable de monitorearlo, mitigarlo y reportar su estado al RTE regularmente."
+      },
+      {
+        q:"¿En qué momento del PI Planning ocurre el ROAMing y quién lo facilita?",
+        opts:["Al inicio del Día 1, antes de presentar la visión de negocio, facilitado por el Product Manager","Durante los breakouts del Día 1, cada equipo hace su propio ROAM de forma independiente","En el Día 2 después del Management Review, facilitado por el RTE con participación de todos los equipos del ART","Después del PI, al finalizar el primer sprint, cuando los riesgos reales ya son visibles"],
+        correct:2,
+        explanation:"El ROAMing ocurre en el Día 2, después del Management Review — cuando los planes están ajustados y los riesgos del ART completo están identificados. El RTE facilita la sesión con participación activa de Business Owners, equipos y management. Es un evento del ART, no de cada equipo individualmente."
+      }
+    ]
+  },
+
+  // ══════════ DELIVERY ══════════
+
+  {
+    id:"cdp", group:"delivery", title:"Continuous Delivery Pipeline", icon:"🔄",
+    color:"#D97706", light:"#FEF3C7", border:"#FCD34D", text:"#78350F",
+    functional:`El Continuous Delivery Pipeline (CDP) es la capa base azul del Big Picture — donde Features, Enablers y Stories fluyen a través de las Iterations hacia el Cliente a través de Release on Demand.
+
+La flecha verde de "Flow" está sobre el CDP — es la manifestación técnica del objetivo Lean.
+
+LOS 4 ASPECTOS DEL CDP:
+
+1. EXPLORACIÓN CONTINUA (CE — Continuous Exploration):
+Identifica QUÉ construir. Hipótesis de negocio, design thinking, investigación de usuario, análisis de mercado. Alimenta el ART Backlog con Features y Enablers validadas.
+
+2. INTEGRACIÓN CONTINUA (CI — Continuous Integration):
+CÓMO construirlo. Cada commit integrado y testeado automáticamente. Elimina el "integration hell". Hace posible el System Demo integrado en cada iteración.
+
+3. DESPLIEGUE CONTINUO (CD — Continuous Deployment):
+Código desplegado automáticamente a staging/producción. SEPARA deployment (técnico, automático) de release (decisión de negocio). Usa Feature Flags para controlar la activación.
+
+4. RELEASE ON DEMAND:
+CUÁNDO liberar AL CLIENTE. Decisión estratégica del negocio — el código puede estar en producción "apagado" hasta que el negocio decide activarlo. Son las flechas azules verticales hacia el Cliente en el Big Picture.
+
+IP ITERATION (Innovation & Planning):
+Sprint especial al FINAL del PI. NO es un buffer para atrasos — es tiempo protegido para innovación, planning del próximo PI y deuda técnica.`,
+    technical:`LA PLATAFORMA DE ARQUITECTURA (Architecture Platform):
+
+En el Big Picture aparece como la base horizontal del CDP. Es el código existente, componentes e infraestructura técnica que permite implementar Features con mínimo rediseño. El ART invierte continuamente en mantenerla mediante Enabler Features y Enabler Stories.
+
+DEVOPS en el CDP:
+La mentalidad DevOps fomenta comunicación, integración y automatización en TODAS las etapas. En el Big Picture, CE/CI/CD aparecen explícitamente como componentes del CDP.
+
+CALIDAD INCORPORADA (Built-in Quality):
+El PDF: 'Los equipos son responsables de incorporar calidad en todo lo que entregan. La inspección suele llegar demasiado tarde para ser eficaz.'
+Prácticas de Built-in Quality:
+→ TDD/BDD: tests escritos antes del código
+→ Peer review: revisión antes de merge
+→ CI con Quality Gates: cobertura mínima, cero vulnerabilidades críticas
+→ System Demo: validación integrada cada iteración
+→ Definition of Done con criterios testeables
+
+DEPLOYMENT vs RELEASE — diferencia crítica:
+→ Deployment: código en el servidor de producción (automatizado, continuo, responsabilidad técnica)
+→ Release on Demand: código activado para el usuario final (decisión de negocio, timing estratégico)
+Esta separación permite desplegar frecuentemente y liberar al cliente en el momento óptimo.
+
+FRECUENCIA DE RELEASES en SAFe:
+El PDF menciona que algunos ARTs hacen releases diarios o múltiples al día. Otros semanales o mensuales. SAFe no prescribe la frecuencia — el ART la define según sus capacidades y necesidades del negocio.`,
+    visual:{ type:"cdp-flow" },
+    questions:[
+      {
+        q:"¿Qué es el IP Iteration y cuál es su propósito real según el PDF de SAFe?",
+        opts:["Es el primer sprint del PI donde se planifica todo el trabajo detallado","Es el sprint especial al FINAL del PI — tiempo protegido para innovación, planificación del próximo PI y reducción de deuda técnica. No es un buffer para trabajo atrasado","Es un sprint adicional cuando el equipo no completó sus PI Objectives comprometidos","Es equivalente a un Sprint de Hardening — solo para estabilización y corrección de bugs"],
+        correct:1,
+        explanation:"El PDF: 'La Iteración de IP permite a los equipos disponer de más tiempo para la exploración, la innovación y la planificación específica. Este tiempo puede dedicarse a oportunidades de aprendizaje tanto formales como informales.' El trabajo atrasado NO se mueve al IP Sprint — es tiempo protegido estratégicamente, no un colchón de seguridad."
+      },
+      {
+        q:"¿Cuál es la diferencia entre Continuous Deployment y Release on Demand en el CDP de SAFe?",
+        opts:["Son sinónimos — desplegar y liberar significan lo mismo en contextos modernos de DevOps","Deployment = código en producción (automatizado y técnico); Release on Demand = activación para el usuario final cuando el negocio decide estratégicamente","Deployment es manual en SAFe; Release on Demand es automático y continuo","Deployment es responsabilidad del equipo de desarrollo; Release on Demand es responsabilidad del RTE"],
+        correct:1,
+        explanation:"SAFe separa deliberadamente ambos conceptos. Deployment es un acto técnico automatizado — el código llega al servidor de producción, potencialmente varias veces al día. Release es una decisión estratégica de negocio — cuándo activar ese código para los usuarios finales. Esta separación permite velocidad técnica con control de negocio."
+      },
+      {
+        q:"¿Por qué la Calidad Incorporada (Built-in Quality) es fundamental para escalar la agilidad en un ART de múltiples equipos?",
+        opts:["Porque reduce el número de testers necesarios, ahorrando costos al ART","Porque con múltiples equipos a alta velocidad, los defectos se multiplican exponencialmente si no se incorpora calidad en cada paso — la inspección al final llega demasiado tarde y bloquea el System Demo del ART","Porque los clientes de organizaciones que usan SAFe suelen estar en industrias reguladas","Porque el System Architect exige estándares de cobertura de código definidos en el ART Backlog"],
+        correct:1,
+        explanation:"El PDF: 'Los equipos son responsables de incorporar calidad en todo lo que entregan. La inspección suele llegar demasiado tarde para ser eficaz.' En un ART de 10 equipos, un defecto que escapa de un equipo contamina la integración del System Demo completo, bloquea dependencias de otros equipos y multiplica el retrabajo."
+      }
+    ]
+  },
+
+  {
+    id:"inspect-adapt", group:"delivery", title:"Inspect & Adapt", icon:"🔍",
+    color:"#D97706", light:"#FEF3C7", border:"#FCD34D", text:"#78350F",
+    functional:`Inspect & Adapt (I&A) es el evento de mejora continua del ART al FINAL de cada PI. En el Big Picture aparece en el extremo derecho del CDP, antes de que el ciclo vuelva a comenzar con el próximo PI Planning.
+
+LAS 3 PARTES DEL I&A:
+
+1. PI SYSTEM DEMO:
+Demostración integrada de TODO lo que el ART construyó en el PI. No es suma de demos por equipo — es una demo del sistema completo funcionando. Business Owners valoran los PI Objectives.
+
+2. QUANTITATIVE MEASUREMENT:
+Revisión con datos reales:
+→ PI Objectives Score: Business Value planeado vs entregado
+→ ART Predictability: % de Committed alcanzados (objetivo 80–100%)
+→ Métricas de flow: velocidad, defect rate, time to market
+
+3. PROBLEM-SOLVING WORKSHOP:
+Retrospectiva del SISTEMA — no del equipo individual. Identifica impedimentos organizacionales con técnicas de causa raíz (5 Whys, Fishbone). Produce 3–5 mejoras CONCRETAS con nombre de owner y fecha.
+
+CONEXIÓN CON EL BIG PICTURE:
+El I&A alimenta la flecha amarilla de "Feedback" — el aprendizaje del PI fluye hacia la izquierda mejorando el próximo ciclo de planificación y ejecución.`,
+    technical:`DIFERENCIAS ENTRE LOS 3 TIPOS DE DEMO en SAFe:
+
+SPRINT REVIEW (cada 2 semanas, nivel Team):
+→ UN equipo muestra SU incremento del sprint
+→ PO + stakeholders del equipo validan el trabajo
+→ No requiere que todos los equipos estén integrados
+
+SYSTEM DEMO ITERATIVO (cada 2 semanas, nivel ART):
+→ TODOS los equipos del ART, trabajo INTEGRADO
+→ Todos los stakeholders del ART + Business Owners pueden participar
+→ Requiere integración continua real — sin CI es imposible
+→ Aparece como los puntos naranjas sobre el CDP en el Big Picture
+
+PI SYSTEM DEMO (al final del PI, antes del I&A):
+→ El más completo: todo lo entregado en el PI por todos los equipos integrados
+→ Business Owners asignan Business Value Actual a cada PI Objective Committed
+→ Es el input principal del Problem-Solving Workshop
+
+ART PREDICTABILITY — la métrica clave:
+Fórmula: (Business Value Entregado en Committed) / (Business Value Planeado en Committed) × 100
+Objetivo SAFe: 80–100%.
+Consistentemente < 80% → problema de planning (sobrecomete) o impedimentos sistémicos no resueltos.
+
+OUTPUTS DEL PROBLEM-SOLVING WORKSHOP:
+Las mejoras producidas NO son promesas abstractas — se convierten en Enabler Stories o Enabler Features que entran al ART Backlog y se priorizan junto al trabajo de negocio en el próximo PI Planning.`,
+    visual:{ type:"inspect-adapt" },
+    questions:[
+      {
+        q:"¿Qué diferencia al Problem-Solving Workshop del I&A de una retrospectiva de equipo normal?",
+        opts:["Son lo mismo — el I&A es simplemente una retrospectiva más grande con más equipos presentes","El Problem-Solving Workshop atiende impedimentos del SISTEMA (organizacionales, entre equipos, de proceso del ART) usando técnicas de causa raíz, produciendo mejoras concretas que entran al backlog","El Problem-Solving Workshop lo facilita el RTE; las retrospectivas de equipo las facilita el SM — la diferencia es solo quién facilita","El Problem-Solving Workshop es opcional; la retrospectiva de equipo es obligatoria en SAFe"],
+        correct:1,
+        explanation:"La retrospectiva de equipo atiende mejoras DENTRO del equipo. El Problem-Solving Workshop del I&A atiende problemas del SISTEMA — impedimentos que ningún equipo puede resolver solo y que requieren cambios organizacionales o de proceso del ART. Las mejoras son específicas, con owner individual y fecha de implementación en el backlog."
+      },
+      {
+        q:"El ART terminó el PI con 62% de PI Objectives Committed alcanzados. ¿Qué indica y qué deberías hacer como SM en el I&A?",
+        opts:["Es aceptable — en un entorno ágil el 60% ya demuestra adaptabilidad ante el cambio","Indica que el ART sobrecomete o tiene impedimentos sistémicos. En el I&A: facilitar análisis de causa raíz (¿fue el scope excesivo? ¿hubo bloqueos recurrentes? ¿dependencias sin resolver?) para producir acciones concretas en el próximo PI","Solo es significativo si el 62% ocurre 3 PIs consecutivos — 1 PI no tiene significado estadístico","Indica que los Business Owners asignaron Business Value demasiado alto a los objetivos"],
+        correct:1,
+        explanation:"SAFe establece 80–100% como objetivo de ART Predictability. Un 62% en Committed indica un problema real: el ART sobrecomite en el PI Planning (scope excesivo relativo a capacidad real) o tiene impedimentos recurrentes que el RTE no está resolviendo. El Problem-Solving Workshop del I&A debe identificar cuál y producir acciones concretas."
+      },
+      {
+        q:"¿Cómo se conecta el I&A con el Big Picture de SAFe visualmente?",
+        opts:["El I&A es el último evento del PI y no tiene representación visual en el Big Picture","El I&A alimenta la flecha amarilla de 'Feedback' (derecha a izquierda) — el aprendizaje del PI fluye hacia atrás mejorando el próximo ciclo de planificación y ejecución","El I&A alimenta directamente el Portfolio Backlog con nuevas Épicas identificadas","El I&A conecta con el PI Planning solo a través del ART Backlog actualizado con mejoras técnicas"],
+        correct:1,
+        explanation:"La flecha de Feedback en el Big Picture (amarilla, que va de derecha a izquierda) representa exactamente el I&A: el aprendizaje del ciclo completado mejora el siguiente. Las mejoras del Problem-Solving Workshop entran al ART Backlog y se planifican en el próximo PI Planning. El ciclo Lean de mejora continua (buscar la perfección) cierra aquí."
+      }
+    ]
+  },
+
+  // ══════════ AVANZADO ══════════
+
+  {
+    id:"pdf-disciplina", group:"avanzado", title:"Flujo de Desarrollo del Producto", icon:"💡",
+    color:"#DC2626", light:"#FEE2E2", border:"#FCA5A5", text:"#7F1D1D",
+    functional:`La Disciplina de Flujo de Desarrollo del Producto (PDF) permite a las organizaciones liberar incrementos de producto valiosos y responder a los cambios del mercado con rapidez. En el Big Picture, esta disciplina se conecta con los elementos de la izquierda del CDP: Visión, Roadmap, Product Innovation y la flecha de Feedback.
+
+El enfoque tradicional "si lo construyes, vendrán" ya no funciona. SAFe propone un modelo operativo en torno al producto que va mucho más allá del desarrollo:
+
+VISIÓN: estado futuro del producto claramente definido que alinea a todos los equipos. Aparece en el Big Picture a la izquierda del ART Backlog.
+
+ESTRATEGIA (ROADMAP): plan flexible de cómo y cuándo se entregarán las capacidades principales. No es un Gantt — es una secuencia de PIs con Features clave que evoluciona.
+
+DISEÑO CENTRADO EN EL CLIENTE (Design Thinking): un enfoque que prioriza la experiencia del cliente y la resolución de problemas reales. Aplica técnicas como entrevistas, prototipos y validación rápida de hipótesis.
+
+ENTREGA CONTINUA: proceso optimizado que mueve ideas desde el concepto hasta el mercado de forma eficiente — el Continuous Delivery Pipeline en el Big Picture.
+
+MARKETING DE PRODUCTO: comunicación estratégica que destaca el valor del producto y resuena con el público objetivo.
+
+SISTEMAS DE FEEDBACK: los datos reales del cliente retroalimentan continuamente el ciclo — la flecha amarilla ← Feedback del Big Picture.
+
+PRODUCT INNOVATION: en el Big Picture aparece como la bombilla con rayos de luz a la izquierda del CDP — representa la capacidad de innovar continuamente como ventaja competitiva.`,
+    technical:`LOS 6 ELEMENTOS DEL FLUJO DE DESARROLLO DEL PRODUCTO (Figura 10 del PDF):
+
+1. INNOVACIÓN → VISIÓN: la innovación alimenta la visión del producto
+2. VISIÓN → ESTRATEGIA: la visión define el roadmap flexible
+3. ESTRATEGIA → DISEÑO CENTRADO EN EL CLIENTE: el roadmap guía el design thinking
+4. DISEÑO CENTRADO EN EL CLIENTE → ENTREGA CONTINUA: el diseño validado fluye hacia el CDP
+5. ENTREGA CONTINUA → MARKETING: el producto listo se comunica al mercado
+6. MARKETING → CLIENTE → FEEDBACK → (de vuelta a INNOVACIÓN): el ciclo se cierra
+
+CONEXIÓN CON LA BIG PICTURE:
+→ Innovación de Producto: el ícono de bombilla a la izquierda del CDP
+→ Visión + Roadmap: inputs directos del ART Backlog
+→ Continuous Delivery Pipeline: el proceso de entrega continua
+→ Release on Demand: cuándo el valor llega al Cliente
+→ Feedback (flecha amarilla): cierra el ciclo de aprendizaje
+
+PARA EL SM / AGILE COACH EN LA PRÁCTICA:
+→ Asegurar que la Visión esté visible y sea entendida por todos los equipos
+→ Facilitar que el Roadmap sea flexible (no un plan rígido con fechas fijas)
+→ Promover prácticas de Design Thinking para entender al cliente real
+→ Medir el feedback del cliente — no solo las métricas técnicas internas
+
+MÉTRICAS CLAVE del Flujo de Desarrollo del Producto:
+→ Time to Market: tiempo desde la idea hasta que el cliente puede usar el feature
+→ Feature Adoption Rate: % de usuarios que adoptan nuevas features
+→ Customer Satisfaction (NPS): feedback del cliente sobre el valor entregado
+→ Product Market Fit: qué tan bien el producto resuelve el problema del cliente`,
+    visual:{ type:"pdf-disciplina" },
+    questions:[
+      {
+        q:"¿Qué representa el ícono de 'Product Innovation' (bombilla con rayos de luz) en el Big Picture de SAFe?",
+        opts:["El equipo de I+D que trabaja separado del ART en proyectos especiales","La capacidad continua de innovar que alimenta la Visión del producto — el punto de partida del flujo de desarrollo del producto","El IP Sprint donde los equipos hacen hackathons e innovación técnica","Los Enabler Epics del Portfolio que financian la investigación técnica"],
+        correct:1,
+        explanation:"Product Innovation en el Big Picture representa la capacidad de innovar continuamente como ventaja competitiva. Es el input inicial del Flujo de Desarrollo del Producto: la innovación genera la Visión, que genera el Roadmap, que guía el ART Backlog. Sin innovación continua, el producto se vuelve obsoleto."
+      },
+      {
+        q:"¿Cuál es la diferencia entre un Roadmap ágil en SAFe y un cronograma de proyecto tradicional?",
+        opts:["Un Roadmap ágil tiene fechas exactas; el cronograma tradicional es más flexible","Un Roadmap ágil es una secuencia flexible de PIs con Features clave que evoluciona con el mercado; un cronograma tradicional ata el trabajo a fechas y alcance fijo","Son equivalentes — SAFe solo cambia el nombre para modernizar la terminología","Un Roadmap ágil no tiene fechas; el cronograma tradicional tiene hitos obligatorios"],
+        correct:1,
+        explanation:"El Roadmap de SAFe es flexible y evoluciona: muestra la secuencia de PIs con las Features más importantes, pero se adapta a medida que el mercado cambia y se aprende del cliente. Un cronograma de proyecto ata presupuesto, fechas y alcance fijo — el triángulo clásico del Project Management tradicional."
+      },
+      {
+        q:"¿Por qué el PDF de SAFe dice que el enfoque 'si lo construyes, vendrán' ya no es válido?",
+        opts:["Porque los clientes modernos ya no pagan por software tradicional","Porque construir un producto exitoso requiere validar el ajuste producto-mercado, escalar via ventas y marketing, e innovar continuamente — el desarrollo técnico es solo una parte del modelo operativo","Porque SAFe reemplaza el desarrollo con Design Thinking puro","Porque los ciclos de vida de los productos son ahora más largos y requieren más planificación"],
+        correct:1,
+        explanation:"El PDF: 'Construir un modelo operativo exitoso en torno a un producto va mucho más allá del desarrollo. Requiere lograr el ajuste del producto al mercado, escalar mediante las ventas y el marketing, e impulsar una innovación constante que responda a los ciclos de vida cada vez más cortos de los productos.'"
+      }
+    ]
+  },
+
+  {
+    id:"lsid", group:"avanzado", title:"Integración y Entrega de Soluciones Grandes", icon:"🏗️",
+    color:"#DC2626", light:"#FEE2E2", border:"#FCA5A5", text:"#7F1D1D",
+    functional:`La Disciplina de Integración y Entrega de Soluciones Grandes (LSID) aplica SAFe al desarrollo, operación y evolución de los sistemas más grandes y complejos del mundo. En el Big Picture, esta disciplina se representa en el nivel de Portfolio con la sección "Coordinate and Deliver" y los múltiples Value Streams que convergen en Products & Solutions.
+
+¿CUÁNDO APLICA LSID?
+Cuando una solución requiere el trabajo coordinado de múltiples ARTs, cadenas de valor y proveedores externos. Ejemplos: sistemas de defensa, satélites, vehículos autónomos, plataformas bancarias a escala nacional.
+
+EL SOLUTION TRAIN:
+Es la estructura que coordina múltiples ARTs. Así como el ART coordina múltiples equipos, el Solution Train coordina múltiples ARTs. Tiene sus propios roles de liderazgo (mismo patrón: autoridad de contenido + autoridad técnica + entrega de valor).
+
+LA MISMA ESTRUCTURA DE 3 ROLES en cada nivel de SAFe:
+→ Equipo: PO + Team Members + SM
+→ ART: Product Management + System Architect + RTE
+→ Solution Train: Solution Management + Solution Architect + STE (Solution Train Engineer)
+
+COORDINAR Y ENTREGAR (en el Big Picture):
+La sección "Coordinate and Deliver" en el Big Picture representa el nivel de coordinación entre múltiples ARTs/Value Streams antes de que el valor llegue a "Products and Solutions".`,
+    technical:`COMPONENTES DEL NIVEL LARGE SOLUTION (Figura 11 del PDF):
+
+INTENCIÓN DE LA SOLUCIÓN:
+Documento vivo que captura los requisitos y restricciones de la solución completa. Es el equivalente del Product Vision pero para el Solution Train completo. No es una especificación detallada — es una intención flexible.
+
+PLANIFICACIÓN PREVIA (Pre-PI Planning):
+Antes del PI Planning de cada ART, los líderes del Solution Train se alinean en los grandes objetivos y dependencias entre ARTs. Asegura que cada ART llegue a su PI Planning con contexto claro.
+
+DEMOSTRACIÓN DE LA SOLUCIÓN (Solution Demo):
+Equivalente del System Demo pero para el Solution Train completo. Integra el trabajo de múltiples ARTs en una demostración del sistema total.
+
+INSPECT AND ADAPT a nivel Solution Train:
+Al final de cada PI, el Solution Train también hace su propio I&A para identificar mejoras en la coordinación entre ARTs.
+
+PROVEEDORES (Suppliers) en el Big Picture:
+Aparecen como participantes en las cadenas de valor. Los proveedores externos con entregables críticos participan en el PI Planning y sus dependencias se gestionan igual que las dependencias internas.
+
+CUÁNDO NO NECESITÁS LSID:
+La mayoría de las organizaciones medianas no necesitan LSID. Si tu organización tiene 1–3 ARTs coordinando el mismo sistema, Essential SAFe o Large Solution SAFe es suficiente. LSID aplica cuando hay decenas de ARTs, cientos de equipos y años de ciclos de desarrollo.
+
+PARA LA ENTREVISTA EN NTT DATA:
+NTT DATA trabaja con grandes clientes corporativos donde LSID puede aplicar. Como SM/Agile Coach, tu rol en un contexto LSID sería: facilitar la coordinación entre tu equipo y otros ARTs, escalar impedimentos que impactan a múltiples ARTs, y participar en Pre-PI Planning cuando aplique.`,
+    visual:{ type:"lsid" },
+    questions:[
+      {
+        q:"¿Qué es el Solution Train en SAFe y cuándo se necesita?",
+        opts:["Es otro nombre para el ART cuando tiene más de 10 equipos","Es la estructura que coordina múltiples ARTs para entregar una solución que un solo ART no puede entregar — aplica cuando hay decenas de ARTs, sistemas ciberfísicos o soluciones de escala masiva","Es el primer ART que se lanza en una organización que implementa SAFe","Es un grupo de trabajo temporal para gestionar proyectos complejos entre ARTs"],
+        correct:1,
+        explanation:"El Solution Train coordina múltiples ARTs de la misma manera que el ART coordina múltiples equipos. Aplica para sistemas de defensa, satélites, vehículos autónomos, o plataformas bancarias masivas — donde un solo ART no puede entregar la solución completa."
+      },
+      {
+        q:"¿Cuáles son los 3 roles de liderazgo del Solution Train y qué patrón siguen?",
+        opts:["RTE + Product Manager + System Architect — los mismos que el ART","Solution Management + Solution Architect + STE (Solution Train Engineer) — el mismo patrón de 3 roles que se repite en todos los niveles de SAFe","Portfolio Leadership + Business Owners + Enterprise Architect — roles del nivel Portfolio","Solution Owner + Delivery Manager + Coach — roles específicos de LSID"],
+        correct:1,
+        explanation:"SAFe aplica el mismo patrón de 3 roles en todos los niveles: autoridad de contenido (Solution Management), autoridad técnica (Solution Architect) y entrega de valor (STE). Este patrón fractal se repite desde el equipo hasta el Solution Train."
+      },
+      {
+        q:"¿Qué es la 'Intención de la Solución' (Solution Intent) en LSID?",
+        opts:["El documento de especificaciones técnicas detalladas y fijas que guía a todos los ARTs","Un documento vivo y flexible que captura los requisitos y restricciones de la solución completa — equivalente del Product Vision para el Solution Train","El contrato legal con el cliente que define el alcance de la solución","El Kanban de Portfolio con las Épicas priorizadas para el Solution Train"],
+        correct:1,
+        explanation:"La Intención de la Solución no es una especificación rígida — es un documento vivo que evoluciona. Captura la visión, los requisitos clave y las restricciones de la solución total. Permite alinear múltiples ARTs sin necesidad de especificaciones detalladas y anticipadas que contradirían los principios ágiles."
+      }
+    ]
+  },
+
+  {
+    id:"implementar", group:"avanzado", title:"Implementar SAFe", icon:"🚀",
+    color:"#DC2626", light:"#FEE2E2", border:"#FCA5A5", text:"#7F1D1D",
+    functional:`Implementar SAFe requiere un esfuerzo significativo y sostenido. Los estudios indican que hasta el 70% de las iniciativas de cambio organizacional a gran escala no logran sus objetivos. SAFe proporciona un Roadmap de implementación de 13 pasos basado en experiencias de cientos de organizaciones.
+
+¿POR DÓNDE EMPEZAR? Depende del contexto:
+
+SIN EXPERIENCIA EN AGILE o adopción gradual:
+→ Comenzar con los Equipos Ágiles y los ARTs para construir base de Agilidad Técnica y de Equipo.
+→ Ruta: Capacitar agentes de cambio → capacitar equipos → lanzar el ART.
+
+NECESIDAD DE RESPUESTA RÁPIDA DEL MERCADO:
+→ Centrarse en el Flujo de Desarrollo del Producto: innovación, entrega temprana, prácticas centradas en el cliente.
+
+DESAFÍOS DE ALINEACIÓN ESTRATÉGICA:
+→ Comenzar con Gestión Lean del Portfolio para conectar estrategia con ejecución.
+
+LOS FACTORES DE FRACASO MÁS COMUNES en transformaciones SAFe:
+1. Falta de argumentos claros y convincentes (el "por qué")
+2. Escasa alineación del equipo de liderazgo
+3. Ausencia de objetivos definidos y sentido de urgencia
+4. Lentitud en la toma de decisiones ante los problemas
+5. Buscar el cambio "big bang" en lugar de un enfoque iterativo
+
+CENTRO DE EXCELENCIA LEAN-AGILE (LACE):
+El grupo interno responsable de guiar y sostener la implementación de SAFe. Compuesto por SPCs (SAFe Program Consultants) y líderes comprometidos.`,
+    technical:`EL ROADMAP DE IMPLEMENTACIÓN DE SAFe — pasos clave (Figura 13 del PDF):
+
+FASE 1: PUNTO DE INFLEXIÓN
+1. Capacitar agentes de cambio Lean-Agile (SPCs — SAFe Program Consultants)
+2. Capacitar ejecutivos, managers y líderes (Leading SAFe)
+3. Crear el Centro de Excelencia Lean-Agile (LACE)
+
+FASE 2: IDENTIFICAR Y LANZAR
+4. Identificar Value Streams y ARTs (SAFe Value Stream & ART Identification Workshop)
+5. Preparar el lanzamiento del ART
+6. Capacitar a los equipos y lanzar el ART (primer PI Planning)
+
+FASE 3: EJECUTAR Y ESCALAR
+7. Ejecutar iteraciones del ART (usar SAFe en la práctica)
+8. Lanzar más ARTs y cadenas de valor
+9. Ampliar el portfolio (LPM)
+10. Acelerar (mejora continua)
+
+CERTIFICACIONES DE SAFe más relevantes para tu perfil (Luis Otoya):
+→ SAFe Scrum Master (SSM): rol de SM en un ART
+→ SAFe Advanced Scrum Master (SASM): SM con habilidades técnicas y de coaching avanzado
+→ Leading SAFe (SA): para líderes y stakeholders del ART
+→ SAFe Release Train Engineer (RTE): para el rol de RTE/Tribe Lead a escala
+
+PARA NTT DATA ESPECÍFICAMENTE:
+NTT DATA es una organización global con múltiples ARTs y clientes enterprise. El lenguaje SAFe es el vocabulario esperado. Como SM/Agile Coach, dominar el Big Picture completo — especialmente PI Planning, ROAM, Program Board, I&A y la conexión con Portfolio — es el diferencial clave en la entrevista.
+
+PREGUNTA FRECUENTE EN ENTREVISTAS NTT DATA:
+"¿Cómo articularías el valor de SAFe a un stakeholder ejecutivo que no conoce el framework?"
+RESPUESTA: SAFe resuelve 5 problemas específicos a escala (alineación estrategia-ejecución, financiamiento incremental, coordinación de dependencias, sincronización de releases, y extensión más allá de TI). Los resultados son medibles: 30-75% de reducción en Time to Market, 20-50% más productividad, 25-75% más calidad (fuente: SAFe Explained 2025).`,
+    visual:{ type:"implementar" },
+    questions:[
+      {
+        q:"Según el PDF oficial de SAFe 2025, ¿cuál es la tasa de fracaso de las iniciativas de cambio organizacional a gran escala?",
+        opts:["30% — la mayoría tiene éxito parcial","50% — mitad éxito, mitad fracaso","70% — la mayoría no logra sus objetivos deseados","90% — casi ninguna implementación tiene éxito completo"],
+        correct:2,
+        explanation:"El PDF cita a McKinsey: 'Los estudios indican que hasta el 70% de las iniciativas de cambio a gran escala no logran sus objetivos deseados.' SAFe aborda esto con un Roadmap de implementación estructurado de 13 pasos que reduce drásticamente el riesgo, basado en experiencias de cientos de organizaciones."
+      },
+      {
+        q:"Una empresa financiera con 5 equipos ágiles tiene dificultades para alinear la estrategia del C-Level con el trabajo de los equipos. ¿Por dónde debería empezar su implementación de SAFe?",
+        opts:["Por la Agilidad Técnica y de Equipo — primero mejorar la calidad técnica de los equipos","Por la Gestión Lean del Portfolio — para conectar la estrategia ejecutiva con la ejecución de los equipos a través de OKRs y Value Streams","Por lanzar el primer PI Planning — la sincronización de todos los equipos resolverá la alineación automáticamente","Por certificar a todos los SMs en SAFe — el conocimiento individual resolverá los problemas de alineación"],
+        correct:1,
+        explanation:"El PDF recomienda explícitamente: 'Organizaciones que enfrentan desafíos de alineación: Comenzar con la Gestión Lean del Portafolio para conectar la estrategia con la ejecución, establecer la dirección estratégica, priorizar las iniciativas grandes y asignar personas y recursos según las necesidades de negocio.'"
+      },
+      {
+        q:"¿Qué es el LACE (Centro de Excelencia Lean-Agile) en la implementación de SAFe?",
+        opts:["El equipo de IT que gestiona las herramientas ágiles (Jira, Confluence, ClickUp) para todos los ARTs","El grupo interno de agentes de cambio responsables de guiar y sostener la implementación de SAFe en la organización","El comité de líderes ejecutivos que aprueba el presupuesto de transformación ágil","Un equipo externo de consultores de Scaled Agile que implementa SAFe en nombre de la organización"],
+        correct:1,
+        explanation:"El LACE es el Centro de Excelencia Lean-Agile interno — un grupo de SPCs y líderes comprometidos que guían, enseñan y sostienen la adopción de SAFe. Es interno (no externo) y es responsable de que SAFe se convierta en la forma de trabajar de la organización, no solo un proyecto temporal de transformación."
+      }
+    ]
+  }
+];
+
+const tabs = [
+  { id:"functional", label:"Funcional" },
+  { id:"technical",  label:"Técnico"   },
+  { id:"visual",     label:"Visual"    },
+  { id:"quiz",       label:"¿Lo entendí?" }
+];
+
+function VisualLeanAgileMindset() {
+  return (
+    <div style={{display:"flex",flexDirection:"column",gap:8}}>
+      <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:8}}>
+        <div style={{background:"#EDE9FE",border:"1px solid #C4B5FD",borderRadius:8,padding:"10px 14px"}}>
+          <div style={{fontSize:12,fontWeight:700,color:"#4C1D95",marginBottom:6}}>5 Principios LEAN</div>
+          {["1. Especificar el valor","2. Identificar la cadena de valor","3. Lograr que fluya sin interrupciones","4. El cliente arrastra el valor (Pull)","5. Buscar la perfección"].map((p,i)=>(<div key={i} style={{fontSize:11,color:"#6D28D9",lineHeight:1.7}}>{p}</div>))}
+        </div>
+        <div style={{background:"#DBEAFE",border:"1px solid #93C5FD",borderRadius:8,padding:"10px 14px"}}>
+          <div style={{fontSize:12,fontWeight:700,color:"#1D4ED8",marginBottom:6}}>4 Valores AGILE (Manifiesto)</div>
+          {["Individuos > Procesos","Software funcionando > Documentación","Colaboración con cliente > Contratos","Respuesta al cambio > Seguir el plan"].map((v,i)=>(<div key={i} style={{fontSize:11,color:"#1E40AF",lineHeight:1.7}}>{v}</div>))}
+        </div>
+      </div>
+      <div style={{background:"#0f172a",borderRadius:8,padding:"10px 14px",display:"flex",gap:12,alignItems:"center"}}>
+        <div style={{fontSize:12,color:"#e2e8f0",lineHeight:1.6}}><span style={{color:"#a78bfa",fontWeight:600}}>LEAN + AGILE juntos:</span> un sistema que elimina desperdicios, responde al cambio y entrega valor al cliente de manera continua y eficiente. — SAFe Explained 2025</div>
+      </div>
+      <div style={{display:"flex",gap:6}}>
+        {[{l:"→ Flow",d:"Valor sin interrupciones",c:"#16A34A",bg:"#DCFCE7",b:"#86EFAC"},{l:"← Feedback",d:"Aprendizaje continuo",c:"#D97706",bg:"#FEF3C7",b:"#FCD34D"},{l:"Pull",d:"Demanda real del cliente",c:"#2563EB",bg:"#DBEAFE",b:"#93C5FD"}].map((x,i)=>(
+          <div key={i} style={{flex:1,background:x.bg,border:`1px solid ${x.b}`,borderRadius:6,padding:"8px 10px",textAlign:"center"}}>
+            <div style={{fontSize:11,fontWeight:700,color:x.c}}>{x.l}</div>
+            <div style={{fontSize:10,color:"#64748b",marginTop:2}}>{x.d}</div>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+}
+
+function VisualBigPictureMap() {
+  return (
+    <div style={{display:"flex",flexDirection:"column",gap:6}}>
+      {[
+        {label:"PORTFOLIO (franja superior)",sub:"Enterprise · Government → Portfolio Leadership → Portfolio Strategy → Portfolio Backlog → Epics → Value Streams → Coordinate & Deliver → Products & Solutions",c:"#7C3AED",bg:"#EDE9FE",b:"#C4B5FD"},
+        {label:"PROGRAM / ART (franja media)",sub:"Business Owners · Product Management · System Architect · RTE → Agile Release Train → PI Planning → Program Board · ROAM Board",c:"#16A34A",bg:"#DCFCE7",b:"#86EFAC"},
+        {label:"TEAM + CDP (base)",sub:"Vision · Roadmap → ART Backlog → Team Backlogs → Features (azul) · Enablers (rojo) · Stories → Iterations → System Demos → IP Iteration → Release on Demand → Customer",c:"#2563EB",bg:"#DBEAFE",b:"#93C5FD"},
+      ].map((x,i)=>(<div key={i} style={{background:x.bg,border:`1px solid ${x.b}`,borderRadius:8,padding:"10px 14px",borderLeft:`4px solid ${x.c}`}}><div style={{fontSize:12,fontWeight:700,color:x.c,marginBottom:4}}>{x.label}</div><div style={{fontSize:11,color:"#374151",lineHeight:1.5}}>{x.sub}</div></div>))}
+      <div style={{display:"flex",gap:6}}>
+        {[{l:"→ Flow",s:"Izq. a Der.",c:"#16A34A"},{l:"← Feedback",s:"Der. a Izq.",c:"#D97706"},{l:"↑ Business Value",s:"crece con cada release",c:"#7C3AED"}].map((x,i)=>(<div key={i} style={{flex:1,background:"#f8fafc",border:"1px solid #e2e8f0",borderRadius:6,padding:"8px 10px",textAlign:"center"}}><div style={{fontSize:11,fontWeight:700,color:x.c}}>{x.l}</div><div style={{fontSize:10,color:"#64748b",marginTop:2}}>{x.s}</div></div>))}
+      </div>
+      <div style={{background:"#1e293b",borderRadius:8,padding:"10px 14px"}}>
+        <div style={{fontSize:10,color:"#5EEAD4",fontWeight:600,marginBottom:5}}>BARRA INFERIOR — Transversales a todo SAFe</div>
+        <div style={{display:"flex",flexWrap:"wrap",gap:5}}>
+          {["Mindset, Values & Principles","SPCs & ASPCs","Implementation Roadmap","Customizing SAFe","Measure & Grow"].map((x,i)=>(<div key={i} style={{background:"#0f5e57",borderRadius:4,padding:"3px 8px",fontSize:10,color:"#5EEAD4",fontWeight:500}}>{x}</div>))}
+        </div>
+      </div>
+    </div>
+  );
+}
+
+function VisualCincoDisciplinas() {
+  const d=[
+    {n:"Gestión Lean del Portfolio",s:"Habilitar la agilidad de la estrategia",c:"#7C3AED",bg:"#EDE9FE"},
+    {n:"Integración y Entrega de Soluciones Grandes",s:"Construir sistemas a gran escala",c:"#D97706",bg:"#FEF3C7"},
+    {n:"Flujo de Desarrollo del Producto",s:"Desarrollar productos innovadores centrados en el Cliente",c:"#DC2626",bg:"#FEE2E2"},
+    {n:"Agilidad Técnica y de Equipo",s:"Acelerar la entrega de valor",c:"#2563EB",bg:"#DBEAFE"},
+    {n:"Liderazgo y Cultura",s:"Establecer una nueva forma de trabajar — BASE",c:"#16A34A",bg:"#DCFCE7"},
+  ];
+  return (<div style={{display:"flex",flexDirection:"column",gap:4}}>{d.map((x,i)=>(<div key={i} style={{background:x.bg,border:`1px solid ${x.c}40`,borderRadius:8,padding:"10px 14px",borderLeft:`4px solid ${x.c}`,marginLeft:i*6,marginRight:i*6}}><div style={{fontSize:12,fontWeight:700,color:x.c}}>{x.n}</div><div style={{fontSize:10,color:"#64748b",marginTop:2,fontStyle:"italic"}}>{x.s}</div></div>))}</div>);
+}
+
+function VisualPortfolioFlow() {
+  return (
+    <div style={{display:"flex",flexDirection:"column",gap:8}}>
+      <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:6}}>
+        {[{icon:"🏢",l:"Enterprise",s:"Dirección estratégica privada"},{icon:"🏛️",l:"Government",s:"Organizaciones públicas"}].map((x,i)=>(<div key={i} style={{background:"#EDE9FE",border:"1px solid #C4B5FD",borderRadius:8,padding:"10px 12px",textAlign:"center"}}><div style={{fontSize:18,marginBottom:4}}>{x.icon}</div><div style={{fontSize:12,fontWeight:700,color:"#4C1D95"}}>{x.l}</div><div style={{fontSize:10,color:"#6D28D9",marginTop:2}}>{x.s}</div></div>))}
+      </div>
+      <div style={{textAlign:"center",fontSize:12,color:"#94a3b8"}}>↓ Portfolio Leadership</div>
+      <div style={{background:"#FEF3C7",border:"1px solid #FCD34D",borderRadius:8,padding:"10px 14px"}}>
+        <div style={{fontSize:12,fontWeight:700,color:"#78350F",marginBottom:6}}>Kanban de Portfolio</div>
+        <div style={{display:"flex",gap:4,flexWrap:"wrap",marginBottom:8}}>{["Funnel","Revisión","Análisis","Listo","Implementación","Terminado"].map((x,i)=>(<div key={i} style={{background:"white",border:"1px solid #FDE68A",borderRadius:4,padding:"3px 8px",fontSize:10,color:"#92400E",fontWeight:500}}>{x}</div>))}</div>
+        <div style={{display:"flex",gap:6}}>
+          <div style={{flex:1,background:"white",border:"1px solid #FDE68A",borderRadius:6,padding:"6px 8px"}}><div style={{fontSize:11,fontWeight:700,color:"#92400E"}}>Business Epic</div><div style={{fontSize:10,color:"#78350F"}}>Valor directo al cliente</div></div>
+          <div style={{flex:1,background:"#FEE2E2",border:"1px solid #FCA5A5",borderRadius:6,padding:"6px 8px"}}><div style={{fontSize:11,fontWeight:700,color:"#991B1B"}}>Enabler Epic</div><div style={{fontSize:10,color:"#7F1D1D"}}>Capacidad técnica</div></div>
+        </div>
+      </div>
+      <div style={{textAlign:"center",fontSize:12,color:"#94a3b8"}}>↓ Value Streams → ARTs → Products & Solutions</div>
+    </div>
+  );
+}
+
+function VisualARTStructure() {
+  return (
+    <div style={{border:"1px solid #86EFAC",borderRadius:10,overflow:"hidden"}}>
+      <div style={{background:"#16A34A",padding:"8px 14px",fontSize:12,fontWeight:700,color:"#fff"}}>ART — Agile Release Train (50–125 personas, 8–12 equipos)</div>
+      <div style={{background:"#DCFCE7",padding:12}}>
+        <div style={{fontSize:10,color:"#14532D",fontWeight:700,marginBottom:6}}>3 ROLES DE LIDERAZGO DEL ART</div>
+        <div style={{display:"grid",gridTemplateColumns:"repeat(3,1fr)",gap:6,marginBottom:10}}>
+          {[{n:"Product Management",s:"Autoridad de contenido"},{n:"System Architect",s:"Autoridad técnica"},{n:"RTE",s:"Entrega de valor · Coach"}].map((r,i)=>(<div key={i} style={{background:"#fff",border:"1px solid #86EFAC",borderRadius:6,padding:"8px 10px",textAlign:"center"}}><div style={{fontSize:11,fontWeight:700,color:"#14532D"}}>{r.n}</div><div style={{fontSize:10,color:"#64748b",marginTop:2}}>{r.s}</div></div>))}
+        </div>
+        <div style={{fontSize:10,color:"#14532D",fontWeight:700,marginBottom:6}}>EQUIPOS ÁGILES (3 roles: PO + SM + Devs)</div>
+        <div style={{display:"grid",gridTemplateColumns:"repeat(4,1fr)",gap:6}}>
+          {["Equipo 1","Equipo 2","Equipo 3","Equipo N"].map((t,i)=>(<div key={i} style={{background:"#DBEAFE",border:"1px solid #93C5FD",borderRadius:6,padding:"8px",textAlign:"center"}}><div style={{fontSize:11,fontWeight:700,color:"#1D4ED8"}}>{t}</div><div style={{fontSize:9,color:"#64748b",marginTop:2}}>SM + PO + Devs</div></div>))}
+        </div>
+      </div>
+    </div>
+  );
+}
+
+function VisualBacklogHierarchy() {
+  return (
+    <div style={{display:"flex",flexDirection:"column",gap:6}}>
+      {[
+        {l:"EPIC",lv:"Portfolio · meses · Lean Business Case",ex:'"Plataforma de pagos internacional"',c:"#7C3AED",bg:"#EDE9FE",b:"#C4B5FD",ind:0},
+        {l:"FEATURE",lv:"Program/ART · 1 PI · ART Backlog",ex:'"Pago con tarjeta en 5 monedas"',c:"#2563EB",bg:"#DBEAFE",b:"#93C5FD",ind:16},
+        {l:"STORY",lv:"Team · 1 iteración · Team Backlog",ex:'"Como usuario, selecciono USD al pagar"',c:"#16A34A",bg:"#DCFCE7",b:"#86EFAC",ind:32},
+        {l:"ENABLER",lv:"Cualquier nivel — tarjeta ROJA en Big Picture",ex:'"Integrar API de conversión de divisas"',c:"#DC2626",bg:"#FEE2E2",b:"#FCA5A5",ind:32},
+      ].map((x,i)=>(<div key={i} style={{marginLeft:x.ind,background:x.bg,border:`1px solid ${x.b}`,borderRadius:8,padding:"10px 14px",borderLeft:`4px solid ${x.c}`}}><div style={{display:"flex",alignItems:"center",gap:8,marginBottom:3}}><div style={{background:x.c,color:"#fff",borderRadius:4,padding:"2px 8px",fontSize:11,fontWeight:700}}>{x.l}</div><div style={{fontSize:11,color:"#64748b"}}>{x.lv}</div></div><div style={{fontSize:11,color:"#374151",fontStyle:"italic"}}>{x.ex}</div></div>))}
+    </div>
+  );
+}
+
+function VisualPIFlow() {
+  return (
+    <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:10}}>
+      {[
+        {day:"Día 1",c:"#0D9488",items:["Visión de negocio (Business Owners + PM)","Visión de arquitectura (System Architect)","Breakouts: equipos planifican iteraciones","Revisión de dependencias → Program Board","Management Review: ajuste de scope/recursos"]},
+        {day:"Día 2",c:"#134E4A",items:["Ajuste de planes según Management Review","ROAMing de riesgos (RTE facilita)","PI Objectives finales (Committed + Uncommitted)","Confidence Vote (mínimo 3/5 promedio)","Cierre del PI Planning"]}
+      ].map((s,i)=>(<div key={i} style={{border:`1px solid ${s.c}40`,borderRadius:8,overflow:"hidden"}}><div style={{background:s.c,padding:"8px 14px",fontSize:12,fontWeight:700,color:"#fff"}}>{s.day}</div>{s.items.map((item,j)=>(<div key={j} style={{padding:"7px 14px",fontSize:11,color:"#374151",borderBottom:j<s.items.length-1?"1px solid #f0fdf4":"none",background:j%2===0?"#fff":"#f0fdf9",lineHeight:1.4}}>{item}</div>))}</div>))}
+    </div>
+  );
+}
+
+function VisualProgramBoard() {
+  return (
+    <div style={{display:"flex",flexDirection:"column",gap:8}}>
+      <div style={{overflowX:"auto"}}>
+        <table style={{borderCollapse:"collapse",width:"100%",fontSize:11,minWidth:480}}>
+          <thead><tr>
+            <th style={{padding:"7px 10px",background:"#1e293b",color:"#94a3b8",fontWeight:500,textAlign:"left"}}>Equipo</th>
+            {["Sprint 1","Sprint 2","Sprint 3","Sprint 4","IP Sprint"].map((s,i)=>(<th key={i} style={{padding:"7px 10px",background:i===4?"#78350F":"#1e293b",color:i===4?"#FDE68A":"#93C5FD",fontWeight:500,textAlign:"center"}}>{s}</th>))}
+          </tr></thead>
+          <tbody>
+            <tr>
+              <td style={{padding:"8px 10px",background:"#f8fafc",fontWeight:700,color:"#374151",borderBottom:"1px solid #e2e8f0",fontSize:11}}>Equipo A</td>
+              <td style={{padding:"6px",borderBottom:"1px solid #e2e8f0",textAlign:"center"}}><div style={{background:"#DBEAFE",border:"1px solid #93C5FD",borderRadius:4,padding:"3px 6px",fontSize:10,color:"#1D4ED8"}}>Auth API</div></td>
+              <td style={{padding:"6px",borderBottom:"1px solid #e2e8f0",textAlign:"center"}}><div style={{background:"#FEE2E2",border:"1px solid #FCA5A5",borderRadius:4,padding:"3px 6px",fontSize:10,color:"#DC2626"}}>Enabler</div></td>
+              <td style={{padding:"6px",borderBottom:"1px solid #e2e8f0",textAlign:"center"}}><div style={{background:"#DBEAFE",border:"1px solid #93C5FD",borderRadius:4,padding:"3px 6px",fontSize:10,color:"#1D4ED8"}}>Pagos API</div></td>
+              <td style={{padding:"6px",borderBottom:"1px solid #e2e8f0"}}></td>
+              <td style={{padding:"6px",borderBottom:"1px solid #e2e8f0",background:"#FEF3C7",textAlign:"center"}}><div style={{fontSize:10,color:"#78350F"}}>Innov.</div></td>
+            </tr>
+            <tr>
+              <td style={{padding:"8px 10px",background:"#f8fafc",fontWeight:700,color:"#374151",fontSize:11}}>Equipo B</td>
+              <td style={{padding:"6px"}}></td>
+              <td style={{padding:"6px",textAlign:"center"}}><div style={{background:"#DCFCE7",border:"1px solid #86EFAC",borderRadius:4,padding:"3px 6px",fontSize:10,color:"#14532D"}}>Login UI</div></td>
+              <td style={{padding:"6px",textAlign:"center"}}><div style={{background:"#DCFCE7",border:"1px solid #86EFAC",borderRadius:4,padding:"3px 6px",fontSize:10,color:"#14532D"}}>Checkout UI</div></td>
+              <td style={{padding:"6px",textAlign:"center"}}><div style={{background:"#FEE2E2",border:"1px solid #FCA5A5",borderRadius:4,padding:"3px 6px",fontSize:10,color:"#DC2626"}}>Enabler</div></td>
+              <td style={{padding:"6px",background:"#FEF3C7",textAlign:"center"}}><div style={{fontSize:10,color:"#78350F"}}>Plan.</div></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <div style={{background:"#FEF3C7",border:"1px solid #FCD34D",borderRadius:6,padding:"8px 12px",fontSize:11,color:"#78350F"}}>Las flechas rojas conectan Auth API (Equipo A, Sprint 1) → Login UI (Equipo B, Sprint 2). Acuerdo explícito y público para todo el ART.</div>
+    </div>
+  );
+}
+
+function VisualROAM() {
+  return (
+    <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:8}}>
+      {[
+        {l:"R",n:"Resolved",d:"El riesgo ya no existe",ex:"Infra confirmó entorno listo para Sprint 1",c:"#16A34A",bg:"#DCFCE7",b:"#86EFAC"},
+        {l:"O",n:"Owned",d:"Una persona específica lo gestiona",ex:"Carlos García gestiona dependencia con proveedor externo",c:"#2563EB",bg:"#DBEAFE",b:"#93C5FD"},
+        {l:"A",n:"Accepted",d:"Se acepta conscientemente el impacto",ex:"Si legal no aprueba antes Sprint 2, el módulo no entra en producción",c:"#D97706",bg:"#FEF3C7",b:"#FCD34D"},
+        {l:"M",n:"Mitigated",d:"Hay un plan concreto de contingencia",ex:"Plan B: API alternativa documentada y contratada si la principal falla",c:"#DB2777",bg:"#FCE7F3",b:"#F9A8D4"},
+      ].map((x,i)=>(<div key={i} style={{background:x.bg,border:`1px solid ${x.b}`,borderRadius:8,padding:"12px 14px"}}><div style={{display:"flex",alignItems:"center",gap:8,marginBottom:6}}><div style={{width:28,height:28,borderRadius:6,background:x.c,display:"flex",alignItems:"center",justifyContent:"center",fontSize:14,fontWeight:700,color:"#fff",flexShrink:0}}>{x.l}</div><div style={{fontSize:13,fontWeight:700,color:x.c}}>{x.n}</div></div><div style={{fontSize:11,color:"#374151",lineHeight:1.5,marginBottom:5}}>{x.d}</div><div style={{fontSize:10,color:"#64748b",fontStyle:"italic"}}>"{x.ex}"</div></div>))}
+    </div>
+  );
+}
+
+function VisualCDPFlow() {
+  return (
+    <div style={{display:"flex",flexDirection:"column",gap:8}}>
+      <div style={{display:"grid",gridTemplateColumns:"repeat(2,1fr)",gap:6}}>
+        {[
+          {n:"Continuous Exploration (CE)",s:"QUÉ construir · Design Thinking · hipótesis validadas",c:"#7C3AED",bg:"#EDE9FE",b:"#C4B5FD"},
+          {n:"Continuous Integration (CI)",s:"CÓMO construirlo · cada commit integrado y testeado",c:"#2563EB",bg:"#DBEAFE",b:"#93C5FD"},
+          {n:"Continuous Deployment (CD)",s:"Deploy automático a staging/producción · Feature Flags",c:"#0D9488",bg:"#CCFBF1",b:"#5EEAD4"},
+          {n:"Release on Demand",s:"Activación para el cliente · decisión estratégica de negocio",c:"#16A34A",bg:"#DCFCE7",b:"#86EFAC"},
+        ].map((x,i)=>(<div key={i} style={{background:x.bg,border:`1px solid ${x.b}`,borderRadius:8,padding:"10px 12px"}}><div style={{fontSize:11,fontWeight:700,color:x.c,marginBottom:3}}>{x.n}</div><div style={{fontSize:10,color:"#64748b",lineHeight:1.4}}>{x.s}</div></div>))}
+      </div>
+      <div style={{background:"#0f172a",borderRadius:8,padding:"10px 14px",textAlign:"center"}}>
+        <div style={{fontSize:12,fontWeight:700,color:"#fbbf24",marginBottom:4}}>Deploy ≠ Release</div>
+        <div style={{fontSize:11,color:"#94a3b8"}}>Deployment = técnico, automático, continuo · Release on Demand = decisión estratégica de negocio</div>
+      </div>
+      <div style={{background:"#FEF3C7",border:"1px solid #FCD34D",borderRadius:7,padding:"8px 12px",textAlign:"center"}}>
+        <div style={{fontSize:11,fontWeight:700,color:"#78350F"}}>IP Iteration — sprint especial al final del PI</div>
+        <div style={{fontSize:10,color:"#92400E",marginTop:2}}>Innovación + Planning del próximo PI + Deuda técnica. NO es un buffer para atrasos.</div>
+      </div>
+    </div>
+  );
+}
+
+function VisualInspectAdapt() {
+  return (
+    <div style={{display:"flex",flexDirection:"column",gap:8}}>
+      {[
+        {s:"1. PI System Demo",d:"Todos los equipos demuestran el sistema INTEGRADO completo a Business Owners. No es suma de demos por equipo. Los Business Owners asignan Business Value Actual a cada PI Objective.",c:"#2563EB",bg:"#DBEAFE",b:"#93C5FD"},
+        {s:"2. Quantitative Measurement",d:"ART Predictability: % de Committed alcanzados (objetivo 80–100%). Business Value planeado vs entregado. Métricas de flow: velocidad, defect rate, time to market.",c:"#D97706",bg:"#FEF3C7",b:"#FCD34D"},
+        {s:"3. Problem-Solving Workshop",d:"Retrospectiva del SISTEMA con técnicas de causa raíz (5 Whys, Fishbone). Output: 3–5 mejoras CONCRETAS con owner individual y fecha → entran al ART Backlog.",c:"#16A34A",bg:"#DCFCE7",b:"#86EFAC"},
+      ].map((x,i)=>(<div key={i} style={{background:x.bg,border:`1px solid ${x.b}`,borderRadius:8,padding:"12px 14px",borderLeft:`4px solid ${x.c}`}}><div style={{fontSize:13,fontWeight:700,color:x.c,marginBottom:5}}>{x.s}</div><div style={{fontSize:12,color:"#374151",lineHeight:1.6}}>{x.d}</div></div>))}
+      <div style={{background:"#f8fafc",border:"1px solid #e2e8f0",borderRadius:6,padding:"8px 12px",fontSize:11,color:"#64748b",textAlign:"center"}}>El I&A alimenta la flecha ← Feedback del Big Picture — el aprendizaje del PI mejora el siguiente ciclo</div>
+    </div>
+  );
+}
+
+function VisualPDFDisciplina() {
+  return (
+    <div style={{display:"flex",flexDirection:"column",gap:8}}>
+      <div style={{display:"flex",gap:4,overflowX:"auto",paddingBottom:4}}>
+        {[{n:"Innovación",c:"#DC2626",bg:"#FEE2E2"},{n:"Visión",c:"#7C3AED",bg:"#EDE9FE"},{n:"Estrategia",c:"#2563EB",bg:"#DBEAFE"},{n:"Design Thinking",c:"#0D9488",bg:"#CCFBF1"},{n:"Entrega Continua",c:"#16A34A",bg:"#DCFCE7"},{n:"Marketing",c:"#D97706",bg:"#FEF3C7"},{n:"Feedback",c:"#DC2626",bg:"#FEE2E2"}].map((x,i)=>(
+          <div key={i} style={{flexShrink:0,textAlign:"center"}}>
+            <div style={{background:x.bg,border:`1px solid ${x.c}40`,borderRadius:8,padding:"8px 12px",fontSize:11,fontWeight:700,color:x.c}}>{x.n}</div>
+            {i<6&&<div style={{textAlign:"center",fontSize:14,color:"#94a3b8"}}>→</div>}
+          </div>
+        ))}
+      </div>
+      <div style={{background:"#0f172a",borderRadius:8,padding:"12px 14px"}}>
+        <div style={{fontSize:11,color:"#fbbf24",fontWeight:600,marginBottom:8}}>CONEXIÓN CON EL BIG PICTURE</div>
+        {[
+          {label:"💡 Product Innovation",desc:"Bombilla a la izquierda del CDP — innovación como input del flujo"},
+          {label:"👁️ Vision + Roadmap",desc:"Inputs directos del ART Backlog — norte del producto"},
+          {label:"🔄 Continuous Delivery Pipeline",desc:"El proceso de entrega continua — CE + CI + CD"},
+          {label:"↑ Release on Demand",desc:"Cuándo el valor llega al Cliente — flechas azules verticales"},
+          {label:"← Feedback",desc:"Flecha amarilla — aprendizaje del cliente cierra el ciclo"},
+        ].map((x,i)=>(<div key={i} style={{display:"flex",gap:8,marginBottom:5}}><div style={{fontSize:12,color:"#e2e8f0",fontWeight:600,minWidth:180}}>{x.label}</div><div style={{fontSize:11,color:"#94a3b8"}}>{x.desc}</div></div>))}
+      </div>
+      <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:6}}>
+        {[{n:"Time to Market",d:"Idea → cliente",c:"#DC2626",bg:"#FEE2E2"},{n:"Feature Adoption",d:"% usuarios adoptan features",c:"#2563EB",bg:"#DBEAFE"},{n:"NPS",d:"Satisfacción del cliente",c:"#16A34A",bg:"#DCFCE7"},{n:"Product-Market Fit",d:"El producto resuelve el problema",c:"#D97706",bg:"#FEF3C7"}].map((x,i)=>(<div key={i} style={{background:x.bg,border:`1px solid ${x.c}40`,borderRadius:7,padding:"8px 10px"}}><div style={{fontSize:11,fontWeight:700,color:x.c}}>{x.n}</div><div style={{fontSize:10,color:"#64748b",marginTop:2}}>{x.d}</div></div>))}
+      </div>
+    </div>
+  );
+}
+
+function VisualLSID() {
+  return (
+    <div style={{display:"flex",flexDirection:"column",gap:8}}>
+      <div style={{background:"#7C3AED",borderRadius:"8px 8px 0 0",padding:"8px 14px",fontSize:12,fontWeight:700,color:"#fff"}}>Solution Train (coordina múltiples ARTs)</div>
+      <div style={{background:"#EDE9FE",border:"1px solid #C4B5FD",padding:12,borderRadius:"0 0 8px 8px",marginTop:-4}}>
+        <div style={{display:"grid",gridTemplateColumns:"repeat(3,1fr)",gap:6,marginBottom:10}}>
+          {[{n:"Solution Management",s:"Autoridad de contenido"},{n:"Solution Architect",s:"Autoridad técnica"},{n:"STE",s:"Entrega de valor · Coach del Solution Train"}].map((r,i)=>(<div key={i} style={{background:"#fff",border:"1px solid #C4B5FD",borderRadius:6,padding:"8px",textAlign:"center"}}><div style={{fontSize:11,fontWeight:700,color:"#4C1D95"}}>{r.n}</div><div style={{fontSize:9,color:"#64748b",marginTop:2}}>{r.s}</div></div>))}
+        </div>
+        <div style={{display:"grid",gridTemplateColumns:"repeat(3,1fr)",gap:6}}>
+          {["ART 1","ART 2","ART N"].map((a,i)=>(<div key={i} style={{background:"#DCFCE7",border:"1px solid #86EFAC",borderRadius:7,padding:"10px",textAlign:"center"}}><div style={{fontSize:11,fontWeight:700,color:"#14532D"}}>{a}</div><div style={{fontSize:9,color:"#166534",marginTop:2}}>PM + SA + RTE</div><div style={{fontSize:9,color:"#166534"}}>8–12 equipos</div></div>))}
+        </div>
+      </div>
+      <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:6}}>
+        {[{n:"Pre-PI Planning",d:"Líderes del Solution Train se alinean ANTES del PI Planning de cada ART",c:"#DC2626",bg:"#FEE2E2"},{n:"Solution Demo",d:"Demostración integrada de TODOS los ARTs — equivalente del System Demo",c:"#2563EB",bg:"#DBEAFE"},{n:"Solution Intent",d:"Documento vivo de requisitos y restricciones de la solución total",c:"#D97706",bg:"#FEF3C7"},{n:"Suppliers",d:"Proveedores externos — sus dependencias se gestionan igual que las internas",c:"#16A34A",bg:"#DCFCE7"}].map((x,i)=>(<div key={i} style={{background:x.bg,border:`1px solid ${x.c}40`,borderRadius:7,padding:"8px 10px"}}><div style={{fontSize:11,fontWeight:700,color:x.c}}>{x.n}</div><div style={{fontSize:10,color:"#374151",marginTop:3,lineHeight:1.4}}>{x.d}</div></div>))}
+      </div>
+    </div>
+  );
+}
+
+function VisualImplementar() {
+  const fases = [
+    {fase:"Fase 1: Punto de inflexión",pasos:["1. Capacitar agentes de cambio (SPCs)","2. Capacitar ejecutivos y líderes","3. Crear el LACE (Centro de Excelencia)"],c:"#7C3AED",bg:"#EDE9FE"},
+    {fase:"Fase 2: Identificar y lanzar",pasos:["4. Identificar Value Streams y ARTs","5. Preparar el lanzamiento del ART","6. Capacitar equipos y lanzar el ART"],c:"#16A34A",bg:"#DCFCE7"},
+    {fase:"Fase 3: Ejecutar y escalar",pasos:["7. Ejecutar iteraciones (usar SAFe)","8. Lanzar más ARTs y Value Streams","9. Ampliar el portfolio (LPM)","10. Acelerar — mejora continua"],c:"#D97706",bg:"#FEF3C7"},
+  ];
+  return (
+    <div style={{display:"flex",flexDirection:"column",gap:8}}>
+      {fases.map((f,i)=>(<div key={i} style={{background:f.bg,border:`1px solid ${f.c}40`,borderRadius:8,padding:"10px 14px",borderLeft:`4px solid ${f.c}`}}><div style={{fontSize:12,fontWeight:700,color:f.c,marginBottom:6}}>{f.fase}</div>{f.pasos.map((p,j)=>(<div key={j} style={{fontSize:11,color:"#374151",lineHeight:1.6}}>{p}</div>))}</div>))}
+      <div style={{background:"#0f172a",borderRadius:8,padding:"10px 14px"}}>
+        <div style={{fontSize:10,color:"#fbbf24",fontWeight:600,marginBottom:6}}>RESULTADOS HABITUALES (SAFe Explained 2025)</div>
+        <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:4}}>
+          {[{n:"30–75%",d:"Reducción en Time to Market"},{n:"20–50%",d:"Aumento en productividad"},{n:"25–75%",d:"Mejoras en calidad"},{n:"10–50%",d:"Empleados más motivados"}].map((x,i)=>(<div key={i} style={{textAlign:"center"}}><div style={{fontSize:16,fontWeight:700,color:"#4ade80"}}>{x.n}</div><div style={{fontSize:10,color:"#94a3b8",lineHeight:1.3}}>{x.d}</div></div>))}
+        </div>
+      </div>
+      <div style={{background:"#FEE2E2",border:"1px solid #FCA5A5",borderRadius:7,padding:"8px 12px"}}>
+        <div style={{fontSize:11,fontWeight:600,color:"#DC2626",marginBottom:4}}>70% de transformaciones organizacionales fallan — SAFe los factores clave:</div>
+        {["Falta de argumentos claros (el 'por qué')","Escasa alineación del equipo de liderazgo","Buscar cambio big bang en lugar de iterativo","Lentitud en la toma de decisiones ante problemas"].map((x,i)=>(<div key={i} style={{fontSize:11,color:"#7F1D1D",lineHeight:1.5}}>✗ {x}</div>))}
+      </div>
+    </div>
+  );
+}
+
+function Visual({chapter}) {
+  const t=chapter.visual.type;
+  if(t==="lean-agile-mindset") return <VisualLeanAgileMindset/>;
+  if(t==="big-picture-map") return <VisualBigPictureMap/>;
+  if(t==="cinco-disciplinas") return <VisualCincoDisciplinas/>;
+  if(t==="portfolio-flow") return <VisualPortfolioFlow/>;
+  if(t==="art-structure") return <VisualARTStructure/>;
+  if(t==="backlog-hierarchy") return <VisualBacklogHierarchy/>;
+  if(t==="pi-flow") return <VisualPIFlow/>;
+  if(t==="program-board") return <VisualProgramBoard/>;
+  if(t==="roam") return <VisualROAM/>;
+  if(t==="cdp-flow") return <VisualCDPFlow/>;
+  if(t==="inspect-adapt") return <VisualInspectAdapt/>;
+  if(t==="pdf-disciplina") return <VisualPDFDisciplina/>;
+  if(t==="lsid") return <VisualLSID/>;
+  if(t==="implementar") return <VisualImplementar/>;
+  return null;
+}
+
+function Quiz({questions,color,light,onComplete}) {
+  const [answers,setAnswers]=useState({});
+  const [submitted,setSubmitted]=useState(false);
+  function answer(qi,oi){if(submitted||answers[qi]!==undefined)return;setAnswers(a=>({...a,[qi]:oi}));}
+  function submit(){
+    if(Object.keys(answers).length<questions.length)return;
+    const score=questions.reduce((s,q,i)=>s+(answers[i]===q.correct?1:0),0);
+    setSubmitted(true);onComplete(score);
+  }
+  return(
+    <div>
+      {questions.map((q,qi)=>(
+        <div key={qi} style={{marginBottom:16}}>
+          <div style={{fontSize:13,fontWeight:500,color:"#1e293b",marginBottom:8,lineHeight:1.5}}>{qi+1}. {q.q}</div>
+          <div style={{display:"flex",flexDirection:"column",gap:5}}>
+            {q.opts.map((o,oi)=>{
+              let bg="#f8fafc",border="1px solid #e2e8f0",tc="#374151";
+              if(answers[qi]===oi){bg=light;border=`1px solid ${color}`;tc="#1e293b";}
+              if(submitted&&oi===q.correct){bg="#f0fdf4";border="1px solid #86efac";tc="#14532d";}
+              if(submitted&&answers[qi]===oi&&oi!==q.correct){bg="#fef2f2";border="1px solid #fca5a5";tc="#7f1d1d";}
+              return(<div key={oi} onClick={()=>answer(qi,oi)} style={{padding:"9px 13px",borderRadius:7,border,background:bg,cursor:submitted||answers[qi]!==undefined?"default":"pointer",fontSize:12,color:tc,transition:".15s",lineHeight:1.4}}>{o}</div>);
+            })}
+          </div>
+          {submitted&&(<div style={{marginTop:8,padding:"8px 12px",background:answers[qi]===q.correct?"#f0fdf4":"#fef2f2",border:`1px solid ${answers[qi]===q.correct?"#86efac":"#fca5a5"}`,borderRadius:6,fontSize:12,color:answers[qi]===q.correct?"#14532d":"#7f1d1d",lineHeight:1.6}}>{answers[qi]===q.correct?"✓ ":"✗ "}{q.explanation}</div>)}
+        </div>
+      ))}
+      {!submitted&&(<button onClick={submit} disabled={Object.keys(answers).length<questions.length} style={{marginTop:4,padding:"9px 20px",borderRadius:7,border:"none",background:Object.keys(answers).length<questions.length?"#e2e8f0":color,color:Object.keys(answers).length<questions.length?"#94a3b8":"#fff",fontSize:13,fontWeight:600,cursor:Object.keys(answers).length<questions.length?"not-allowed":"pointer"}}>Verificar respuestas</button>)}
+    </div>
+  );
+}
+
+function SAFeGuiaCompleta() {
+  const [chapter,setChapter]=useState(0);
+  const [tab,setTab]=useState("functional");
+  const [quizDone,setQuizDone]=useState({});
+  const [totalScore,setTotalScore]=useState(0);
+  const [totalQ,setTotalQ]=useState(0);
+  const [quizKey,setQuizKey]=useState(0);
+  const ch=CHAPTERS[chapter];
+  const pct=totalQ>0?Math.round((totalScore/totalQ)*100):0;
+  const doneCh=Object.keys(quizDone).length;
+  function handleQuizComplete(score){const prev=quizDone[chapter];if(!prev){setTotalScore(s=>s+score);setTotalQ(t=>t+ch.questions.length);}setQuizDone(d=>({...d,[chapter]:{done:true,score,total:ch.questions.length}}));}
+  function goChapter(idx){setChapter(idx);setTab("functional");setQuizKey(k=>k+1);}
+  return(
+    <div style={{fontFamily:"var(--font-sans)",maxWidth:780,margin:"0 auto"}}>
+      <div style={{background:"#0f172a",borderRadius:"12px 12px 0 0",padding:"12px 16px",display:"flex",alignItems:"center",gap:10}}>
+        <div style={{width:32,height:32,borderRadius:8,background:"rgba(124,58,237,.25)",border:"1px solid rgba(196,181,253,.4)",display:"flex",alignItems:"center",justifyContent:"center",flexShrink:0,fontSize:16}}>🏗️</div>
+        <div style={{flex:1}}>
+          <div style={{fontSize:13,fontWeight:500,color:"#f1f5f9"}}>SAFe — Guía completa · Big Picture + PDF oficial 2025</div>
+          <div style={{fontSize:11,color:"#64748b"}}>12 secciones · 4 grupos · 36 preguntas · NTT DATA prep</div>
+        </div>
+        {doneCh>0&&(<div style={{textAlign:"right"}}><div style={{fontSize:18,fontWeight:700,color:pct>=80?"#4ade80":pct>=60?"#fbbf24":"#f87171"}}>{pct}%</div><div style={{fontSize:10,color:"#64748b"}}>{doneCh}/{CHAPTERS.length} secciones</div></div>)}
+      </div>
+      <div style={{background:"#1e293b",padding:"8px 12px",borderBottom:"1px solid #0f172a"}}>
+        {GROUPS.map(group=>{
+          const gc=CHAPTERS.filter(c=>c.group===group.id);
+          return(<div key={group.id} style={{marginBottom:5}}>
+            <div style={{fontSize:10,fontWeight:700,color:group.color,letterSpacing:".05em",marginBottom:4,paddingLeft:2}}>{group.label.toUpperCase()}</div>
+            <div style={{display:"flex",gap:4,flexWrap:"wrap"}}>
+              {gc.map(c=>{const idx=CHAPTERS.indexOf(c);return(<button key={idx} onClick={()=>goChapter(idx)} style={{fontSize:11,padding:"5px 10px",borderRadius:6,cursor:"pointer",background:chapter===idx?c.color:"transparent",color:chapter===idx?"#fff":"#94a3b8",border:`1px solid ${chapter===idx?c.color:"#334155"}`,fontWeight:chapter===idx?600:400,display:"flex",alignItems:"center",gap:4,transition:".15s"}}>{quizDone[idx]&&<span style={{fontSize:9}}>{quizDone[idx].score===quizDone[idx].total?"✓":"~"}</span>}{c.icon} {c.title}</button>);})}
+            </div>
+          </div>);
+        })}
+      </div>
+      <div style={{background:"#fff",border:"1px solid #e2e8f0",borderTop:"none"}}>
+        <div style={{background:ch.light,borderBottom:`2px solid ${ch.border}`,padding:"14px 18px"}}>
+          <div style={{display:"flex",alignItems:"center",gap:10,flexWrap:"wrap"}}>
+            <div style={{width:42,height:42,borderRadius:10,background:ch.color,display:"flex",alignItems:"center",justifyContent:"center",fontSize:20,flexShrink:0}}>{ch.icon}</div>
+            <div style={{flex:1}}><div style={{fontSize:15,fontWeight:700,color:ch.text}}>{ch.title}</div><div style={{fontSize:11,color:ch.color,marginTop:2}}>{ch.questions.length} preguntas{quizDone[chapter]&&` · ${quizDone[chapter].score}/${quizDone[chapter].total} correctas`}</div></div>
+            <div style={{display:"flex",gap:5,flexWrap:"wrap"}}>{tabs.map(t=>(<button key={t.id} onClick={()=>setTab(t.id)} style={{fontSize:11,padding:"5px 12px",borderRadius:6,cursor:"pointer",background:tab===t.id?ch.color:"transparent",color:tab===t.id?"#fff":ch.text,border:`1px solid ${tab===t.id?ch.color:ch.border}`,fontWeight:tab===t.id?600:400,transition:".15s"}}>{t.label}</button>))}</div>
+          </div>
+        </div>
+        <div style={{padding:"16px 18px"}}>
+          {tab==="functional"&&(<div><div style={{fontSize:10,fontWeight:700,color:"#94a3b8",letterSpacing:".5px",marginBottom:10}}>¿QUÉ ES Y POR QUÉ IMPORTA?</div><div style={{fontSize:13,color:"#374151",lineHeight:1.8,whiteSpace:"pre-line"}}>{ch.functional}</div><div style={{marginTop:14,padding:"10px 14px",background:ch.light,border:`1px solid ${ch.border}`,borderRadius:8,fontSize:12,color:ch.text}}>Orden recomendado: <strong>Funcional → Técnico → Visual → ¿Lo entendí?</strong></div></div>)}
+          {tab==="technical"&&(<div><div style={{fontSize:10,fontWeight:700,color:"#94a3b8",letterSpacing:".5px",marginBottom:10}}>DETALLES TÉCNICOS Y OPERATIVOS</div><div style={{background:"#0f172a",borderRadius:8,padding:"14px 16px"}}><div style={{fontSize:12,color:"#e2e8f0",lineHeight:1.9,whiteSpace:"pre-line",fontFamily:"monospace"}}>{ch.technical}</div></div></div>)}
+          {tab==="visual"&&(<div><div style={{fontSize:10,fontWeight:700,color:"#94a3b8",letterSpacing:".5px",marginBottom:10}}>REPRESENTACIÓN VISUAL</div><Visual chapter={ch}/><div style={{fontSize:12,color:"#64748b",marginTop:10,lineHeight:1.6}}>Mapa mental para la entrevista — memorizá la estructura antes del quiz.</div></div>)}
+          {tab==="quiz"&&(<div><div style={{fontSize:10,fontWeight:700,color:"#94a3b8",letterSpacing:".5px",marginBottom:12}}>VALIDA TU COMPRENSIÓN</div>{quizDone[chapter]?(<div><div style={{background:quizDone[chapter].score===quizDone[chapter].total?"#f0fdf4":"#fffbeb",border:`1px solid ${quizDone[chapter].score===quizDone[chapter].total?"#86efac":"#fcd34d"}`,borderRadius:8,padding:"12px 14px",marginBottom:12}}><div style={{fontSize:13,fontWeight:600,color:"#1e293b"}}>{quizDone[chapter].score===quizDone[chapter].total?"🎯 ¡Sección dominada!":"✅ Sección completada"}</div><div style={{fontSize:12,color:"#64748b",marginTop:4}}>{quizDone[chapter].score}/{quizDone[chapter].total} correctas</div></div><button onClick={()=>{setQuizDone(d=>{const nd={...d};delete nd[chapter];return nd;});setQuizKey(k=>k+1);}} style={{fontSize:12,padding:"8px 16px",borderRadius:7,border:"1px solid #e2e8f0",background:"#f8fafc",cursor:"pointer",color:"#64748b"}}>Repetir quiz</button></div>):(<Quiz key={quizKey} questions={ch.questions} color={ch.color} light={ch.light} onComplete={handleQuizComplete}/>)}</div>)}
+        </div>
+        <div style={{padding:"10px 18px 14px",borderTop:"1px solid #f1f5f9",display:"flex",justifyContent:"space-between",alignItems:"center"}}>
+          <button onClick={()=>goChapter(chapter-1)} disabled={chapter===0} style={{fontSize:12,padding:"8px 16px",borderRadius:7,border:"1px solid #e2e8f0",background:"#f8fafc",cursor:chapter===0?"not-allowed":"pointer",color:chapter===0?"#cbd5e1":"#374151"}}>← Anterior</button>
+          <div style={{fontSize:11,color:"#94a3b8"}}>{chapter+1} / {CHAPTERS.length}</div>
+          <button onClick={()=>goChapter(chapter+1)} disabled={chapter===CHAPTERS.length-1} style={{fontSize:12,padding:"8px 16px",borderRadius:7,border:`1px solid ${ch.color}`,background:ch.color,color:"#fff",cursor:chapter===CHAPTERS.length-1?"not-allowed":"pointer",opacity:chapter===CHAPTERS.length-1?.5:1}}>Siguiente →</button>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+
+const root = ReactDOM.createRoot(document.getElementById("root"));
+root.render(<SAFeGuiaCompleta />);
+</script>
+
+<script>
+// Hide loading, show content when React renders
+window.addEventListener('load', () => {
+  setTimeout(() => {
+    const root = document.getElementById('root');
+    const loading = document.getElementById('loading');
+    if (root && root.children.length > 0) {
+      loading.style.display = 'none';
+      root.style.display = 'block';
+    } else {
+      const observer = new MutationObserver(() => {
+        if (root.children.length > 0) {
+          loading.style.display = 'none';
+          root.style.display = 'block';
+          observer.disconnect();
+        }
+      });
+      observer.observe(root, { childList: true });
+    }
+  }, 100);
+});
+
+// Register SW
+if ('serviceWorker' in navigator) {
+  navigator.serviceWorker.register('./sw.js');
+}
+</script>
+</body>
+</html>
