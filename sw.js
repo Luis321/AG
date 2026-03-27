@@ -1,4 +1,4 @@
-const CACHE_NAME = 'agile-coach-pwa-v2';
+const CACHE_NAME = 'agile-coach-pwa-v3';
 
 const CORE_ASSETS = [
   './index.html',
