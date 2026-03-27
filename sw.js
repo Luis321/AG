@@ -4,20 +4,20 @@
 // automática en todos los dispositivos
 // ══════════════════════════════════════════════
 
-const CACHE_VERSION = 'v7-calaris'; // ← incrementar con cada deploy
+const CACHE_VERSION = 'v8-fix-links'; // ← incrementar con cada deploy
 const CACHE_NAME = `ag-prep-${CACHE_VERSION}`;
 
 const PRECACHE_URLS = [
   '/AG/',
   '/AG/index.html',
   '/AG/manifest.json',
-  '/AG/plan/',
-  '/AG/herramientas/',
-  '/AG/safe/',
-  '/AG/modelos/',
-  '/AG/less/',
-  '/AG/atf/',
-  '/AG/calaris/',
+  '/AG/plan.html',
+  '/AG/herramientas.html',
+  '/AG/safe.html',
+  '/AG/modelos.html',
+  '/AG/less.html',
+  '/AG/atf.html',
+  '/AG/calaris.html',
 ];
 
 // ── INSTALL: precachear recursos esenciales ──
