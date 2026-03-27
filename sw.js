@@ -1,101 +1,106 @@
-const CACHE_NAME = 'agile-coach-pwa-v3';
+// ══════════════════════════════════════════════
+// sw.js — Service Worker con cache versionado
+// Cambia CACHE_VERSION para forzar actualización
+// automática en todos los dispositivos
+// ══════════════════════════════════════════════
 
-const CORE_ASSETS = [
-  './index.html',
-  './plan.html',
-  './herramientas.html',
-  './modelos.html',
-  './safe.html',
-  './less.html',
-  './atf.html',
-  './manifest.json'
+const CACHE_VERSION = 'v7-calaris'; // ← incrementar con cada deploy
+const CACHE_NAME = `ag-prep-${CACHE_VERSION}`;
+
+const PRECACHE_URLS = [
+  '/AG/',
+  '/AG/index.html',
+  '/AG/manifest.json',
+  '/AG/plan/',
+  '/AG/herramientas/',
+  '/AG/safe/',
+  '/AG/modelos/',
+  '/AG/less/',
+  '/AG/atf/',
+  '/AG/calaris/',
 ];
 
-const CDN_ASSETS = [
-  'https://unpkg.com/react@18/umd/react.production.min.js',
-  'https://unpkg.com/react-dom@18/umd/react-dom.production.min.js',
-  'https://unpkg.com/@babel/standalone/babel.min.js',
-  'https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;1,9..40,300&display=swap'
-];
-
-// Install: cache all core assets + CDN dependencies
+// ── INSTALL: precachear recursos esenciales ──
 self.addEventListener('install', event => {
+  // Activar inmediatamente sin esperar a que cierren las pestañas
+  self.skipWaiting();
+
   event.waitUntil(
     caches.open(CACHE_NAME).then(cache => {
-      return cache.addAll(CORE_ASSETS).catch(err => {
-        console.warn('Some core assets failed to cache:', err);
+      return cache.addAll(PRECACHE_URLS.map(url => {
+        return new Request(url, { cache: 'reload' });
+      })).catch(err => {
+        // Si falla alguna URL no crítica, continuar igual
+        console.warn('SW precache parcial:', err);
       });
-    }).then(() => {
-      // Pre-cache CDN assets (React, Babel) needed for herramientas.html
-      return caches.open(CACHE_NAME).then(cache => {
-        return Promise.allSettled(
-          CDN_ASSETS.map(url => fetch(url).then(r => r.ok ? cache.put(url, r) : null).catch(() => null))
-        );
-      });
-    }).then(() => self.skipWaiting())
+    })
   );
 });
 
-// Activate: clean old caches
+// ── ACTIVATE: eliminar caches viejos automáticamente ──
 self.addEventListener('activate', event => {
   event.waitUntil(
-    caches.keys().then(keys =>
-      Promise.all(
-        keys.filter(k => k !== CACHE_NAME).map(k => caches.delete(k))
-      )
-    ).then(() => self.clients.claim())
+    caches.keys().then(cacheNames => {
+      return Promise.all(
+        cacheNames
+          .filter(name => name.startsWith('ag-prep-') && name !== CACHE_NAME)
+          .map(name => {
+            console.log('SW eliminando cache viejo:', name);
+            return caches.delete(name);
+          })
+      );
+    }).then(() => {
+      // Tomar control de todas las pestañas abiertas inmediatamente
+      return self.clients.claim();
+    })
   );
 });
 
-// Fetch: cache-first for local files, network-first with cache fallback for CDN
+// ── FETCH: Network First para HTML, Cache First para assets ──
 self.addEventListener('fetch', event => {
   const url = new URL(event.request.url);
 
-  // Skip non-GET requests
-  if (event.request.method !== 'GET') return;
+  // Solo manejar requests del mismo origen
+  if (url.origin !== location.origin) return;
 
-  // Cache-first for same-origin (local files)
-  if (url.origin === self.location.origin) {
+  // Para documentos HTML: Network First (para recibir actualizaciones)
+  if (event.request.mode === 'navigate' ||
+      event.request.headers.get('accept')?.includes('text/html')) {
     event.respondWith(
-      caches.match(event.request).then(cached => {
-        if (cached) return cached;
-        return fetch(event.request).then(response => {
-          if (response && response.status === 200) {
-            const clone = response.clone();
-            caches.open(CACHE_NAME).then(cache => cache.put(event.request, clone));
-          }
+      fetch(event.request)
+        .then(response => {
+          // Guardar copia fresca en cache
+          const responseClone = response.clone();
+          caches.open(CACHE_NAME).then(cache => cache.put(event.request, responseClone));
           return response;
-        }).catch(() => caches.match('./index.html'));
-      })
+        })
+        .catch(() => {
+          // Sin red: servir desde cache
+          return caches.match(event.request)
+            .then(cached => cached || caches.match('/AG/'));
+        })
     );
     return;
   }
 
-  // Stale-while-revalidate for CDN assets (React, Babel, Fonts)
-  if (CDN_ASSETS.some(a => event.request.url.includes(a.split('/').pop().split('?')[0].slice(0,20)))) {
-    event.respondWith(
-      caches.match(event.request).then(cached => {
-        const fetchPromise = fetch(event.request).then(response => {
-          if (response && response.status === 200) {
-            const clone = response.clone();
-            caches.open(CACHE_NAME).then(cache => cache.put(event.request, clone));
-          }
-          return response;
-        }).catch(() => null);
-        return cached || fetchPromise;
-      })
-    );
-    return;
-  }
-
-  // Default: network with cache fallback
+  // Para JS, CSS, imágenes: Cache First con fallback a red
   event.respondWith(
-    fetch(event.request).then(response => {
-      if (response && response.status === 200) {
-        const clone = response.clone();
-        caches.open(CACHE_NAME).then(cache => cache.put(event.request, clone));
-      }
-      return response;
-    }).catch(() => caches.match(event.request))
+    caches.match(event.request).then(cached => {
+      if (cached) return cached;
+      return fetch(event.request).then(response => {
+        if (response && response.status === 200) {
+          const clone = response.clone();
+          caches.open(CACHE_NAME).then(cache => cache.put(event.request, clone));
+        }
+        return response;
+      });
+    })
   );
+});
+
+// ── MESSAGE: responder a petición de skip waiting ──
+self.addEventListener('message', event => {
+  if (event.data && event.data.type === 'SKIP_WAITING') {
+    self.skipWaiting();
+  }
 });
