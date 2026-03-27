@@ -7,6 +7,7 @@ const CORE_ASSETS = [
   './modelos.html',
   './safe.html',
   './less.html',
+  './atf.html',
   './manifest.json'
 ];
 
