@@ -1,338 +1,213 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<meta name="theme-color" content="#7c5cbf">
-<meta name="apple-mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<meta name="apple-mobile-web-app-title" content="Agile Guías">
-<title>Agile Coach Guías · Luis Otoya</title>
-<link rel="manifest" href="./manifest.json">
-<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;1,9..40,300&display=swap" rel="stylesheet">
-<style>
-  :root {
-    --ink: #1a1814;
-    --page: #faf8f4;
-    --page-warm: #f2ede4;
-    --rule: #e4dfd6;
-    --purple: #7c5cbf;
-    --green: #1a8a6e;
-    --amber: #c26a1e;
-    --blue: #2a6db5;
-    --red: #c0392b;
-  }
-  * { margin: 0; padding: 0; box-sizing: border-box; }
-  body {
-    font-family: 'DM Sans', sans-serif;
-    background: var(--ink);
-    color: var(--page);
-    min-height: 100vh;
-    display: flex;
-    flex-direction: column;
-  }
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Luis Otoya — Prep NTT DATA</title>
+  <meta name="theme-color" content="#0f172a"/>
+  <meta name="description" content="Plan de cierre de brechas + guías de estudio con quizzes · Luis Otoya Sarca"/>
+  <link rel="manifest" href="manifest.json"/>
+  <link rel="apple-touch-icon" href="icons/icon-192.png"/>
+  <style>
+    *{box-sizing:border-box;margin:0;padding:0}
+    :root{
+      --bg:#0f172a;--surface:#1e293b;--border:#334155;
+      --text:#f1f5f9;--muted:#94a3b8;--accent:#7C3AED;
+    }
+    body{
+      font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;
+      background:var(--bg);color:var(--text);min-height:100vh;
+      padding-bottom:env(safe-area-inset-bottom);
+    }
 
-  /* HEADER */
-  .hero {
-    padding: 3rem 2rem 2rem;
-    text-align: center;
-    position: relative;
-    overflow: hidden;
-    flex-shrink: 0;
-  }
-  .hero::before {
-    content: '';
-    position: absolute;
-    top: -80px; right: -80px;
-    width: 300px; height: 300px;
-    border-radius: 50%;
-    background: rgba(124,92,191,0.08);
-  }
-  .hero-eyebrow {
-    font-size: 11px;
-    letter-spacing: 0.15em;
-    text-transform: uppercase;
-    color: rgba(255,255,255,0.4);
-    margin-bottom: 0.75rem;
-  }
-  .hero-title {
-    font-family: 'DM Serif Display', serif;
-    font-size: clamp(1.8rem, 5vw, 2.8rem);
-    line-height: 1.15;
-    margin-bottom: 0.5rem;
-  }
-  .hero-title em {
-    font-style: italic;
-    color: rgba(255,255,255,0.45);
-  }
-  .hero-sub {
-    font-size: 13px;
-    color: rgba(255,255,255,0.4);
-    font-weight: 300;
-    margin-bottom: 2rem;
-  }
+    /* ── HEADER ── */
+    .header{
+      padding:40px 20px 24px;
+      text-align:center;
+      border-bottom:1px solid var(--border);
+    }
+    .header-badge{
+      display:inline-flex;align-items:center;gap:6px;
+      background:rgba(124,58,237,.15);border:1px solid rgba(196,181,253,.3);
+      border-radius:20px;padding:4px 12px;
+      font-size:11px;color:#a78bfa;margin-bottom:16px;
+    }
+    .header h1{font-size:22px;font-weight:700;line-height:1.3;margin-bottom:8px}
+    .header p{font-size:13px;color:var(--muted);line-height:1.6}
 
-  /* OFFLINE BADGE */
-  .pwa-badge {
-    display: inline-flex;
-    align-items: center;
-    gap: 6px;
-    background: rgba(255,255,255,0.06);
-    border: 1px solid rgba(255,255,255,0.1);
-    border-radius: 20px;
-    padding: 6px 14px;
-    font-size: 11px;
-    color: rgba(255,255,255,0.5);
-    margin-bottom: 2.5rem;
-  }
-  .pwa-badge .dot {
-    width: 6px; height: 6px;
-    border-radius: 50%;
-    background: #4ade80;
-    animation: pulse 2s infinite;
-  }
-  @keyframes pulse {
-    0%, 100% { opacity: 1; }
-    50% { opacity: 0.4; }
-  }
+    /* ── INSTALL BANNER ── */
+    #install-banner{
+      display:none;margin:16px 20px;
+      background:linear-gradient(135deg,#4C1D95,#1D4ED8);
+      border-radius:12px;padding:14px 16px;
+    }
+    #install-banner p{font-size:12px;color:#c4b5fd;margin-bottom:10px;line-height:1.5}
+    #install-banner button{
+      background:#7C3AED;color:#fff;border:none;
+      border-radius:8px;padding:8px 16px;font-size:12px;
+      font-weight:600;cursor:pointer;width:100%;
+    }
 
-  /* MODULES GRID */
-  .modules {
-    display: grid;
-    grid-template-columns: 1fr;
-    gap: 12px;
-    padding: 0 1.5rem 2rem;
-    max-width: 520px;
-    margin: 0 auto;
-    width: 100%;
-  }
+    /* ── SECTIONS ── */
+    .section-label{
+      font-size:10px;font-weight:700;letter-spacing:.08em;
+      color:var(--muted);padding:20px 20px 8px;
+      text-transform:uppercase;
+    }
 
-  .module-card {
-    display: flex;
-    align-items: center;
-    gap: 16px;
-    background: rgba(255,255,255,0.04);
-    border: 1px solid rgba(255,255,255,0.08);
-    border-radius: 14px;
-    padding: 1.25rem 1.5rem;
-    cursor: pointer;
-    text-decoration: none;
-    color: inherit;
-    transition: all 0.2s;
-    position: relative;
-    overflow: hidden;
-  }
-  .module-card:hover {
-    background: rgba(255,255,255,0.08);
-    border-color: rgba(255,255,255,0.15);
-    transform: translateY(-1px);
-  }
-  .module-card::before {
-    content: '';
-    position: absolute;
-    left: 0; top: 0; bottom: 0;
-    width: 3px;
-    border-radius: 3px 0 0 3px;
-  }
-  .module-card.purple::before { background: #7c5cbf; }
-  .module-card.green::before  { background: #1a8a6e; }
-  .module-card.amber::before  { background: #c26a1e; }
-  .module-card.blue::before   { background: #2563eb; }
+    /* ── CARDS ── */
+    .card{
+      margin:0 16px 8px;
+      background:var(--surface);
+      border:1px solid var(--border);
+      border-radius:14px;
+      padding:14px 16px;
+      display:flex;align-items:center;gap:14px;
+      text-decoration:none;color:var(--text);
+      transition:background .15s,border-color .15s;
+      cursor:pointer;
+    }
+    .card:active{background:#263044}
+    .card-icon{
+      width:44px;height:44px;border-radius:10px;
+      display:flex;align-items:center;justify-content:center;
+      font-size:20px;flex-shrink:0;
+    }
+    .card-body{flex:1;min-width:0}
+    .card-title{font-size:14px;font-weight:600;margin-bottom:3px}
+    .card-sub{font-size:11px;color:var(--muted);line-height:1.4}
+    .card-arrow{color:var(--muted);font-size:16px;flex-shrink:0}
 
-  .module-icon {
-    width: 48px; height: 48px;
-    border-radius: 12px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 22px;
-    flex-shrink: 0;
-  }
-  .module-card.purple .module-icon { background: rgba(124,92,191,0.2); }
-  .module-card.green  .module-icon { background: rgba(26,138,110,0.2); }
-  .module-card.amber  .module-icon { background: rgba(194,106,30,0.2); }
-  .module-card.blue   .module-icon { background: rgba(37,99,235,0.2); }
+    /* ── ACCENT COLORS ── */
+    .c-purple{background:rgba(124,58,237,.2);border-color:rgba(196,181,253,.3)}
+    .c-teal  {background:rgba(13,148,136,.2); border-color:rgba(94,234,212,.3)}
+    .c-blue  {background:rgba(37,99,235,.2);  border-color:rgba(147,197,253,.3)}
+    .c-green {background:rgba(22,163,74,.2);  border-color:rgba(134,239,172,.3)}
+    .c-orange{background:rgba(217,119,6,.2);  border-color:rgba(252,211,77,.3)}
+    .c-red   {background:rgba(220,38,38,.2);  border-color:rgba(252,165,165,.3)}
 
-  .module-info { flex: 1; }
-  .module-title {
-    font-size: 14px;
-    font-weight: 500;
-    color: white;
-    margin-bottom: 3px;
-  }
-  .module-meta {
-    font-size: 11px;
-    color: rgba(255,255,255,0.4);
-    line-height: 1.5;
-  }
-  .module-arrow {
-    font-size: 18px;
-    color: rgba(255,255,255,0.25);
-    flex-shrink: 0;
-  }
-
-  /* DIVIDER */
-  .section-divider {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    padding: 0 1.5rem;
-    max-width: 520px;
-    margin: 0 auto 14px;
-    width: 100%;
-  }
-  .section-divider span {
-    font-size: 10px;
-    letter-spacing: 0.12em;
-    text-transform: uppercase;
-    color: rgba(255,255,255,0.25);
-    white-space: nowrap;
-  }
-  .section-divider::before, .section-divider::after {
-    content: '';
-    flex: 1;
-    height: 1px;
-    background: rgba(255,255,255,0.08);
-  }
-
-  /* INSTALL BANNER */
-  #install-banner {
-    display: none;
-    margin: 0 1.5rem 1.5rem;
-    max-width: 520px;
-    margin-left: auto;
-    margin-right: auto;
-    background: rgba(124,92,191,0.15);
-    border: 1px solid rgba(124,92,191,0.3);
-    border-radius: 12px;
-    padding: 12px 16px;
-    text-align: center;
-    font-size: 12px;
-    color: rgba(255,255,255,0.7);
-  }
-  #install-banner button {
-    margin-top: 8px;
-    background: #7c5cbf;
-    color: white;
-    border: none;
-    border-radius: 8px;
-    padding: 8px 20px;
-    font-size: 12px;
-    cursor: pointer;
-    font-weight: 500;
-  }
-
-  /* FOOTER */
-  .footer {
-    border-top: 1px solid rgba(255,255,255,0.06);
-    padding: 1.5rem;
-    text-align: center;
-    font-size: 11px;
-    color: rgba(255,255,255,0.2);
-    margin-top: auto;
-  }
-  .footer strong { color: rgba(255,255,255,0.4); }
-</style>
+    /* ── FOOTER ── */
+    footer{
+      text-align:center;padding:24px 20px;
+      font-size:11px;color:#475569;line-height:1.8;
+      border-top:1px solid var(--border);margin-top:16px;
+    }
+  </style>
 </head>
 <body>
 
-<div class="hero">
-  <div class="hero-eyebrow">Luis Otoya Sarca · Agile Coach & AI Practitioner</div>
-  <h1 class="hero-title">Guías de preparación<br><em>interactivas</em></h1>
-  <p class="hero-sub">Plan de cierre de brechas + 4 guías de estudio con quizzes</p>
-  <div class="pwa-badge">
-    <div class="dot"></div>
-    Disponible sin internet después del primer acceso
-  </div>
+<div class="header">
+  <div class="header-badge">⚡ Disponible sin internet después del primer acceso</div>
+  <h1>Plan de cierre de brechas + guías de estudio con quizzes</h1>
+  <p>Luis Otoya Sarca · Prep NTT DATA / BCP · Marzo 2026</p>
 </div>
 
 <div id="install-banner">
-  📲 Instalá esta app en tu pantalla de inicio para acceso rápido sin internet
-  <br>
+  <p>📲 Instalá esta app en tu pantalla de inicio para acceso rápido sin internet</p>
   <button id="install-btn">Instalar app</button>
 </div>
 
-<div class="section-divider"><span>Plan personal</span></div>
+<div class="section-label">Plan Personal</div>
 
-<div class="modules">
-  <a href="./plan.html" class="module-card purple">
-    <div class="module-icon">📋</div>
-    <div class="module-info">
-      <div class="module-title">Plan de Cierre de Brechas</div>
-      <div class="module-meta">4 semanas · ~22h total · Diagnóstico basado en evaluación</div>
-    </div>
-    <div class="module-arrow">›</div>
-  </a>
+<a class="card" href="plan/">
+  <div class="card-icon c-purple">📋</div>
+  <div class="card-body">
+    <div class="card-title">Plan de Cierre de Brechas</div>
+    <div class="card-sub">4 semanas · ~22h total · Diagnóstico basado en evaluación</div>
+  </div>
+  <div class="card-arrow">›</div>
+</a>
 
-  <a href="./herramientas.html" class="module-card amber">
-    <div class="module-icon">🛠️</div>
-    <div class="module-info">
-      <div class="module-title">Herramientas NTT Data</div>
-      <div class="module-meta">8 secciones · 24 preguntas · Jira · Azure · Miro · Mural · ServiceNow</div>
-    </div>
-    <div class="module-arrow">›</div>
-  </a>
+<a class="card" href="herramientas/">
+  <div class="card-icon c-orange">🔧</div>
+  <div class="card-body">
+    <div class="card-title">Herramientas NTT Data</div>
+    <div class="card-sub">8 secciones · 24 preguntas · Jira · Azure · Miro · Mural · ServiceNow</div>
+  </div>
+  <div class="card-arrow">›</div>
+</a>
 
-</div>
+<div class="section-label">Guías de Estudio con Quiz</div>
 
-<div class="section-divider" style="margin-top:8px"><span>Guías de estudio con quiz</span></div>
+<a class="card" href="safe/">
+  <div class="card-icon c-purple">🏗️</div>
+  <div class="card-body">
+    <div class="card-title">SAFe — Guía completa</div>
+    <div class="card-sub">15 secciones · 45 preguntas · Big Picture + PDF oficial 2025</div>
+  </div>
+  <div class="card-arrow">›</div>
+</a>
 
-<div class="modules">
-  <a href="./atf.html" class="module-card green">
-    <div class="module-icon">🧭</div>
-    <div class="module-info">
-      <div class="module-title">Agile Team Facilitator</div>
-      <div class="module-meta">11 secciones · 33 preguntas · Herramientas · Artefactos · Ceremonias · Avanzado</div>
-    </div>
-    <div class="module-arrow">›</div>
-  </a>
-</div>
+<a class="card" href="modelos/">
+  <div class="card-icon c-teal">🏛️</div>
+  <div class="card-body">
+    <div class="card-title">Modelos Organizacionales</div>
+    <div class="card-sub">13 secciones · 39 preguntas · Team Topologies · OKRs · DORA</div>
+  </div>
+  <div class="card-arrow">›</div>
+</a>
 
-<div class="modules">
-  <a href="./safe.html" class="module-card purple">
-    <div class="module-icon">🏗️</div>
-    <div class="module-info">
-      <div class="module-title">SAFe — Guía completa</div>
-      <div class="module-meta">12 secciones · 36 preguntas · Big Picture + PDF oficial 2025</div>
-    </div>
-    <div class="module-arrow">›</div>
-  </a>
+<a class="card" href="less/">
+  <div class="card-icon c-blue">🔵</div>
+  <div class="card-body">
+    <div class="card-title">LeSS · TDD · BDD</div>
+    <div class="card-sub">8 secciones · 24 preguntas · Large-Scale Scrum + QA técnico</div>
+  </div>
+  <div class="card-arrow">›</div>
+</a>
 
-  <a href="./modelos.html" class="module-card green">
-    <div class="module-icon">🏛️</div>
-    <div class="module-info">
-      <div class="module-title">Modelos Organizacionales</div>
-      <div class="module-meta">13 secciones · 39 preguntas · Team Topologies · OKRs · DORA</div>
-    </div>
-    <div class="module-arrow">›</div>
-  </a>
+<a class="card" href="atf/">
+  <div class="card-icon c-teal">🧭</div>
+  <div class="card-body">
+    <div class="card-title">Agile Team Facilitator</div>
+    <div class="card-sub">11 secciones · 33 preguntas · Herramientas · Ceremonias · BCP prep</div>
+  </div>
+  <div class="card-arrow">›</div>
+</a>
 
-  <a href="./less.html" class="module-card blue">
-    <div class="module-icon">🔵</div>
-    <div class="module-info">
-      <div class="module-title">LeSS · TDD · BDD</div>
-      <div class="module-meta">8 secciones · 24 preguntas · Large-Scale Scrum + QA técnico</div>
-    </div>
-    <div class="module-arrow">›</div>
-  </a>
-</div>
+<a class="card" href="calaris/">
+  <div class="card-icon c-purple">🧩</div>
+  <div class="card-body">
+    <div class="card-title">CALARIS Framework</div>
+    <div class="card-sub">9 secciones · 27 preguntas · Tu framework diferencial · C·A·L·A·R·I·S</div>
+  </div>
+  <div class="card-arrow">›</div>
+</a>
 
-<div class="footer">
-  <strong>Luis Otoya Sarca</strong> · Lima, Perú · Marzo 2026<br>
+<footer>
+  <strong>Luis Otoya Sarca</strong> · Lima, Perú · Marzo 2026<br/>
   PWA — funciona sin conexión después del primer acceso
-</div>
+</footer>
 
 <script>
-// Register Service Worker
+// ── SERVICE WORKER ──
 if ('serviceWorker' in navigator) {
-  window.addEventListener('load', () => {
-    navigator.serviceWorker.register('./sw.js')
-      .then(reg => console.log('SW registered:', reg.scope))
-      .catch(err => console.log('SW registration failed:', err));
+  navigator.serviceWorker.register('/AG/sw.js', { scope: '/AG/' })
+    .then(reg => {
+      // Verificar actualizaciones cada vez que se abre la app
+      reg.update();
+      reg.addEventListener('updatefound', () => {
+        const newWorker = reg.installing;
+        newWorker.addEventListener('statechange', () => {
+          if (newWorker.state === 'installed' && navigator.serviceWorker.controller) {
+            // Nuevo SW listo — activar inmediatamente sin esperar
+            newWorker.postMessage({ type: 'SKIP_WAITING' });
+          }
+        });
+      });
+    });
+
+  // Cuando el SW nuevo toma control, recargar la página automáticamente
+  let refreshing = false;
+  navigator.serviceWorker.addEventListener('controllerchange', () => {
+    if (!refreshing) {
+      refreshing = true;
+      window.location.reload();
+    }
   });
 }
 
-// PWA Install prompt
+// ── INSTALL PROMPT ──
 let deferredPrompt;
 window.addEventListener('beforeinstallprompt', e => {
   e.preventDefault();
@@ -341,17 +216,19 @@ window.addEventListener('beforeinstallprompt', e => {
 });
 
 document.getElementById('install-btn').addEventListener('click', async () => {
-  if (deferredPrompt) {
-    deferredPrompt.prompt();
-    const { outcome } = await deferredPrompt.userChoice;
-    deferredPrompt = null;
+  if (!deferredPrompt) return;
+  deferredPrompt.prompt();
+  const { outcome } = await deferredPrompt.userChoice;
+  if (outcome === 'accepted') {
     document.getElementById('install-banner').style.display = 'none';
   }
+  deferredPrompt = null;
 });
 
 window.addEventListener('appinstalled', () => {
   document.getElementById('install-banner').style.display = 'none';
 });
 </script>
+
 </body>
 </html>
