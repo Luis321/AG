@@ -8,14 +8,19 @@
   <meta name="description" content="Plan de cierre de brechas + guías de estudio con quizzes"/>
   <link rel="manifest" href="manifest.json"/>
   <link rel="apple-touch-icon" href="icons/icon-192.png"/>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;1,9..40,300&display=swap" rel="stylesheet">
   <style>
     *{box-sizing:border-box;margin:0;padding:0}
     :root{--bg:#0f172a;--surface:#1e293b;--border:#334155;--text:#f1f5f9;--muted:#94a3b8}
-    body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;padding-bottom:env(safe-area-inset-bottom)}
-    .header{padding:40px 20px 24px;text-align:center;border-bottom:1px solid var(--border)}
-    .header-badge{display:inline-flex;align-items:center;gap:6px;background:rgba(124,58,237,.15);border:1px solid rgba(196,181,253,.3);border-radius:20px;padding:4px 12px;font-size:11px;color:#a78bfa;margin-bottom:16px}
-    .header h1{font-size:22px;font-weight:700;line-height:1.3;margin-bottom:8px}
-    .header p{font-size:13px;color:var(--muted);line-height:1.6}
+    body{font-family:'DM Sans',-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;padding-bottom:env(safe-area-inset-bottom)}
+    .header{padding:3rem 2rem 2rem;text-align:center;border-bottom:1px solid var(--border)}
+    .header-eyebrow{font-size:11px;letter-spacing:0.15em;text-transform:uppercase;color:rgba(255,255,255,0.4);margin-bottom:0.75rem}
+    .header h1{font-family:'DM Serif Display',serif;font-size:clamp(1.8rem,5vw,2.8rem);font-weight:400;line-height:1.15;margin-bottom:0.5rem}
+    .header h1 em{font-style:italic;color:rgba(255,255,255,0.45)}
+    .header-sub{font-size:13px;color:var(--muted);font-weight:300;margin-bottom:1.5rem}
+    .header-badge{display:inline-flex;align-items:center;gap:6px;background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.1);border-radius:20px;padding:6px 14px;font-size:11px;color:rgba(255,255,255,0.5);margin-bottom:0.5rem}
+    .header-badge .dot{width:6px;height:6px;border-radius:50%;background:#4ade80;animation:pulse 2s infinite}
+    @keyframes pulse{0%,100%{opacity:1}50%{opacity:0.4}}
     .global-progress{margin:16px 20px;background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:14px 16px;display:none}
     .global-progress-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:10px}
     .global-progress-title{font-size:12px;color:var(--muted);font-weight:600}
@@ -50,8 +55,10 @@
 <body>
 
 <div class="header">
-  <div class="header-badge">⚡ Disponible sin internet después del primer acceso</div>
-  <h1>Plan de cierre de brechas + guías de estudio con quizzes</h1>
+  <div class="header-eyebrow">Luis Otoya Sarca · Agile Coach &amp; AI Practitioner</div>
+  <h1>Guías de preparación<br><em>interactivas</em></h1>
+  <p class="header-sub">Plan de cierre de brechas + 4 guías de estudio con quizzes</p>
+  <div class="header-badge"><div class="dot"></div>Disponible sin internet después del primer acceso</div>
 </div>
 
 <div class="global-progress" id="global-progress">
@@ -71,7 +78,7 @@
 
 <div class="section-label">Plan Personal</div>
 
-<a class="card" href="plan/">
+<a class="card" href="plan.html">
   <div class="card-icon c-purple">📋</div>
   <div class="card-body">
     <div class="card-title">Plan de Cierre de Brechas</div>
@@ -80,7 +87,7 @@
   <div class="card-right"><div class="card-arrow">›</div></div>
 </a>
 
-<a class="card" href="herramientas/">
+<a class="card" href="herramientas.html">
   <div class="card-icon c-orange">🔧</div>
   <div class="card-body">
     <div class="card-title">Herramientas NTT Data</div>
@@ -94,7 +101,7 @@
 
 <div class="section-label">Guías de Estudio con Quiz</div>
 
-<a class="card" href="safe/">
+<a class="card" href="safe.html">
   <div class="card-icon c-purple">🏗️</div>
   <div class="card-body">
     <div class="card-title">SAFe — Guía completa</div>
@@ -106,7 +113,7 @@
   </div>
 </a>
 
-<a class="card" href="modelos/">
+<a class="card" href="modelos.html">
   <div class="card-icon c-teal">🏛️</div>
   <div class="card-body">
     <div class="card-title">Modelos Organizacionales</div>
@@ -118,7 +125,7 @@
   </div>
 </a>
 
-<a class="card" href="less/">
+<a class="card" href="less.html">
   <div class="card-icon c-blue">🔵</div>
   <div class="card-body">
     <div class="card-title">LeSS · TDD · BDD</div>
@@ -130,7 +137,7 @@
   </div>
 </a>
 
-<a class="card" href="atf/">
+<a class="card" href="atf.html">
   <div class="card-icon c-teal">🧭</div>
   <div class="card-body">
     <div class="card-title">Agile Team Facilitator</div>
@@ -142,7 +149,7 @@
   </div>
 </a>
 
-<a class="card" href="calaris/">
+<a class="card" href="calaris.html">
   <div class="card-icon c-purple">🧩</div>
   <div class="card-body">
     <div class="card-title">CALARIS Framework</div>

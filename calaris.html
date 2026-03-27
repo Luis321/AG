@@ -1,0 +1,1184 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#7C3AED">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<title>CALARIS Framework — Guía interactiva</title>
+<link rel="manifest" href="./manifest.json">
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;1,9..40,300&display=swap" rel="stylesheet">
+<script src="https://unpkg.com/react@18/umd/react.production.min.js" crossorigin></script>
+<script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js" crossorigin></script>
+<script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    font-family: 'DM Sans', system-ui, sans-serif;
+    background: #f8fafc;
+    --font-sans: 'DM Sans', system-ui, sans-serif;
+  }
+  .pwa-nav {
+    background: #0f172a;
+    padding: 10px 16px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    border-bottom: 1px solid rgba(255,255,255,0.06);
+  }
+  .pwa-nav a {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    color: rgba(255,255,255,0.5);
+    font-size: 12px;
+    text-decoration: none;
+    transition: color 0.2s;
+  }
+  .pwa-nav a:hover { color: white; }
+  .pwa-nav .sep { color: rgba(255,255,255,0.15); font-size: 12px; }
+  .pwa-nav .current { color: rgba(255,255,255,0.4); font-size: 12px; }
+  .content-wrap {
+    padding: 16px;
+    max-width: 820px;
+    margin: 0 auto;
+  }
+  #loading {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 60vh;
+    flex-direction: column;
+    gap: 12px;
+    color: #64748b;
+    font-size: 13px;
+  }
+  .spinner {
+    width: 32px; height: 32px;
+    border: 3px solid #e2e8f0;
+    border-top-color: #7C3AED;
+    border-radius: 50%;
+    animation: spin 0.8s linear infinite;
+  }
+  @keyframes spin { to { transform: rotate(360deg); } }
+</style>
+</head>
+<body>
+
+<nav class="pwa-nav">
+  <a href="./index.html">← Inicio</a>
+  <span class="sep">/</span>
+  <span class="current">🧩 CALARIS Framework</span>
+</nav>
+
+<div id="loading">
+  <div class="spinner"></div>
+  Cargando guía interactiva...
+</div>
+
+<div class="content-wrap" id="root" style="display:none"></div>
+
+<script type="text/babel">
+const { useState } = React;
+
+const GROUPS = [
+  { id: "fundamentos", label: "Fundamentos",  color: "#7C3AED" },
+  { id: "ejecucion",   label: "Ejecución",    color: "#0D9488" },
+  { id: "delivery",    label: "Delivery",     color: "#2563EB" },
+  { id: "escala",      label: "Escala",       color: "#16A34A" },
+];
+
+const CHAPTERS = [
+
+  // ══════════ FUNDAMENTOS ══════════
+
+  {
+    id:"que-es-calaris", group:"fundamentos", title:"¿Qué es CALARIS?", icon:"🧩",
+    color:"#7C3AED", light:"#EDE9FE", border:"#C4B5FD", text:"#4C1D95",
+    functional:`CALARIS es un sistema de ejecución estratégica que convierte caos organizacional en valor medible. No es un framework teórico — es un sistema operativo práctico para Agile Coaches, Delivery Leaders y AI-Enabled Strategists que operan en entornos complejos.
+
+¿POR QUÉ EXISTE CALARIS?
+Los frameworks ágiles (Scrum, SAFe, Kanban) resuelven el CÓMO entregar. CALARIS resuelve el QUÉ, POR QUÉ y PARA QUIÉN entregar — antes de que empiece cualquier ejecución.
+
+Sin CALARIS: aplicás frameworks sin diagnóstico, los OKRs son decorativos, el roadmap es una lista de features sin dirección estratégica, y el equipo trabaja duro en las cosas equivocadas.
+
+Con CALARIS: cada decisión parte del contexto real, la ejecución está alineada con el valor del negocio, el liderazgo influye sin autoridad formal, y el impacto es medible.
+
+LAS 7 CAPAS:
+C — Contexto: analizá antes de actuar
+A — Alineación: asegurá dirección común
+L — Liderazgo: influí sin autoridad formal
+A — Audiencia: adaptá el mensaje
+R — Roadmap: convertí visión en ejecución
+I — Impacto: medí valor real
+S — Standards: definí reglas para escalar
+
+LA FORMA DE RAZONAR:
+Siempre en ese orden. Si saltás una capa, el sistema se rompe. Un Roadmap sin Contexto es un plan ciego. Un Liderazgo sin Alineación genera fricción. Un Standards sin Impacto es burocracia.
+
+PARA LA ENTREVISTA EN BCP/NTT DATA:
+CALARIS es tu diferencial único. Nadie más en el proceso va a llegar con un framework propio. Usalo para estructurar tus respuestas — cada pregunta de la entrevista puede responderse con las 7 capas.`,
+    technical:`CALARIS COMO SISTEMA OPERATIVO — cómo funciona en la práctica:
+
+ENTRADA: un problema, una iniciativa, un conflicto, una oportunidad
+PROCESO: análisis en las 7 capas en secuencia
+SALIDA: decisión estructurada, acción concreta, impacto medible
+
+CUÁNDO ACTIVAR CADA CAPA:
+
+C — Contexto: al inicio de cualquier engagement. Antes de proponer cualquier solución.
+A — Alineación: cuando hay múltiples stakeholders con agendas diferentes.
+L — Liderazgo: cuando hay resistencia, conflicto o necesidad de influir sin autoridad.
+A — Audiencia: antes de cualquier comunicación importante (ejecutivos, equipo, cliente).
+R — Roadmap: cuando hay que convertir la estrategia en ejecución concreta.
+I — Impacto: para demostrar valor, justificar inversiones, tomar decisiones con datos.
+S — Standards: cuando el equipo o la organización necesita escalar sin caos.
+
+CALARIS + IA — la combinación diferencial:
+→ C: usar Claude/ChatGPT para analizar documentos del cliente y mapear el contexto
+→ A: usar NotebookLM para procesar múltiples fuentes y sintetizar la alineación
+→ L: usar IA para preparar conversaciones difíciles y anticipar objeciones
+→ A: usar IA para adaptar el mismo mensaje a diferentes audiencias automáticamente
+→ R: usar IA para generar el roadmap con dependencias y riesgos identificados
+→ I: usar IA para procesar métricas y generar insights de impacto
+→ S: usar IA para revisar y mantener los estándares del equipo
+
+CALARIS EN UNA FRASE POR CAPA:
+C: "¿Qué está pasando realmente aquí?"
+A: "¿Todos estamos yendo hacia el mismo lugar?"
+L: "¿Cómo muevo esto sin tener la autoridad formal?"
+A: "¿Estoy hablando el idioma de quien me escucha?"
+R: "¿Cómo llego de aquí hasta allá, paso a paso?"
+I: "¿Cómo sé que lo que hice importó?"
+S: "¿Cómo aseguro que esto funcione igual cuando ya no esté yo?"`,
+    visual:{ type:"calaris-overview" },
+    questions:[
+      {
+        q:"¿Cuál es la diferencia fundamental entre CALARIS y un framework ágil como Scrum o SAFe?",
+        opts:["CALARIS es más complejo y reemplaza a Scrum y SAFe","Scrum y SAFe resuelven el CÓMO entregar; CALARIS resuelve el QUÉ, POR QUÉ y PARA QUIÉN — es el sistema que da dirección antes de que arranque cualquier ejecución","Son equivalentes — CALARIS es la versión latinoamericana de SAFe","CALARIS solo aplica para organizaciones grandes; Scrum aplica para equipos pequeños"],
+        correct:1,
+        explanation:"CALARIS no reemplaza los frameworks de ejecución — los complementa. Scrum y SAFe dicen cómo organizar el trabajo. CALARIS dice qué trabajo hacer, para quién, con qué alineación y con qué impacto esperado. Sin CALARIS, podés hacer Scrum perfecto en la dirección equivocada."
+      },
+      {
+        q:"¿Por qué el orden de las 7 capas de CALARIS es crítico y no puede alterarse?",
+        opts:["Es solo una convención — el orden no afecta el resultado","Cada capa depende de la anterior: sin Contexto, la Alineación es ciega; sin Alineación, el Liderazgo genera fricción; sin entender la Audiencia, el Roadmap no comunica. Saltarse una capa rompe el sistema","El orden es para facilitar la memorización del acrónimo, no tiene implicancia práctica","Solo las primeras 3 capas son críticas — las últimas 4 son opcionales según el contexto"],
+        correct:1,
+        explanation:"El orden de CALARIS es causal, no arbitrario. Contexto → Alineación → Liderazgo → Audiencia → Roadmap → Impacto → Standards. Cada capa informa a la siguiente. Un Roadmap construido sin Contexto es un plan ciego. Standards sin Impacto es burocracia sin propósito."
+      },
+      {
+        q:"En la entrevista de BCP te preguntan: '¿Qué es CALARIS?' ¿Cuál es la mejor respuesta de 30 segundos?",
+        opts:["'Es un framework ágil que creé basado en SAFe y Scrum'","'Es un sistema de ejecución estratégica con 7 capas: Contexto, Alineación, Liderazgo, Audiencia, Roadmap, Impacto y Standards. Lo uso para convertir caos organizacional en valor medible — antes de aplicar cualquier framework de ejecución'","'Es una metodología de gestión de proyectos que desarrollé en Lilab'","'Es un modelo de coaching ágil basado en las mejores prácticas de la industria'"],
+        correct:1,
+        explanation:"La respuesta correcta es concisa, menciona las 7 capas, comunica el valor único ('convertir caos en valor medible') y diferencia CALARIS de los frameworks de ejecución. Evita decir 'metodología' o 'basado en SAFe' — CALARIS es original y estratégico, no una copia."
+      }
+    ]
+  },
+
+  {
+    id:"contexto", group:"fundamentos", title:"C — Contexto", icon:"🔍",
+    color:"#7C3AED", light:"#EDE9FE", border:"#C4B5FD", text:"#4C1D95",
+    functional:`La capa de Contexto es la más crítica de CALARIS — y la más ignorada. El error más costoso en transformaciones ágiles es aplicar frameworks sin diagnóstico previo. CALARIS empieza aquí.
+
+EL PRINCIPIO FUNDAMENTAL:
+Analizá antes de actuar. Sin contexto, cualquier solución es una apuesta. Con contexto, cada decisión está informada.
+
+¿QUÉ ANALIZA EL CONTEXTO?
+
+1. MODELO DE NEGOCIO:
+¿Cómo genera valor la organización? ¿Cuáles son sus flujos de ingresos? ¿Cuáles son sus restricciones regulatorias? En BCP: banco retail con millones de clientes, regulado por la SBS, con obligaciones de compliance estrictas.
+
+2. STAKEHOLDERS REALES vs FORMALES:
+El organigrama dice quién tiene el título. El contexto te dice quién tiene el poder real de decisión, quién puede bloquear, quién puede patrocinar.
+
+3. CULTURA ORGANIZACIONAL:
+¿Es una cultura jerárquica o colaborativa? ¿Se incentiva la experimentación o se penaliza el error? En banca: cultura conservadora con aversión al riesgo — el ATF debe adaptarse.
+
+4. FLUJO DE VALOR:
+¿Cómo fluye el trabajo desde la idea hasta el cliente? ¿Dónde están los cuellos de botella? ¿Cuánto tarda una feature en producción?
+
+5. RESTRICCIONES:
+Budget, tiempo, regulación, deuda técnica, capacidad del equipo, dependencias externas. Las restricciones definen el espacio de soluciones posibles.
+
+SIN CONTEXTO vs CON CONTEXTO:
+Sin: "Implementemos SAFe en BCP porque es el estándar de la industria"
+Con: "BCP tiene 40 equipos, cultura conservadora, compliance estricto y legacy bancario — el modelo operativo debe ser SAFe Essential adaptado con gobernanza de compliance integrada"`,
+    technical:`HERRAMIENTAS DE DIAGNÓSTICO DE CONTEXTO:
+
+STAKEHOLDER MAP — 4 cuadrantes:
+→ Alto poder, alto interés: gestionar activamente (sponsors ejecutivos)
+→ Alto poder, bajo interés: mantener satisfechos (C-Level)
+→ Bajo poder, alto interés: mantener informados (equipo)
+→ Bajo poder, bajo interés: monitorear (áreas de soporte)
+
+VALUE STREAM MAP rápido:
+1. Identificar el flujo de una capacidad representativa (ej: nueva feature de pagos)
+2. Mapear cada paso: idea → desarrollo → QA → compliance → producción
+3. Medir Lead Time real y Efficiency Rate
+4. Identificar los 2-3 mayores cuellos de botella
+
+PREGUNTAS CLAVE DE CONTEXTO para BCP:
+→ "¿Cuáles son las 3 iniciativas estratégicas más importantes del banco este año?"
+→ "¿Cuál es el principal bloqueador para entregar valor más rápido?"
+→ "¿Cómo se toman las decisiones de priorización? ¿Quién tiene la última palabra?"
+→ "¿Qué pasó con las últimas transformaciones ágiles que intentaron?"
+→ "¿Cuáles son los procesos de compliance que impactan el delivery del equipo?"
+
+CALARIS + IA PARA CONTEXTO:
+→ Subir el documento de estrategia del cliente a NotebookLM y hacer preguntas de diagnóstico
+→ Usar Claude para analizar el organigrama y mapear stakeholders reales vs formales
+→ Usar ChatGPT para procesar los resultados de encuestas del equipo y extraer patrones
+
+ANTI-PATRÓN más costoso:
+Llegar a BCP el primer día con un plan de transformación ya hecho. El contexto se descubre, no se asume. Las primeras 2 semanas en un nuevo engagement deben ser 80% escucha y 20% propuesta.`,
+    visual:{ type:"contexto" },
+    questions:[
+      {
+        q:"Es tu primer día como ATF en un squad de BCP. Un manager te pide que implementes SAFe inmediatamente. ¿Cuál es tu respuesta desde la capa de Contexto?",
+        opts:["Implementás SAFe de inmediato — el manager tiene autoridad y SAFe es el estándar","Rechazás la propuesta — SAFe no es adecuado para todos los contextos bancarios","Proponés 2 semanas de diagnóstico de contexto primero: mapear stakeholders, flujo de valor, cultura y restricciones. Con ese diagnóstico, decidís juntos si SAFe Essential, un modelo híbrido o Kanban puro es la solución correcta","Consultás con NTT DATA sobre cuál framework aplicar en BCP"],
+        correct:2,
+        explanation:"La capa de Contexto dice: analizá antes de actuar. Implementar SAFe sin diagnóstico es la causa de la mayoría de las transformaciones fallidas. El ATF propone el diagnóstico como primer entregable — no como demora, sino como inversión que garantiza que la solución sea la correcta para este contexto específico."
+      },
+      {
+        q:"¿Cuál es la diferencia entre stakeholders formales y stakeholders reales en el análisis de Contexto?",
+        opts:["Son lo mismo — el organigrama refleja fielmente quién tiene el poder","Los stakeholders formales son los que tienen el título en el organigrama; los reales son quienes tienen el poder efectivo de decisión, bloqueo o patrocinio — que a veces no coinciden con la jerarquía formal","Los stakeholders formales son internos; los reales son externos (clientes, reguladores)","Los stakeholders formales son permanentes; los reales son temporales según el proyecto"],
+        correct:1,
+        explanation:"En organizaciones bancarias como BCP, la persona con el título más alto no siempre es quien toma la decisión real. Un jefe de arquitectura con bajo título puede bloquear cualquier iniciativa técnica. Un gerente de compliance puede vetar cualquier release. El ATF mapea el poder real, no el formal."
+      },
+      {
+        q:"¿Por qué las restricciones son un input crítico del Contexto y no un obstáculo a ignorar?",
+        opts:["Las restricciones son obstáculos que hay que eliminar para liberar al equipo","Las restricciones (budget, regulación, deuda técnica, dependencias) definen el espacio de soluciones posibles — ignorarlas produce planes irrealizables. El ATF diseña soluciones DENTRO de las restricciones reales, no en un mundo ideal","Las restricciones son responsabilidad del manager, no del ATF","Solo las restricciones técnicas son relevantes para el ATF"],
+        correct:1,
+        explanation:"Las restricciones no son el enemigo — son la realidad del sistema. En BCP: la regulación de la SBS define qué puede desplegarse y cuándo. La deuda técnica define qué puede cambiarse en cuánto tiempo. El budget define qué es viable. Diseñar sin considerar restricciones produce roadmaps hermosos que nunca se ejecutan."
+      }
+    ]
+  },
+
+  // ══════════ EJECUCIÓN ══════════
+
+  {
+    id:"alineacion", group:"ejecucion", title:"A — Alineación", icon:"🎯",
+    color:"#0D9488", light:"#CCFBF1", border:"#5EEAD4", text:"#134E4A",
+    functional:`La Alineación asegura que todos los actores — equipo, negocio, stakeholders — estén yendo hacia el mismo lugar con la misma comprensión de qué significa éxito.
+
+¿POR QUÉ FALLA LA ALINEACIÓN?
+La mayoría de los equipos creen que están alineados porque asisten a las mismas reuniones. Pero "alineación" real significa: misma definición de valor, mismas prioridades, mismo entendimiento de los objetivos.
+
+LOS 3 NIVELES DE ALINEACIÓN:
+
+1. ALINEACIÓN DE VALOR:
+¿Todos saben por qué existe este equipo y qué valor entrega al negocio? En BCP: "reducir la fricción del cliente en operaciones digitales para aumentar el NPS del canal app."
+
+2. ALINEACIÓN DE PRIORIDADES (OKRs):
+¿Las prioridades del backlog reflejan los objetivos estratégicos del negocio? OKRs mal formulados = backlogs inflados con features que nadie usa.
+
+OKR bien alineado:
+O: Que el cliente complete operaciones sin ayuda humana
+KR1: Tasa de abandono en app cae del 34% al 15%
+KR2: Llamadas al call center por operaciones digitales reducen 40%
+
+3. ALINEACIÓN DE EXPECTATIVAS:
+¿Los stakeholders saben qué pueden esperar y cuándo? Las expectativas no alineadas producen las peores conversaciones — cuando alguien esperaba algo que el equipo nunca prometió.
+
+SIN ALINEACIÓN vs CON ALINEACIÓN:
+Sin: cada stakeholder tiene su propia agenda, el backlog crece sin control, el equipo trabaja en lo que pidió el último en hablar
+Con: decisiones de priorización son rápidas porque todos tienen el mismo marco de valor, el backlog refleja la estrategia, el equipo sabe qué no hacer`,
+    technical:`HERRAMIENTAS DE ALINEACIÓN:
+
+OKR WORKSHOP — cómo facilitarlo con CALARIS:
+1. Contexto primero: presentar los datos del negocio y los resultados actuales
+2. Pregunta de alineación: "¿Qué cambio en el mundo/negocio/cliente queremos ver en 90 días?"
+3. Formular el Objective: cualitativo, inspirador, orientado a outcome
+4. Derivar los Key Results: cuantitativos, medibles, que el equipo puede influir
+5. Validar la conexión: ¿este KR es consecuencia de trabajar en estas features?
+6. Test de output vs outcome: si el KR se puede cumplir sin que el cliente cambie su comportamiento, es un output, no un outcome
+
+PRIORIZACIÓN CON WSJF (Weighted Shortest Job First — SAFe):
+Para cada ítem del backlog calcular:
+WSJF = (Valor de negocio + Urgencia temporal + Reducción de riesgo) / Tamaño
+El ítem con mayor WSJF entra primero al sprint.
+
+SEÑALES DE DESALINEACIÓN en un equipo BCP:
+→ El PO y el tech lead tienen versiones diferentes del Sprint Goal
+→ El backlog tiene más de 100 ítems sin priorización clara
+→ Los stakeholders piden features contradictorias en la misma semana
+→ El equipo no sabe cómo su trabajo conecta con los OKRs del negocio
+→ Las retros producen mejoras de proceso pero el negocio sigue insatisfecho
+
+CALARIS + IA PARA ALINEACIÓN:
+→ Usar Claude para analizar el backlog y detectar ítems sin conexión con OKRs
+→ Usar ChatGPT para reformular OKRs output como OKRs outcome
+→ Usar NotebookLM para procesar múltiples documentos de estrategia y encontrar contradicciones`,
+    visual:{ type:"alineacion" },
+    questions:[
+      {
+        q:"El backlog del equipo tiene 150 ítems. El PO dice que todo es prioritario. ¿Cómo aplicás la capa de Alineación?",
+        opts:["Estimás las 150 historias con el equipo para planificar los próximos 6 meses","Pedís al PO que reduzca el backlog a 20 ítems antes de continuar","Facilitás un workshop de alineación: conectar el backlog con los OKRs del negocio. Todo ítem que no contribuya a ningún KR activo se mueve a un icebox. El resultado es un backlog de 20-30 ítems priorizados por valor real","Implementás WSJF para estimar el valor de cada uno de los 150 ítems"],
+        correct:2,
+        explanation:"Un backlog de 150 ítems 'todos prioritarios' es un síntoma de desalineación, no de un equipo productivo. La solución de CALARIS es conectar el backlog con los OKRs: si un ítem no contribuye a ningún KR activo, no es prioritario ahora. El icebox no lo elimina — lo deja disponible para cuando sea relevante."
+      },
+      {
+        q:"¿Cuál es la diferencia entre alineación real y alineación superficial en un equipo?",
+        opts:["Alineación real = todos firmaron el acta de constitución del proyecto","Alineación superficial = todos asisten a las mismas reuniones; alineación real = misma definición de valor, mismas prioridades y mismo entendimiento de qué significa éxito para el negocio y el cliente","Alineación real = el equipo trabaja en el mismo sprint","No hay diferencia práctica — si no hay conflictos, el equipo está alineado"],
+        correct:1,
+        explanation:"La alineación superficial es la más peligrosa porque da falsa sensación de coordinación. Los equipos pueden asistir a las mismas ceremonias, usar las mismas herramientas y aun así trabajar con definiciones completamente diferentes de éxito. La alineación real se verifica con preguntas directas: '¿Qué significa que este sprint fue exitoso para el negocio?'"
+      },
+      {
+        q:"¿Cómo distinguís un OKR bien alineado de uno decorativo en el contexto de BCP?",
+        opts:["Un OKR bien alineado tiene más Key Results","Un OKR bien alineado conecta directamente con la estrategia del banco y sus KRs miden cambios en el comportamiento del cliente o métricas de negocio reales — no tareas completadas. Si el KR puede cumplirse sin que nada cambie para el cliente, es decorativo","Un OKR bien alineado fue aprobado por el gerente del área","Un OKR bien alineado tiene fechas específicas y responsables asignados"],
+        correct:1,
+        explanation:"El test definitivo de un OKR: ¿puede cumplirse el KR sin que el cliente o el negocio cambie algo? Si la respuesta es sí, es un output (actividad) disfrazado de outcome. OKR decorativo en BCP: 'KR: completar 40 historias del módulo de pagos.' OKR real: 'KR: reducir el abandono en el flujo de pago del 34% al 15%.'"
+      }
+    ]
+  },
+
+  {
+    id:"liderazgo", group:"ejecucion", title:"L — Liderazgo", icon:"🧭",
+    color:"#0D9488", light:"#CCFBF1", border:"#5EEAD4", text:"#134E4A",
+    functional:`La capa de Liderazgo en CALARIS define cómo influir, moverse y generar cambio sin necesidad de autoridad formal. Es la capa más diferencial del framework — porque la mayoría de los Agile Coaches solo facilitan. Los mejores lideran.
+
+LA PARADOJA DEL ATF:
+Tenés responsabilidad sobre los resultados del equipo pero sin autoridad jerárquica sobre nadie. En BCP, el ATF de NTT DATA trabaja con un squad del banco — no puede ordenar, solo puede influir.
+
+LOS 3 PILARES DEL LIDERAZGO EN CALARIS:
+
+1. MANEJO DE STAKEHOLDERS:
+No es gestión de relaciones — es gestión de influencia. ¿Quién puede patrocinar el cambio? ¿Quién puede bloquearlo? ¿Qué necesita cada stakeholder para moverse en la dirección correcta?
+
+2. CONVERSACIONES DIFÍCILES:
+El ATF que evita el conflicto no protege al equipo — lo abandona. Las conversaciones difíciles son: dar feedback a un PO que no refina el backlog, decirle a un ejecutivo que su urgencia está destruyendo el sprint, confrontar a un developer senior que bloquea el equipo.
+
+3. TOMA DE POSTURA:
+Ser un facilitador neutral no significa no tener opinión. Cuando el equipo está tomando una decisión que el ATF sabe que va a dañar el resultado, la responsabilidad profesional es decirlo. Con datos, con respeto, con firmeza.
+
+SIN LIDERAZGO vs CON LIDERAZGO:
+Sin: el ATF facilita reuniones, toma notas, y deja que el equipo decida todo — incluso cuando el equipo está yendo en la dirección equivocada
+Con: el ATF influye sin autoridad, genera conversaciones incómodas cuando es necesario, construye alianzas con stakeholders clave, y toma postura basada en datos`,
+    technical:`TÉCNICAS DE LIDERAZGO SIN AUTORIDAD:
+
+CONSTRUIR CREDIBILIDAD TÉCNICA:
+En BCP, un ATF de NTT DATA necesita ganarse la confianza del equipo del banco. La credibilidad se gana con: conocimiento del contexto bancario, propuestas con datos, coherencia entre lo que dice y lo que hace, y resultados visibles en las primeras semanas.
+
+GESTIÓN DE RESISTENCIA — 4 tipos:
+1. Resistencia por miedo: "no quiero que cambien mis procesos" → mostrar beneficios concretos para esa persona
+2. Resistencia por experiencia: "ya intentamos esto y no funcionó" → reconocer la historia, diferencias concretas con el nuevo enfoque
+3. Resistencia política: "si esto funciona, pierdo poder" → encontrar cómo el cambio los empodera en lugar de reducirlos
+4. Resistencia por sobrecarga: "no tenemos tiempo para otro cambio" → reducir la fricción del cambio, empezar pequeño
+
+CÓMO TENER UNA CONVERSACIÓN DIFÍCIL (modelo CALARIS):
+1. Contexto: describir la situación con datos, sin juicio
+2. Impacto: qué consecuencia tiene en el equipo/negocio/cliente
+3. Pedido específico: qué necesitás que cambie
+4. Escucha activa: dejá que la otra persona responda antes de reaccionar
+
+ALIANZAS ESTRATÉGICAS en BCP:
+→ Identificar quién en el banco quiere el mismo cambio que vos
+→ Construir coalición con los early adopters del equipo
+→ Hacer visible el valor de las primeras mejoras rápidamente
+→ Usar los resultados como argumento para el siguiente nivel de cambio
+
+CALARIS + IA PARA LIDERAZGO:
+→ Usar Claude para preparar conversaciones difíciles: "¿Cuáles son los argumentos que probablemente va a usar el CTO para oponerse a este cambio?"
+→ Usar IA para simular stakeholders resistentes y practicar las respuestas`,
+    visual:{ type:"liderazgo" },
+    questions:[
+      {
+        q:"El PO del squad en BCP lleva 3 sprints sin refinar el backlog. Las historias entran mal al planning y el equipo pierde 2 horas en cada sesión. ¿Cómo abordás esto desde la capa de Liderazgo?",
+        opts:["Esperás a que el PO mejore solo — no es tu responsabilidad su performance","Escalás al manager del PO para que le llame la atención","Tenés una conversación directa con el PO usando el modelo de CALARIS: contexto (3 sprints de planning ineficiente con datos), impacto (2 horas perdidas × 3 × costo del equipo = X), pedido específico (30 min de refinamiento semanal juntos), y ofrecés facilitarlo vos mismo","Resolvés el problema refinando el backlog vos mismo para no confrontar al PO"],
+        correct:2,
+        explanation:"La capa de Liderazgo dice: tomar postura con datos. Evitar la conversación difícil protege la comodidad del ATF pero abandona al equipo. El modelo de CALARIS para conversaciones difíciles: contexto (datos objetivos) → impacto (consecuencias medibles) → pedido específico (qué cambio necesitás) → escucha activa. Ofrecer facilitarlo vos convierte el pedido en una propuesta colaborativa."
+      },
+      {
+        q:"¿Cuál es la diferencia entre un ATF que facilita y un ATF que lidera desde CALARIS?",
+        opts:["No hay diferencia — facilitar es liderar en contextos ágiles","El ATF que facilita crea el espacio para que el equipo decida; el ATF que lidera hace eso Y también influye activamente, toma postura cuando el equipo va en dirección equivocada, gestiona stakeholders resistentes y construye alianzas para el cambio","El ATF que lidera tiene más autoridad formal que el que facilita","El ATF que lidera trabaja con equipos grandes; el que facilita con equipos pequeños"],
+        correct:1,
+        explanation:"CALARIS hace una distinción crítica: ser solo facilitador es necesario pero no suficiente. El liderazgo sin autoridad formal requiere influir, construir credibilidad, tener conversaciones incómodas y tomar postura con datos. Un ATF que evita el conflicto no es neutral — es ausente."
+      },
+      {
+        q:"Un gerente de BCP resiste el cambio porque teme perder control sobre su equipo con la adopción de prácticas ágiles. ¿Cómo identificás el tipo de resistencia y qué hacés?",
+        opts:["Es resistencia por miedo — le mostrás los beneficios generales de Agile para convencerlo","Es resistencia política — el gerente percibe que el cambio reduce su poder. La respuesta correcta es encontrar cómo el cambio lo empodera: 'Con este modelo vas a tener visibilidad en tiempo real del avance, datos para tus reportes ejecutivos y un equipo que entrega más predeciblemente'","Es resistencia por experiencia — le explicás que este enfoque es diferente a lo que intentaron antes","Es resistencia por sobrecarga — proponés implementar el cambio más lentamente"],
+        correct:1,
+        explanation:"Identificar el tipo de resistencia correcto es la diferencia entre una intervención efectiva y una que genera más resistencia. La resistencia política (miedo a perder poder) se aborda mostrando cómo el cambio empodera al stakeholder — visibilidad, datos, resultados. No con argumentos sobre los beneficios generales de Agile, que en este caso son irrelevantes para su preocupación real."
+      }
+    ]
+  },
+
+  {
+    id:"audiencia", group:"ejecucion", title:"A — Audiencia", icon:"🎙️",
+    color:"#0D9488", light:"#CCFBF1", border:"#5EEAD4", text:"#134E4A",
+    functional:`La capa de Audiencia en CALARIS resuelve el problema más frecuente en transformaciones ágiles: comunicar el mensaje correcto a la persona equivocada, o el mensaje incorrecto a la persona correcta.
+
+EL PRINCIPIO FUNDAMENTAL:
+No existe un mensaje universal. La misma información debe comunicarse de forma completamente diferente según quién la recibe. El ATF que habla igual al CEO que al developer está fallando a ambos.
+
+LAS 3 AUDIENCIAS PRINCIPALES EN BCP:
+
+1. AUDIENCIA EJECUTIVA (CEO, Gerentes, Sponsors):
+Lenguaje: valor de negocio, riesgo, ROI, tiempo al mercado
+Lo que quieren saber: ¿estamos entregando lo que prometimos? ¿cuál es el riesgo? ¿cuándo llega al cliente?
+Lo que NO quieren: velocity points, story points, definición de done, detalles técnicos
+Formato: 3 slides máximo, datos, tendencias, decisiones que necesitan tomar
+
+2. AUDIENCIA DE NEGOCIO (PO, Product Manager, Analistas):
+Lenguaje: features, valor para el usuario, prioridades, roadmap
+Lo que quieren saber: ¿qué se entrega en el próximo sprint? ¿cuándo está listo X?
+Formato: backlog priorizado, roadmap Now/Next/Later, demo del producto funcionando
+
+3. AUDIENCIA TÉCNICA (Developers, QA, Arquitectos):
+Lenguaje: implementación, arquitectura, deuda técnica, criterios de aceptación
+Lo que quieren saber: ¿qué construir exactamente? ¿cómo se integra? ¿qué calidad se espera?
+Formato: historias con criterios Given/When/Then, DoD clara, decisiones de arquitectura documentadas
+
+SIN AUDIENCIA vs CON AUDIENCIA:
+Sin: el ATF presenta el burndown chart al CEO y las métricas de negocio al developer
+Con: el ATF tiene versiones del mismo mensaje para cada audiencia, adaptadas a su lenguaje, sus preguntas y sus necesidades`,
+    technical:`CÓMO ADAPTAR EL MENSAJE — framework de CALARIS:
+
+PASO 1 — IDENTIFICAR LA AUDIENCIA:
+¿Quién es? ¿Qué le importa? ¿Qué decisión necesita tomar? ¿Cuánto tiempo tiene?
+
+PASO 2 — ELEGIR EL LENGUAJE:
+Ejecutivo → valor, riesgo, tiempo, dinero
+Negocio → features, usuario, prioridad, fecha
+Técnico → implementación, calidad, arquitectura, deuda
+
+PASO 3 — ELEGIR EL FORMATO:
+Ejecutivo → bullet points, números, tendencias (2 minutos)
+Negocio → demo en vivo, roadmap visual (15 minutos)
+Técnico → especificación detallada, criterios de aceptación (30 minutos)
+
+PASO 4 — ANTICIPAR LAS PREGUNTAS:
+Cada audiencia tiene sus preguntas predecibles. Preparar respuestas antes de la presentación.
+
+EJECUTIVO DE BCP — sus preguntas predecibles:
+→ "¿Cuándo va a estar listo para el cliente?"
+→ "¿Cuánto nos va a costar?"
+→ "¿Qué pasa si no lo hacemos?"
+→ "¿Cómo sé que están avanzando bien?"
+
+DEVELOPER DE BCP — sus preguntas predecibles:
+→ "¿Cómo se integra con el sistema legado?"
+→ "¿Cuáles son los criterios de aceptación exactos?"
+→ "¿Quién revisa el código?"
+→ "¿Hay deuda técnica que bloquea esta historia?"
+
+CALARIS + IA PARA AUDIENCIA:
+→ "Tengo este mensaje técnico sobre el Cycle Time del equipo. Reescribilo para un gerente de BCP que solo tiene 2 minutos y necesita saber si el equipo está entregando bien."
+→ "Ayudame a preparar las 5 preguntas que un CTO de banco haría en una revisión trimestral de la transformación ágil."`,
+    visual:{ type:"audiencia" },
+    questions:[
+      {
+        q:"Tenés que comunicar que el Cycle Time del equipo subió de 5 a 9 días. ¿Cómo lo presentás al CTO de BCP vs al equipo técnico?",
+        opts:["Igual para ambos — la transparencia requiere dar los mismos datos a todos","Al CTO: 'El tiempo para entregar valor al cliente aumentó un 80% — esto impacta nuestro Time to Market y necesitamos decidir si invertimos en reducir el cuello de botella en Code Review.' Al equipo: 'El Cycle Time subió de 5 a 9 días — el CFD muestra que el cuello de botella está en Code Review, PRs esperan 3 días en promedio. ¿Qué acordamos para reducirlo?'","Al CTO los datos técnicos, al equipo la estrategia de negocio","Solo comunicarlo al equipo técnico — el CTO no necesita saber de Cycle Time"],
+        correct:1,
+        explanation:"El mismo dato, dos mensajes completamente diferentes. El CTO necesita la traducción a impacto de negocio (Time to Market, decisión de inversión). El equipo necesita el diagnóstico técnico (dónde está el cuello de botella, qué acordamos cambiar). Usar el lenguaje técnico con el ejecutivo o el lenguaje de negocio con el developer produce confusión y pérdida de credibilidad."
+      },
+      {
+        q:"¿Cuál es el error más común del ATF al comunicar con audiencia ejecutiva?",
+        opts:["Dar demasiada información estratégica que el ejecutivo no puede manejar","Usar lenguaje técnico ágil (velocity, story points, burndown, DoD) con ejecutivos que necesitan lenguaje de valor de negocio — produciendo desconexión y pérdida de credibilidad","Ser demasiado breve — los ejecutivos quieren detalle para tomar decisiones informadas","No llevar métricas suficientes a las reuniones ejecutivas"],
+        correct:1,
+        explanation:"El error más costoso: llevar el burndown chart a una reunión con el CEO. El ejecutivo no sabe qué es un story point ni por qué debería importarle. El ATF traduce: 'En las últimas 4 semanas entregamos 3 capacidades nuevas al cliente. El tiempo promedio desde que acordamos algo hasta que está disponible es de 9 días.' Mismo dato, lenguaje de negocio."
+      },
+      {
+        q:"¿Cómo aplicás la capa de Audiencia para preparar la presentación del Sprint Review en BCP?",
+        opts:["Hacés una presentación única con todos los datos y dejás que cada persona tome lo que le sirve","Preparás versiones diferentes: para ejecutivos (valor entregado al cliente, próximo bloque de valor, decisiones necesarias); para negocio (demo del producto funcionando, feedback solicitado); para técnicos (lo que se hizo y lo que quedó pendiente con razones)","Solo presentás al equipo técnico — los ejecutivos no deberían estar en el Sprint Review","Delegás la presentación al PO para que adapte el mensaje según su criterio"],
+        correct:1,
+        explanation:"La capa de Audiencia en el Sprint Review significa diseñar la sesión para múltiples audiencias simultáneas. Los ejecutivos quieren ver valor entregado al cliente y tomar decisiones. El negocio quiere dar feedback sobre el producto. El equipo quiere reconocimiento y contexto para el próximo sprint. El ATF estructura la sesión para que cada audiencia obtenga lo que necesita en el tiempo asignado."
+      }
+    ]
+  },
+
+  // ══════════ DELIVERY ══════════
+
+  {
+    id:"roadmap", group:"delivery", title:"R — Roadmap", icon:"🗺️",
+    color:"#2563EB", light:"#DBEAFE", border:"#93C5FD", text:"#1D4ED8",
+    functional:`La capa de Roadmap en CALARIS convierte la visión estratégica en ejecución incremental. No es un Gantt con fechas fijas — es una secuencia de valor con horizontes de certeza decreciente.
+
+EL PRINCIPIO FUNDAMENTAL:
+El roadmap no es un contrato. Es una hipótesis sobre cómo llegar al objetivo, sujeta a actualización continua basada en el aprendizaje de cada entrega.
+
+LOS 3 TIPOS DE ROADMAP EN CALARIS:
+
+1. ROADMAP ESTRATÉGICO (Portfolio Level):
+Horizonte: 6-12 meses. Granularidad: Épicas y capacidades de negocio.
+Audiencia: C-Level, Portfolio Leadership.
+Formato: Now/Next/Later con outcomes esperados, no features.
+
+2. ROADMAP DE PROGRAMA (ART/Tribe Level):
+Horizonte: 2-3 PIs (4-6 meses). Granularidad: Features y habilitadores.
+Audiencia: Business Owners, Product Management.
+Formato: PI Planning board con dependencias mapeadas.
+
+3. ROADMAP DEL EQUIPO (Squad Level):
+Horizonte: 2-3 sprints. Granularidad: Historias de usuario.
+Audiencia: PO, stakeholders directos.
+Formato: Sprint backlog + próximos 2 sprints en el horizonte.
+
+¿QUÉ HACE UN BUEN ROADMAP?
+→ Comunica dirección sin comprometer fechas que no pueden garantizarse
+→ Muestra dependencias entre equipos explícitamente
+→ Incluye puntos de validación (¿llegamos donde esperábamos?)
+→ Es actualizable sin drama — el cambio no es falla, es aprendizaje
+
+PARA BCP:
+Los ejecutivos van a pedir fechas exactas. El ATF con CALARIS entrega un roadmap con horizontes de certeza: "En las próximas 2 semanas, con alta certeza. En el próximo mes, con certeza media. En los próximos 3 meses, con baja certeza sujeta a validación."`,
+    technical:`CÓMO CONSTRUIR UN ROADMAP CON CALARIS:
+
+PASO 1 — CONTEXTO + ALINEACIÓN primero:
+El roadmap solo puede construirse después de entender el contexto y alinear los OKRs. Un roadmap sin OKRs es una lista de features sin dirección.
+
+PASO 2 — DESCOMPONER OUTCOMES EN CAPACIDADES:
+Outcome → Épicas → Features → Historias
+OKR: reducir abandono en checkout del 34% al 15%
+  → Épica: rediseño del flujo de pago
+    → Feature: pago con un clic
+    → Feature: guardar método de pago preferido
+      → Historia: como usuario guardo mi tarjeta con un tap
+
+PASO 3 — SECUENCIAR POR VALOR Y DEPENDENCIAS:
+¿Qué debe entregarse primero para desbloquear lo siguiente?
+¿Qué depende de qué equipo externo?
+¿Qué tiene más valor de negocio vs más riesgo técnico?
+
+PASO 4 — DEFINIR PUNTOS DE VALIDACIÓN:
+Al final de cada PI o cada mes: ¿estamos viendo el impacto esperado?
+Si no: ¿pivotamos la dirección o ajustamos las acciones?
+
+ROADMAP NOW / NEXT / LATER para BCP:
+NOW (próximas 2-4 semanas): compromisos claros con el equipo
+NEXT (próximo mes): dirección confirmada, features definidas
+LATER (2-3 meses): outcomes esperados, capacidades de alto nivel
+
+ANTI-PATRÓN — el Roadmap Waterfall disfrazado de Ágil:
+Cuando el roadmap tiene fechas exactas para todo a 12 meses y no cambia nunca = es un plan de proyecto waterfall con otro nombre. El roadmap ágil abraza la incertidumbre y la gestiona con horizontes de certeza.
+
+CALARIS + IA PARA ROADMAP:
+→ "Tengo estos 3 OKRs del trimestre y estas 20 features en el backlog. Ayudame a secuenciarlas en un roadmap Now/Next/Later priorizando por valor de negocio."
+→ "Identificá las dependencias entre estas features y sugerí el orden de implementación que minimice los bloqueos."`,
+    visual:{ type:"roadmap" },
+    questions:[
+      {
+        q:"Un gerente de BCP pide un roadmap con fechas exactas para los próximos 12 meses. ¿Cómo respondés desde la capa de Roadmap de CALARIS?",
+        opts:["Creás el roadmap con fechas exactas para los 12 meses — el gerente tiene autoridad para pedirlo","Rechazás la propuesta porque los roadmaps ágiles no tienen fechas","Proponés un roadmap con horizontes de certeza: compromisos claros para las próximas 4 semanas, dirección confirmada para el próximo mes, outcomes esperados para los próximos 3 meses. Explicás que más certeza artificial produce más decepción real","Delegás el roadmap al PO — no es responsabilidad del ATF"],
+        correct:2,
+        explanation:"El ATF no rechaza la necesidad del gerente (visibilidad y predictibilidad) — la satisface de forma honesta. Un roadmap a 12 meses con fechas exactas genera expectativas falsas que se rompen en el tercer mes cuando el negocio cambia o aparece deuda técnica. El roadmap con horizontes de certeza es más honesto Y más útil porque actualiza expectativas continuamente."
+      },
+      {
+        q:"¿Cuál es la diferencia entre un Roadmap de CALARIS y un plan de proyecto tradicional?",
+        opts:["Son equivalentes — ambos definen qué se va a hacer y cuándo","El plan de proyecto fija alcance, fechas y presupuesto desde el inicio; el Roadmap de CALARIS fija la dirección (outcomes) y secuencia las capacidades con horizontes de certeza decreciente, actualizable basado en el aprendizaje de cada entrega","El Roadmap de CALARIS solo aplica para proyectos de software","El plan de proyecto es más detallado; el Roadmap de CALARIS es solo un resumen ejecutivo"],
+        correct:1,
+        explanation:"La diferencia es filosófica. El plan de proyecto asume que se puede predecir todo al inicio. El Roadmap de CALARIS asume que el aprendizaje de cada entrega cambia lo que sabe el equipo — y el roadmap se actualiza en consecuencia. No es falta de planificación — es planificación adaptativa."
+      },
+      {
+        q:"¿Cómo validás que el Roadmap está generando el impacto esperado al final de cada PI?",
+        opts:["Revisás si se completaron todas las features planificadas","Medís si los Key Results de los OKRs están avanzando — si la tasa de abandono bajó, si el NPS mejoró, si el Cycle Time se redujo. Si los outputs se entregaron pero los outcomes no se movieron, el roadmap necesita revisión","Revisás si el equipo cumplió la velocity planeada","Hacés una retrospectiva con el equipo para evaluar el proceso de delivery"],
+        correct:1,
+        explanation:"La validación del Roadmap en CALARIS es sobre outcomes, no outputs. Entregaste todas las features del PI y aun así la tasa de abandono no bajó = el roadmap tenía las features equivocadas. Este momento de validación — ¿llegamos donde esperábamos? — es el punto de decisión: pivotamos la dirección o ajustamos las acciones para el próximo PI."
+      }
+    ]
+  },
+
+  {
+    id:"impacto", group:"delivery", title:"I — Impacto", icon:"📊",
+    color:"#2563EB", light:"#DBEAFE", border:"#93C5FD", text:"#1D4ED8",
+    functional:`La capa de Impacto en CALARIS define cómo medir que el trabajo que hace el equipo realmente importa. Sin impacto medible, la agilidad es un conjunto de ceremonias sin propósito.
+
+EL PRINCIPIO FUNDAMENTAL:
+Medir valor real, no actividad. La diferencia entre un equipo que entrega y un equipo que trabaja está en las métricas que elige medir.
+
+LOS 3 NIVELES DE IMPACTO:
+
+1. IMPACTO DE NEGOCIO (¿el cliente/negocio cambió algo?):
+→ NPS: ¿los clientes están más satisfechos?
+→ Conversión: ¿más usuarios completan el flujo?
+→ Retención: ¿los usuarios vuelven?
+→ Revenue: ¿generamos más o perdemos menos?
+
+2. IMPACTO DE DELIVERY (¿el equipo entrega mejor?):
+→ Lead Time: tiempo desde idea hasta producción
+→ Cycle Time: tiempo de trabajo activo
+→ Throughput: cuántas capacidades por sprint
+→ Change Failure Rate: % de deploys que generan incidentes
+
+3. IMPACTO DE EQUIPO (¿el equipo está en buen estado?):
+→ Team Health score trimestral
+→ % de acciones de retro implementadas
+→ Impedimentos resueltos vs abiertos
+→ Engagement score
+
+SIN IMPACTO vs CON IMPACTO:
+Sin: el equipo mide velocity y puntos — sabe cuánto trabaja pero no si lo que hace importa
+Con: el equipo mide outcomes de negocio + métricas de delivery + salud del equipo — toma decisiones basadas en qué mueve el valor real`,
+    technical:`FRAMEWORK DE MÉTRICAS CALARIS — 4 dimensiones:
+
+1. MÉTRICAS DE VALOR (¿estamos construyendo lo correcto?):
+Adopción de features: % de usuarios que usan lo que entregamos
+Feature impact: ¿cambió el comportamiento del usuario?
+OKR achievement: % de Key Results alcanzados
+
+2. MÉTRICAS DE FLUJO (¿estamos entregando bien?):
+Lead Time: desde que entra al backlog hasta producción
+Cycle Time: desde que el equipo empieza a trabajar hasta done
+Throughput: ítems completados por semana
+WIP: ítems en proceso simultáneamente
+
+3. MÉTRICAS DE CALIDAD (¿estamos construyendo bien?):
+Change Failure Rate: % de deploys con incidentes
+Time to Restore: tiempo para recuperarse de un incidente
+Defect Escape Rate: bugs que llegan a producción
+Test Coverage: % de código cubierto por tests automáticos
+
+4. MÉTRICAS DE EQUIPO (¿el sistema humano está sano?):
+Team Health Score: evaluación periódica por dimensiones
+Psychological Safety Score: encuesta anónima
+Impediment Resolution Rate: tiempo promedio para resolver bloqueos
+
+CÓMO PRESENTAR IMPACTO A EJECUTIVOS DE BCP:
+No presentar Cycle Time — presentar: "Desde que acordamos trabajar en algo hasta que el cliente puede usarlo, tardamos X días. Hace 3 meses tardábamos Y días. Eso significa que llegamos al mercado X semanas antes."
+
+CALARIS + IA PARA IMPACTO:
+→ "Tengo estos datos de métricas del último trimestre. Identificá las 3 tendencias más importantes y generá un resumen ejecutivo de 200 palabras para el QBR."
+→ "Ayudame a diseñar un dashboard de impacto para un squad bancario que comunique valor a 3 audiencias: CEO, PO y equipo técnico."
+
+ANTI-PATRÓN — métricas sin contexto:
+Un Cycle Time de 9 días puede ser excelente o terrible dependiendo del contexto. La capa de Impacto en CALARIS siempre compara contra un baseline y una tendencia, no contra un número abstracto.`,
+    visual:{ type:"impacto" },
+    questions:[
+      {
+        q:"El equipo completó el 100% de las features del PI pero el OKR de 'reducir abandono en checkout del 34% al 15%' está en 30% de avance. ¿Qué indica esto y qué hacés?",
+        opts:["El equipo trabajó bien — el 100% de features entregadas es el éxito","Las features se entregaron (output) pero no generaron el cambio esperado en el cliente (outcome). Hay que investigar: ¿las features eran las correctas? ¿hay un problema de UX/adoption? ¿el cliente sabe que existen? Revisar el roadmap antes del próximo PI","El OKR era demasiado ambicioso — hay que reducirlo al 25%","El problema es técnico — el equipo necesita mejorar la calidad del código"],
+        correct:1,
+        explanation:"Esta es la brecha más crítica que mide la capa de Impacto: output sin outcome. El equipo trabajó, pero el trabajo no movió el indicador de negocio. Las causas posibles son múltiples: features construidas pero no las que el cliente necesitaba, UX que no facilita la adopción, falta de comunicación al cliente sobre las nuevas funciones. CALARIS activa la capa de Contexto para diagnosticar antes del próximo PI."
+      },
+      {
+        q:"¿Cuál es la métrica más importante para demostrar impacto del ATF en BCP en los primeros 3 meses?",
+        opts:["La velocity del equipo — si aumentó, el ATF está funcionando","El % de acciones de retrospectiva implementadas — si sube del 20% al 80%, el equipo está mejorando continuamente y el ATF está haciendo su trabajo","El número de ceremonias realizadas correctamente","El score de certificaciones del equipo en Scrum y SAFe"],
+        correct:1,
+        explanation:"El % de acciones de retro implementadas es la métrica más directa del impacto del ATF porque mide si el sistema de mejora continua funciona. Un equipo que identifica mejoras pero no las implementa tiene un problema de accountability que es responsabilidad del ATF resolver. Pasar del 20% al 80% en 3 meses es un logro tangible y demostrable."
+      },
+      {
+        q:"¿Cómo distinguís una métrica de impacto real de una métrica de actividad en el contexto de CALARIS?",
+        opts:["Las métricas de impacto son más difíciles de medir","Una métrica de actividad mide lo que hace el equipo (stories completadas, deploys realizados, ceremonias ejecutadas); una métrica de impacto mide el cambio que eso produce en el cliente o el negocio (NPS, tasa de conversión, Lead Time, abandono). CALARIS prioriza las segundas","Las métricas de actividad son para el equipo; las de impacto son para los ejecutivos","No hay distinción práctica — todas las métricas sirven si se miden consistentemente"],
+        correct:1,
+        explanation:"La distinción output vs outcome es el corazón de la capa de Impacto en CALARIS. Métricas de actividad (velocity, puntos, ceremonias) miden que el equipo trabaja. Métricas de impacto (NPS, conversión, Lead Time) miden que el trabajo importa. Un equipo puede tener velocity perfecta y NPS en caída libre. CALARIS te obliga a medir lo segundo."
+      }
+    ]
+  },
+
+  // ══════════ ESCALA ══════════
+
+  {
+    id:"standards", group:"escala", title:"S — Standards", icon:"📐",
+    color:"#16A34A", light:"#DCFCE7", border:"#86EFAC", text:"#14532D",
+    functional:`La capa de Standards en CALARIS define las reglas que permiten escalar sin caos. Sin standards, cada equipo inventa su propio proceso — generando inconsistencia, deuda de conocimiento y dependencia de personas clave.
+
+EL PRINCIPIO FUNDAMENTAL:
+Los standards no son burocracia — son el sistema inmune de la organización. Permiten que el equipo opere con autonomía dentro de límites claros.
+
+LOS 3 TIPOS DE STANDARDS EN CALARIS:
+
+1. STANDARDS DE CALIDAD:
+Definition of Done: qué significa que algo está terminado
+Definition of Ready: qué debe cumplir una historia antes de entrar al sprint
+Criterios de aceptación: formato Given/When/Then
+Test coverage mínimo: % de código cubierto por tests automáticos
+
+2. STANDARDS DE PROCESO:
+Working Agreements: cómo trabajamos juntos (horarios, canales, decisiones)
+Escalation Path: quién decide qué y cuándo
+Meeting norms: duración máxima, agenda previa, decisiones documentadas
+Branching strategy: convenciones de código y deploy
+
+3. STANDARDS DE GOBERNANZA (incluye IA):
+Decision log: registro de decisiones arquitectónicas y de proceso
+Architecture Decision Records (ADRs): decisiones técnicas con contexto y razones
+IA Governance: qué datos pueden procesarse con IA, qué outputs requieren revisión humana
+Compliance checkpoints: qué validaciones de seguridad y regulación son mandatorias antes del deploy
+
+SIN STANDARDS vs CON STANDARDS:
+Sin: cuando un developer clave sale del equipo, el conocimiento se va con él. Cada squad en BCP tiene su propio proceso. La calidad es inconsistente.
+Con: el equipo opera consistentemente independiente de quién está. El onboarding de nuevos miembros tarda días, no meses. La calidad es predecible.`,
+    technical:`CÓMO IMPLEMENTAR STANDARDS CON CALARIS:
+
+PASO 1 — IDENTIFICAR QUÉ STANDARDIZAR:
+No todo necesita standards. Standardizar lo que: se repite frecuentemente, causa variabilidad en calidad, es crítico para compliance/seguridad, o es necesario para escalar.
+
+PASO 2 — CO-CREAR, NO IMPONER:
+Los standards impuestos generan resistencia y se ignoran. Los standards co-creados con el equipo se adoptan porque el equipo los diseñó. El ATF facilita la creación — no la prescribe.
+
+PASO 3 — DOCUMENTAR EN EL LUGAR CORRECTO:
+Working agreements → Confluence, visible en el tablero
+DoD y DoR → Jira, visible en cada board
+ADRs → repositorio del equipo, con el código
+Gobernanza de IA → política documentada, accesible a todo el equipo
+
+PASO 4 — EVOLUCIONAR, NO CONGELAR:
+Los standards deben revisarse cada trimestre. Un standard que nunca cambia es un standard que el mundo dejó atrás.
+
+GOBERNANZA DE IA EN BCP — el standard más crítico para 2025:
+→ ¿Qué datos del cliente pueden procesarse con IA? (regulación SBS)
+→ ¿Qué outputs de IA requieren revisión humana antes de implementarse?
+→ ¿Cómo se documenta el uso de IA en el proceso de desarrollo?
+→ ¿Cuál es el proceso de validación de modelos de IA antes de producción?
+
+CALARIS + IA PARA STANDARDS:
+→ Usar Claude para generar el primer draft de Working Agreements basado en el contexto del equipo
+→ Usar IA para revisar automáticamente que las historias cumplen la DoR antes del planning
+→ Usar IA para detectar patrones de incumplimiento de la DoD en el historial del equipo`,
+    visual:{ type:"standards" },
+    questions:[
+      {
+        q:"El equipo de BCP tiene 3 developers que llevan 2 años en el squad y conocen todo el sistema. El resto no sabe cómo funciona el módulo de pagos. ¿Qué standard de CALARIS falta y cómo lo implementás?",
+        opts:["Falta un standard de horarios — los developers deben estar disponibles para consultas todo el día","Falta la documentación del conocimiento — ADRs (Architecture Decision Records) y runbooks que capturen las decisiones técnicas y el know-how operativo. El ATF facilita sesiones de knowledge transfer y define como standard que toda decisión técnica importante quede documentada antes de cerrar el sprint","Falta un standard de code review — el código debería revisarse por todos los miembros","Falta un standard de estimación — todos deben estimar las historias igual"],
+        correct:1,
+        explanation:"El bus factor (dependencia de personas clave) es uno de los riesgos más costosos en equipos de software bancario. CALARIS lo resuelve con standards de documentación: ADRs para decisiones técnicas, runbooks para procesos operativos, y knowledge transfer como parte de la DoD. El ATF no documenta — facilita que el equipo lo haga como práctica estándar."
+      },
+      {
+        q:"¿Por qué los standards de gobernanza de IA son críticos en un contexto bancario como BCP?",
+        opts:["Porque la IA es una tecnología nueva que los reguladores no conocen aún","Porque los bancos manejan datos sensibles del cliente regulados por la SBS — usar IA sin definir qué datos pueden procesarse, qué outputs requieren revisión humana y cómo se documenta el uso de IA expone al banco a riesgos regulatorios, de privacidad y de responsabilidad legal","Porque la IA puede reemplazar a los developers y hay que regular eso","Porque el equipo necesita saber cómo usar las herramientas de IA correctamente"],
+        correct:1,
+        explanation:"En banca, la gobernanza de IA no es opcional — es una necesidad regulatoria. La SBS (Superintendencia de Banca y Seguros) tiene regulaciones sobre el tratamiento de datos del cliente. Un ATF que integra IA en el proceso de delivery de BCP necesita definir explícitamente: qué datos pueden procesarse, qué outputs requieren revisión humana, y cómo se audita el uso de IA. Esto es el standard más diferencial que podés proponer en la entrevista."
+      },
+      {
+        q:"¿Cuál es la diferencia entre un standard bien implementado y burocracia innecesaria en CALARIS?",
+        opts:["Los standards son siempre burocracia — CALARIS los minimiza al máximo","Un standard bien implementado fue co-creado con el equipo, resuelve un problema real, es revisable y está en el lugar correcto. La burocracia es un proceso impuesto desde afuera, que no agrega valor al cliente ni al equipo, y que nadie puede explicar por qué existe","Los standards son necesarios para grandes organizaciones; para equipos pequeños son burocracia","Los standards son burocracia cuando los genera el manager; son válidos cuando los genera el equipo"],
+        correct:1,
+        explanation:"CALARIS hace la distinción clara: standard = regla que protege la calidad, reduce la variabilidad y permite escalar. Burocracia = proceso que consume tiempo sin producir valor. El test: ¿si eliminamos este proceso, algo importante falla? Si la respuesta es no, es burocracia. Si la respuesta es sí, es un standard que vale la pena mantener."
+      }
+    ]
+  },
+
+  {
+    id:"calaris-en-accion", group:"escala", title:"CALARIS en Acción", icon:"🚀",
+    color:"#16A34A", light:"#DCFCE7", border:"#86EFAC", text:"#14532D",
+    functional:`CALARIS en Acción es donde el framework deja de ser teoría y se convierte en ventaja competitiva real. Esta sección conecta las 7 capas con situaciones concretas de la entrevista en BCP/NTT DATA.
+
+CÓMO USAR CALARIS EN LA ENTREVISTA:
+Cada pregunta de la entrevista puede responderse estructurando la respuesta con las capas relevantes de CALARIS. No tenés que mencionar el nombre del framework en cada respuesta — pero la estructura que te da es tu diferencial.
+
+SITUACIÓN 1 — "¿Cómo arrancarías en BCP el primer mes?":
+C: 2 semanas de diagnóstico (stakeholders, cultura, flujo de valor, restricciones)
+A: Workshop de OKRs con el PO y Business Owners
+L: Construir credibilidad con el equipo técnico con acciones concretas en la primera semana
+A: Reunión individual con cada stakeholder clave, escuchar su versión del problema
+R: Proponer el roadmap de adopción ágil basado en el diagnóstico
+I: Definir las métricas de baseline desde el día 1
+S: Co-crear con el equipo la DoD, los Working Agreements y el Escalation Path
+
+SITUACIÓN 2 — "¿Cómo demostrarías tu valor en los primeros 90 días?":
+I: Lead Time reducido X%, acciones de retro implementadas al 80%, impedimentos resueltos en <48h
+L: Conversaciones difíciles que desbloquearon situaciones críticas (con ejemplos)
+A: Stakeholders ejecutivos recibiendo reportes en su lenguaje
+S: Standards co-creados que el equipo adopta sin dependencia del ATF
+
+SITUACIÓN 3 — "¿Qué te diferencia de otros candidatos?":
+CALARIS + IA aplicada: soy el único candidato que llega con un framework propio de 7 capas para ejecución estratégica, y que integra IA en cada capa del proceso de delivery. No solo sé Scrum — sé cómo conectar la estrategia del banco con la ejecución del squad con impacto medible.`,
+    technical:`CALARIS APLICADO AL CONTEXTO BCP — escenarios específicos:
+
+ESCENARIO 1 — Primer contacto con el squad:
+C: Escuchar, no proponer. Mapear quién hace qué, cómo fluye el trabajo, cuáles son los bloqueos recurrentes.
+A: Identificar si el equipo tiene OKRs claros y si el backlog los refleja.
+S: Revisar si existe DoD, DoR y Working Agreements. Si no existen, esa es la primera propuesta.
+
+ESCENARIO 2 — Sprint que no alcanzó el Sprint Goal:
+I: Datos objetivos — cuántas historias, cuántos puntos, por qué no se alcanzó el goal.
+C: ¿Fue un problema de planning (scope excesivo), de impedimentos no resueltos, o de estimaciones incorrectas?
+L: Conversación directa con el PO sobre si el Sprint Goal era realista.
+S: ¿La DoR detectó las historias problemáticas? Si no, ¿qué criterio faltaba?
+
+ESCENARIO 3 — Ejecutivo pide feature urgente fuera del proceso:
+A: Identificar quién es realmente (alto poder, alto interés) y cuál es su necesidad real.
+L: Conversación directa: "Tu pedido es importante. Para poder entregarlo con calidad, necesito que pase por el proceso — el PO lo prioriza en el próximo sprint."
+C: ¿Es una urgencia real (regulatory, cliente crítico) o una preferencia disfrazada de urgencia?
+I: Si entra, ¿qué sale del sprint? Hacer visible el tradeoff con datos.
+
+CALARIS COMO PITCH FINAL EN LA ENTREVISTA:
+"En los últimos 8 años desarrollé CALARIS — un sistema de ejecución estratégica que uso para convertir caos organizacional en valor medible. Tiene 7 capas: Contexto, Alineación, Liderazgo, Audiencia, Roadmap, Impacto y Standards. En BCP lo aplicaría así: [describir las primeras acciones]. El diferencial adicional es que integro IA en cada capa — lo que me permite analizar más rápido, comunicar mejor y escalar el impacto del equipo sin aumentar la complejidad."`,
+    visual:{ type:"calaris-accion" },
+    questions:[
+      {
+        q:"En la entrevista te preguntan: '¿Cómo arrancarías en BCP el primer mes?' ¿Cómo estructurás la respuesta con CALARIS?",
+        opts:["Implementarías Scrum con todos sus rituales desde el día 1","Harías un diagnóstico de 2 semanas (C), luego un workshop de alineación de OKRs (A), construirías credibilidad con el equipo con acciones concretas (L), te reunirías con cada stakeholder clave para escuchar su versión (A), propondrías el roadmap de adopción basado en el diagnóstico (R), definirías métricas de baseline (I) y co-crearías DoD y Working Agreements con el equipo (S)","Pedirías la documentación del proyecto anterior para entender el contexto","Organizarías un kick-off con todo el banco para presentar la transformación ágil"],
+        correct:1,
+        explanation:"Esta respuesta demuestra madurez profesional porque empieza con diagnóstico (no con soluciones) y cubre las 7 capas de CALARIS de forma coherente. En la entrevista, esta estructura demuestra que pensás sistémicamente y que no llegás con soluciones predeterminadas — llegás con un proceso para encontrar la solución correcta para ese contexto específico."
+      },
+      {
+        q:"¿Cuál es tu diferencial como candidato ATF para BCP/NTT DATA usando CALARIS como argumento?",
+        opts:["Tener más certificaciones que los otros candidatos","Tener experiencia en banca previamente","Ser el único candidato con un framework propio de ejecución estratégica (CALARIS) que conecta estrategia con ejecución, más la capacidad de integrar IA en cada capa del proceso de delivery — lo que permite analizar más rápido, comunicar mejor y escalar el impacto sin aumentar la complejidad","Conocer SAFe y Scrum mejor que cualquier otro candidato"],
+        correct:2,
+        explanation:"El diferencial de CALARIS en una entrevista no es el nombre del framework — es lo que representa: un profesional que no solo ejecuta prácticas ágiles sino que diseña sistemas de ejecución estratégica adaptados al contexto. Combinado con la integración de IA, esto posiciona a Luis Otoya como un candidato de siguiente nivel, no un SM más."
+      },
+      {
+        q:"¿Cómo integrarías IA específicamente en las 7 capas de CALARIS para el squad de BCP?",
+        opts:["Usarías IA solo para generar reportes automáticos al final del sprint","C: Claude para analizar documentos del banco y mapear el contexto. A: NotebookLM para sintetizar múltiples fuentes de alineación. L: IA para preparar conversaciones difíciles. A: IA para adaptar mensajes a diferentes audiencias. R: IA para secuenciar el roadmap por valor. I: IA para procesar métricas y generar insights. S: IA para revisar cumplimiento de standards.","Usarías ChatGPT para escribir las historias de usuario del backlog","Usarías IA solo cuando el equipo lo solicite explícitamente"],
+        correct:1,
+        explanation:"Esta respuesta demuestra que la integración de IA en CALARIS es sistémica, no cosmética. No es 'uso IA para algunas cosas' — es 'tengo una capa de IA para cada dimensión del trabajo del ATF'. En la entrevista de BCP/NTT DATA, esto posiciona a Luis como un AI-Enabled Delivery Leader, no como un ATF que usa IA ocasionalmente."
+      }
+    ]
+  }
+];
+
+const tabs = [
+  { id:"functional", label:"Funcional" },
+  { id:"technical",  label:"Técnico" },
+  { id:"visual",     label:"Visual" },
+  { id:"quiz",       label:"¿Lo entendí?" }
+];
+
+// ══════════ VISUALS ══════════
+
+function VisualCalarisOverview() {
+  const capas = [
+    {l:"C",n:"Contexto",d:"Analizá antes de actuar",c:"#7C3AED",bg:"#EDE9FE"},
+    {l:"A",n:"Alineación",d:"Asegurá dirección común",c:"#0D9488",bg:"#CCFBF1"},
+    {l:"L",n:"Liderazgo",d:"Influí sin autoridad formal",c:"#2563EB",bg:"#DBEAFE"},
+    {l:"A",n:"Audiencia",d:"Adaptá el mensaje",c:"#D97706",bg:"#FEF3C7"},
+    {l:"R",n:"Roadmap",d:"Convertí visión en ejecución",c:"#DC2626",bg:"#FEE2E2"},
+    {l:"I",n:"Impacto",d:"Medí valor real",c:"#16A34A",bg:"#DCFCE7"},
+    {l:"S",n:"Standards",d:"Definí reglas para escalar",c:"#64748b",bg:"#f8fafc"},
+  ];
+  return (
+    <div style={{display:"flex",flexDirection:"column",gap:6}}>
+      <div style={{background:"#0f172a",borderRadius:8,padding:"10px 14px",marginBottom:4,textAlign:"center"}}>
+        <div style={{fontSize:13,fontWeight:700,color:"#e2e8f0",marginBottom:4}}>CALARIS</div>
+        <div style={{fontSize:11,color:"#94a3b8"}}>Sistema de ejecución estratégica · convierte caos en valor medible</div>
+      </div>
+      {capas.map((c,i)=>(
+        <div key={i} style={{display:"flex",alignItems:"center",gap:10,background:c.bg,border:`1px solid ${c.c}40`,borderRadius:8,padding:"10px 14px",borderLeft:`4px solid ${c.c}`}}>
+          <div style={{width:32,height:32,borderRadius:8,background:c.c,display:"flex",alignItems:"center",justifyContent:"center",fontSize:16,fontWeight:900,color:"#fff",flexShrink:0}}>{c.l}</div>
+          <div>
+            <div style={{fontSize:12,fontWeight:700,color:c.c}}>{c.n}</div>
+            <div style={{fontSize:10,color:"#64748b",marginTop:2}}>{c.d}</div>
+          </div>
+        </div>
+      ))}
+    </div>
+  );
+}
+
+function VisualContexto() {
+  return (
+    <div style={{display:"flex",flexDirection:"column",gap:8}}>
+      <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:6}}>
+        {[{n:"Modelo de negocio",d:"¿Cómo genera valor la organización? Flujos de ingreso, restricciones regulatorias.",c:"#7C3AED",bg:"#EDE9FE"},{n:"Stakeholders reales vs formales",d:"El organigrama dice el título. El contexto dice quién tiene el poder real.",c:"#0D9488",bg:"#CCFBF1"},{n:"Cultura organizacional",d:"¿Jerarquía o colaboración? ¿Se incentiva la experimentación?",c:"#2563EB",bg:"#DBEAFE"},{n:"Restricciones",d:"Budget, regulación, deuda técnica, dependencias. Definen el espacio de soluciones.",c:"#D97706",bg:"#FEF3C7"}].map((x,i)=>(
+          <div key={i} style={{background:x.bg,border:`1px solid ${x.c}40`,borderRadius:8,padding:"10px 12px"}}>
+            <div style={{fontSize:11,fontWeight:700,color:x.c,marginBottom:3}}>{x.n}</div>
+            <div style={{fontSize:10,color:"#374151",lineHeight:1.5}}>{x.d}</div>
+          </div>
+        ))}
+      </div>
+      <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:6}}>
+        <div style={{background:"#FEE2E2",border:"1px solid #FCA5A5",borderRadius:8,padding:"10px 12px"}}>
+          <div style={{fontSize:12,fontWeight:700,color:"#DC2626",marginBottom:5}}>❌ Sin Contexto</div>
+          <div style={{fontSize:10,color:"#7F1D1D",lineHeight:1.7}}>"Implementemos SAFe en BCP porque es el estándar de la industria"</div>
+        </div>
+        <div style={{background:"#DCFCE7",border:"1px solid #86EFAC",borderRadius:8,padding:"10px 12px"}}>
+          <div style={{fontSize:12,fontWeight:700,color:"#14532D",marginBottom:5}}>✓ Con Contexto</div>
+          <div style={{fontSize:10,color:"#14532D",lineHeight:1.7}}>"BCP tiene 40 equipos, cultura conservadora y compliance estricto — SAFe Essential adaptado con gobernanza de compliance integrada"</div>
+        </div>
+      </div>
+      <div style={{background:"#0f172a",borderRadius:7,padding:"8px 12px",fontSize:11,color:"#fbbf24",textAlign:"center",fontWeight:700}}>
+        Las primeras 2 semanas: 80% escucha · 20% propuesta
+      </div>
+    </div>
+  );
+}
+
+function VisualAlineacion() {
+  return (
+    <div style={{display:"flex",flexDirection:"column",gap:8}}>
+      <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:8}}>
+        <div style={{background:"#FEE2E2",border:"1px solid #FCA5A5",borderRadius:8,padding:"10px 12px"}}>
+          <div style={{fontSize:12,fontWeight:700,color:"#DC2626",marginBottom:6}}>❌ OKR DECORATIVO</div>
+          <div style={{fontSize:10,color:"#7F1D1D",lineHeight:1.7}}>O: Mejorar el módulo de pagos<br/>KR1: Completar 40 historias<br/>KR2: Hacer 3 deploys al mes<br/><br/><em>Mide actividad, no impacto</em></div>
+        </div>
+        <div style={{background:"#DCFCE7",border:"1px solid #86EFAC",borderRadius:8,padding:"10px 12px"}}>
+          <div style={{fontSize:12,fontWeight:700,color:"#14532D",marginBottom:6}}>✓ OKR ALINEADO</div>
+          <div style={{fontSize:10,color:"#14532D",lineHeight:1.7}}>O: Cliente completa operaciones sin fricción<br/>KR1: Abandono checkout 34%→15%<br/>KR2: Llamadas a call center -40%<br/><br/><em>Mide cambio en el usuario</em></div>
+        </div>
+      </div>
+      <div style={{background:"#f8fafc",border:"1px solid #e2e8f0",borderRadius:8,padding:"10px 14px"}}>
+        <div style={{fontSize:11,fontWeight:700,color:"#1e293b",marginBottom:6}}>TEST DE ALINEACIÓN — preguntás esto al equipo:</div>
+        {["¿Todos tienen la misma definición de qué significa éxito este trimestre?","¿El ítem más arriba del backlog conecta directamente con un KR activo?","Si el PO y el tech lead describen el Sprint Goal, ¿dicen lo mismo?","¿Hay ítems en el backlog que nadie sabe por qué están ahí?"].map((x,i)=><div key={i} style={{fontSize:10,color:"#374151",lineHeight:1.7}}>→ {x}</div>)}
+      </div>
+    </div>
+  );
+}
+
+function VisualLiderazgo() {
+  return (
+    <div style={{display:"flex",flexDirection:"column",gap:8}}>
+      <div style={{display:"grid",gridTemplateColumns:"repeat(2,1fr)",gap:6}}>
+        {[{n:"Manejo de stakeholders",d:"Gestión de influencia, no solo de relaciones. ¿Quién puede patrocinar? ¿Quién puede bloquear?",c:"#0D9488",bg:"#CCFBF1"},{n:"Conversaciones difíciles",d:"El ATF que evita el conflicto abandona al equipo. Feedback al PO, al ejecutivo, al senior.",c:"#2563EB",bg:"#DBEAFE"},{n:"Toma de postura",d:"Ser neutral no significa no tener opinión. Con datos, con respeto, con firmeza.",c:"#7C3AED",bg:"#EDE9FE"},{n:"Construir credibilidad",d:"En BCP: resultados visibles en las primeras 2 semanas. Coherencia entre palabras y acciones.",c:"#16A34A",bg:"#DCFCE7"}].map((x,i)=>(
+          <div key={i} style={{background:x.bg,border:`1px solid ${x.c}40`,borderRadius:8,padding:"10px 12px"}}>
+            <div style={{fontSize:11,fontWeight:700,color:x.c,marginBottom:3}}>{x.n}</div>
+            <div style={{fontSize:10,color:"#374151",lineHeight:1.5}}>{x.d}</div>
+          </div>
+        ))}
+      </div>
+      <div style={{background:"#0f172a",borderRadius:8,padding:"10px 14px"}}>
+        <div style={{fontSize:10,fontWeight:700,color:"#fbbf24",marginBottom:6}}>4 TIPOS DE RESISTENCIA Y CÓMO MANEJARLOS</div>
+        {[{t:"Por miedo",r:"Mostrar beneficios concretos para esa persona",c:"#f87171"},{t:"Por experiencia",r:"Reconocer la historia, mostrar diferencias concretas",c:"#fbbf24"},{t:"Política",r:"Mostrar cómo el cambio los empodera en lugar de reducirlos",c:"#a78bfa"},{t:"Por sobrecarga",r:"Reducir la fricción del cambio, empezar pequeño",c:"#4ade80"}].map((x,i)=>(
+          <div key={i} style={{display:"flex",gap:8,marginBottom:5}}>
+            <div style={{fontSize:10,color:x.c,fontWeight:700,minWidth:100}}>{x.t}</div>
+            <div style={{fontSize:10,color:"#94a3b8"}}>{x.r}</div>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+}
+
+function VisualAudiencia() {
+  return (
+    <div style={{display:"flex",flexDirection:"column",gap:8}}>
+      {[{n:"👔 Ejecutivo (CTO, Gerentes)",l:"Valor, riesgo, ROI, tiempo al mercado",q:"¿Cuándo llega al cliente? ¿Cuánto cuesta? ¿Qué pasa si no lo hacemos?",f:"3 slides máximo · datos · tendencias · decisiones",c:"#7C3AED",bg:"#EDE9FE"},{n:"📋 Negocio (PO, PM, Analistas)",l:"Features, valor para el usuario, prioridades, roadmap",q:"¿Qué se entrega en el próximo sprint? ¿Cuándo está listo X?",f:"Backlog priorizado · roadmap Now/Next/Later · demo en vivo",c:"#0D9488",bg:"#CCFBF1"},{n:"💻 Técnico (Devs, QA, Arquitectos)",l:"Implementación, arquitectura, criterios de aceptación, deuda técnica",q:"¿Cómo se integra? ¿Cuáles son los criterios exactos? ¿Hay deuda técnica?",f:"Historias con Given/When/Then · DoD clara · ADRs",c:"#2563EB",bg:"#DBEAFE"}].map((x,i)=>(
+        <div key={i} style={{background:x.bg,border:`1px solid ${x.c}40`,borderRadius:8,padding:"10px 14px",borderLeft:`4px solid ${x.c}`}}>
+          <div style={{fontSize:12,fontWeight:700,color:x.c,marginBottom:5}}>{x.n}</div>
+          <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:6}}>
+            <div><div style={{fontSize:9,color:"#64748b",fontWeight:700,marginBottom:3}}>LENGUAJE</div><div style={{fontSize:10,color:"#374151"}}>{x.l}</div></div>
+            <div><div style={{fontSize:9,color:"#64748b",fontWeight:700,marginBottom:3}}>FORMATO</div><div style={{fontSize:10,color:"#374151"}}>{x.f}</div></div>
+          </div>
+        </div>
+      ))}
+    </div>
+  );
+}
+
+function VisualRoadmap() {
+  return (
+    <div style={{display:"flex",flexDirection:"column",gap:8}}>
+      <div style={{display:"grid",gridTemplateColumns:"repeat(3,1fr)",gap:6}}>
+        {[{n:"NOW",d:"Próximas 2–4 semanas",s:"Compromisos claros · historias detalladas · certeza alta",c:"#16A34A",bg:"#DCFCE7"},{n:"NEXT",d:"Próximo mes",s:"Dirección confirmada · features planificadas · certeza media",c:"#D97706",bg:"#FEF3C7"},{n:"LATER",d:"2–3 meses",s:"Outcomes esperados · capacidades de alto nivel · certeza baja",c:"#DC2626",bg:"#FEE2E2"}].map((x,i)=>(
+          <div key={i} style={{background:x.bg,border:`1px solid ${x.c}40`,borderRadius:8,padding:"10px 12px",textAlign:"center"}}>
+            <div style={{fontSize:16,fontWeight:900,color:x.c,marginBottom:3}}>{x.n}</div>
+            <div style={{fontSize:10,fontWeight:700,color:x.c,marginBottom:5}}>{x.d}</div>
+            <div style={{fontSize:9,color:"#374151",lineHeight:1.5}}>{x.s}</div>
+          </div>
+        ))}
+      </div>
+      <div style={{background:"#f8fafc",border:"1px solid #e2e8f0",borderRadius:8,padding:"10px 14px"}}>
+        <div style={{fontSize:11,fontWeight:700,color:"#1e293b",marginBottom:6}}>DESCOMPOSICIÓN DE OUTCOMES EN CAPACIDADES</div>
+        {[{l:"OKR",v:"Reducir abandono en checkout del 34% al 15%",c:"#7C3AED"},{l:"Épica",v:"Rediseño del flujo de pago",c:"#0D9488"},{l:"Feature",v:"Pago con un clic · guardar método preferido",c:"#2563EB"},{l:"Historia",v:"Como usuario guardo mi tarjeta con un tap",c:"#16A34A"}].map((x,i)=>(
+          <div key={i} style={{display:"flex",gap:8,marginBottom:5,paddingLeft:i*12}}>
+            <div style={{background:x.c,color:"#fff",borderRadius:4,padding:"2px 6px",fontSize:9,fontWeight:700,minWidth:50,textAlign:"center"}}>{x.l}</div>
+            <div style={{fontSize:10,color:"#374151"}}>{x.v}</div>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+}
+
+function VisualImpacto() {
+  return (
+    <div style={{display:"flex",flexDirection:"column",gap:8}}>
+      <div style={{display:"grid",gridTemplateColumns:"repeat(2,1fr)",gap:6}}>
+        {[{n:"Impacto de Negocio",items:["NPS: ¿clientes más satisfechos?","Conversión: ¿más usuarios completan el flujo?","Revenue: ¿generamos más valor?"],c:"#7C3AED",bg:"#EDE9FE"},{n:"Impacto de Delivery",items:["Lead Time: idea → producción","Cycle Time: trabajo activo","Change Failure Rate"],c:"#0D9488",bg:"#CCFBF1"},{n:"Impacto de Equipo",items:["Team Health score","% acciones de retro implementadas","Impedimentos resueltos vs abiertos"],c:"#2563EB",bg:"#DBEAFE"},{n:"Anti-patrón",items:["Velocity = cuánto trabaja el equipo","Story points = actividad, no valor","Ceremonias realizadas = proceso, no impacto"],c:"#DC2626",bg:"#FEE2E2"}].map((x,i)=>(
+          <div key={i} style={{background:x.bg,border:`1px solid ${x.c}40`,borderRadius:8,padding:"10px 12px"}}>
+            <div style={{fontSize:11,fontWeight:700,color:x.c,marginBottom:6}}>{x.n}</div>
+            {x.items.map((it,j)=><div key={j} style={{fontSize:10,color:"#374151",lineHeight:1.7}}>→ {it}</div>)}
+          </div>
+        ))}
+      </div>
+      <div style={{background:"#0f172a",borderRadius:7,padding:"8px 12px",fontSize:11,color:"#e2e8f0",textAlign:"center"}}>
+        <strong style={{color:"#4ade80"}}>Output sin Outcome = trabajo sin impacto.</strong> CALARIS siempre mide los dos.
+      </div>
+    </div>
+  );
+}
+
+function VisualStandards() {
+  return (
+    <div style={{display:"flex",flexDirection:"column",gap:8}}>
+      {[{n:"Standards de Calidad",items:["Definition of Done (DoD)","Definition of Ready (DoR)","Criterios Given/When/Then","Test coverage mínimo"],c:"#16A34A",bg:"#DCFCE7"},{n:"Standards de Proceso",items:["Working Agreements","Escalation Path (quién decide qué)","Meeting norms","Branching strategy"],c:"#2563EB",bg:"#DBEAFE"},{n:"Gobernanza de IA (crítico en BCP)",items:["¿Qué datos del cliente pueden procesarse con IA? (SBS)","¿Qué outputs de IA requieren revisión humana?","¿Cómo se documenta el uso de IA en el desarrollo?","¿Cuál es el proceso de validación antes de producción?"],c:"#7C3AED",bg:"#EDE9FE"}].map((x,i)=>(
+        <div key={i} style={{background:x.bg,border:`1px solid ${x.c}40`,borderRadius:8,padding:"10px 14px",borderLeft:`4px solid ${x.c}`}}>
+          <div style={{fontSize:12,fontWeight:700,color:x.c,marginBottom:6}}>{x.n}</div>
+          {x.items.map((it,j)=><div key={j} style={{fontSize:10,color:"#374151",lineHeight:1.7}}>☐ {it}</div>)}
+        </div>
+      ))}
+    </div>
+  );
+}
+
+function VisualCalarisAccion() {
+  return (
+    <div style={{display:"flex",flexDirection:"column",gap:8}}>
+      <div style={{background:"#0f172a",borderRadius:8,padding:"10px 14px"}}>
+        <div style={{fontSize:11,fontWeight:700,color:"#fbbf24",marginBottom:6}}>PITCH FINAL EN LA ENTREVISTA BCP/NTT DATA</div>
+        <div style={{fontSize:11,color:"#e2e8f0",lineHeight:1.8,fontStyle:"italic"}}>"En los últimos 8 años desarrollé CALARIS — un sistema de ejecución estratégica de 7 capas: Contexto, Alineación, Liderazgo, Audiencia, Roadmap, Impacto y Standards. Lo uso para convertir caos organizacional en valor medible. En BCP lo aplicaría desde el día 1. El diferencial adicional es que integro IA en cada capa — lo que me permite analizar más rápido, comunicar mejor y escalar el impacto del equipo sin aumentar la complejidad."</div>
+      </div>
+      <div style={{display:"flex",flexDirection:"column",gap:5}}>
+        {[{p:"¿Cómo arrancarías el primer mes?",r:"C→A→L→A→R→I→S secuencialmente",c:"#7C3AED"},{p:"¿Cómo demostrarías valor en 90 días?",r:"I: Lead Time reducido + acciones retro al 80% + impedimentos <48h",c:"#0D9488"},{p:"¿Qué te diferencia de otros candidatos?",r:"Framework propio + IA integrada en cada capa del proceso",c:"#16A34A"},{p:"¿Cómo manejarías una urgencia del ejecutivo?",r:"A: identificar audiencia → L: conversación directa → I: mostrar el tradeoff",c:"#D97706"}].map((x,i)=>(
+          <div key={i} style={{background:"#f8fafc",border:`1px solid ${x.c}40`,borderRadius:7,padding:"8px 12px",borderLeft:`3px solid ${x.c}`}}>
+            <div style={{fontSize:10,color:"#64748b",marginBottom:3}}>{x.p}</div>
+            <div style={{fontSize:11,fontWeight:600,color:x.c}}>{x.r}</div>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+}
+
+function Visual({ chapter }) {
+  const t = chapter.visual.type;
+  if(t==="calaris-overview") return <VisualCalarisOverview/>;
+  if(t==="contexto")         return <VisualContexto/>;
+  if(t==="alineacion")       return <VisualAlineacion/>;
+  if(t==="liderazgo")        return <VisualLiderazgo/>;
+  if(t==="audiencia")        return <VisualAudiencia/>;
+  if(t==="roadmap")          return <VisualRoadmap/>;
+  if(t==="impacto")          return <VisualImpacto/>;
+  if(t==="standards")        return <VisualStandards/>;
+  if(t==="calaris-accion")   return <VisualCalarisAccion/>;
+  return null;
+}
+
+function Quiz({ questions, color, light, onComplete }) {
+  const [answers, setAnswers] = useState({});
+  const [submitted, setSubmitted] = useState(false);
+  function answer(qi, oi) { if (submitted || answers[qi] !== undefined) return; setAnswers(a=>({...a,[qi]:oi})); }
+  function submit() {
+    if (Object.keys(answers).length < questions.length) return;
+    const score = questions.reduce((s,q,i) => s+(answers[i]===q.correct?1:0), 0);
+    setSubmitted(true); onComplete(score);
+  }
+  return (
+    <div>
+      {questions.map((q,qi) => (
+        <div key={qi} style={{marginBottom:16}}>
+          <div style={{fontSize:13,fontWeight:500,color:"#1e293b",marginBottom:8,lineHeight:1.5}}>{qi+1}. {q.q}</div>
+          <div style={{display:"flex",flexDirection:"column",gap:5}}>
+            {q.opts.map((o,oi) => {
+              let bg="#f8fafc", border="1px solid #e2e8f0", tc="#374151";
+              if(answers[qi]===oi) { bg=light; border=`1px solid ${color}`; tc="#1e293b"; }
+              if(submitted && oi===q.correct) { bg="#f0fdf4"; border="1px solid #86efac"; tc="#14532d"; }
+              if(submitted && answers[qi]===oi && oi!==q.correct) { bg="#fef2f2"; border="1px solid #fca5a5"; tc="#7f1d1d"; }
+              return <div key={oi} onClick={()=>answer(qi,oi)} style={{padding:"9px 13px",borderRadius:7,border,background:bg,cursor:submitted||answers[qi]!==undefined?"default":"pointer",fontSize:12,color:tc,lineHeight:1.4}}>{o}</div>;
+            })}
+          </div>
+          {submitted && <div style={{marginTop:8,padding:"8px 12px",background:answers[qi]===q.correct?"#f0fdf4":"#fef2f2",border:`1px solid ${answers[qi]===q.correct?"#86efac":"#fca5a5"}`,borderRadius:6,fontSize:12,color:answers[qi]===q.correct?"#14532d":"#7f1d1d",lineHeight:1.6}}>{answers[qi]===q.correct?"✓ ":"✗ "}{q.explanation}</div>}
+        </div>
+      ))}
+      {!submitted && <button onClick={submit} disabled={Object.keys(answers).length<questions.length} style={{marginTop:4,padding:"9px 20px",borderRadius:7,border:"none",background:Object.keys(answers).length<questions.length?"#e2e8f0":color,color:Object.keys(answers).length<questions.length?"#94a3b8":"#fff",fontSize:13,fontWeight:600,cursor:Object.keys(answers).length<questions.length?"not-allowed":"pointer"}}>Verificar respuestas</button>}
+    </div>
+  );
+}
+
+function CalarisGuia() {
+  const [chapter, setChapter] = useState(0);
+  const [tab, setTab] = useState("functional");
+  const [quizDone, setQuizDone] = useState({});
+  const [totalScore, setTotalScore] = useState(0);
+  const [totalQ, setTotalQ] = useState(0);
+  const [quizKey, setQuizKey] = useState(0);
+
+  const ch = CHAPTERS[chapter];
+  const pct = totalQ>0 ? Math.round((totalScore/totalQ)*100) : 0;
+  const doneCh = Object.keys(quizDone).length;
+
+  function handleQuizComplete(score) {
+    if (!quizDone[chapter]) { setTotalScore(s=>s+score); setTotalQ(t=>t+ch.questions.length); }
+    setQuizDone(d=>({...d,[chapter]:{done:true,score,total:ch.questions.length}}));
+  }
+  function goChapter(idx) { setChapter(idx); setTab("functional"); setQuizKey(k=>k+1); }
+
+  return (
+    <div style={{fontFamily:"var(--font-sans)",maxWidth:780,margin:"0 auto"}}>
+
+      <div style={{background:"#0f172a",borderRadius:"12px 12px 0 0",padding:"12px 16px",display:"flex",alignItems:"center",gap:10}}>
+        <div style={{width:32,height:32,borderRadius:8,background:"rgba(124,58,237,.25)",border:"1px solid rgba(196,181,253,.4)",display:"flex",alignItems:"center",justifyContent:"center",flexShrink:0,fontSize:16}}>🧩</div>
+        <div style={{flex:1}}>
+          <div style={{fontSize:13,fontWeight:500,color:"#f1f5f9"}}>CALARIS Framework — Guía interactiva · BCP prep</div>
+          <div style={{fontSize:11,color:"#64748b"}}>{CHAPTERS.length} secciones · {CHAPTERS.reduce((s,c)=>s+c.questions.length,0)} preguntas · Tu framework diferencial</div>
+        </div>
+        {doneCh>0 && <div style={{textAlign:"right"}}><div style={{fontSize:18,fontWeight:700,color:pct>=80?"#4ade80":pct>=60?"#fbbf24":"#f87171"}}>{pct}%</div><div style={{fontSize:10,color:"#64748b"}}>{doneCh}/{CHAPTERS.length}</div></div>}
+      </div>
+
+      <div style={{background:"#1e293b",padding:"8px 12px",borderBottom:"1px solid #0f172a"}}>
+        {GROUPS.map(group => {
+          const gc = CHAPTERS.filter(c=>c.group===group.id);
+          return (
+            <div key={group.id} style={{marginBottom:6}}>
+              <div style={{fontSize:10,fontWeight:700,color:group.color,letterSpacing:".05em",marginBottom:4,paddingLeft:2}}>{group.label.toUpperCase()}</div>
+              <div style={{display:"flex",gap:4,flexWrap:"wrap"}}>
+                {gc.map(c => {
+                  const idx = CHAPTERS.indexOf(c);
+                  return <button key={idx} onClick={()=>goChapter(idx)} style={{fontSize:11,padding:"5px 10px",borderRadius:6,cursor:"pointer",background:chapter===idx?c.color:"transparent",color:chapter===idx?"#fff":"#94a3b8",border:`1px solid ${chapter===idx?c.color:"#334155"}`,fontWeight:chapter===idx?600:400,display:"flex",alignItems:"center",gap:4,transition:".15s"}}>
+                    {quizDone[idx]&&<span style={{fontSize:9}}>{quizDone[idx].score===quizDone[idx].total?"✓":"~"}</span>}
+                    {c.icon} {c.title}
+                  </button>;
+                })}
+              </div>
+            </div>
+          );
+        })}
+      </div>
+
+      <div style={{background:"#fff",border:"1px solid #e2e8f0",borderTop:"none"}}>
+        <div style={{background:ch.light,borderBottom:`2px solid ${ch.border}`,padding:"14px 18px"}}>
+          <div style={{display:"flex",alignItems:"center",gap:10,flexWrap:"wrap"}}>
+            <div style={{width:42,height:42,borderRadius:10,background:ch.color,display:"flex",alignItems:"center",justifyContent:"center",fontSize:20,flexShrink:0}}>{ch.icon}</div>
+            <div style={{flex:1}}>
+              <div style={{fontSize:15,fontWeight:700,color:ch.text}}>{ch.title}</div>
+              <div style={{fontSize:11,color:ch.color,marginTop:2}}>{ch.questions.length} preguntas{quizDone[chapter]&&` · ${quizDone[chapter].score}/${quizDone[chapter].total} correctas`}</div>
+            </div>
+            <div style={{display:"flex",gap:5,flexWrap:"wrap"}}>
+              {tabs.map(t=><button key={t.id} onClick={()=>setTab(t.id)} style={{fontSize:11,padding:"5px 12px",borderRadius:6,cursor:"pointer",background:tab===t.id?ch.color:"transparent",color:tab===t.id?"#fff":ch.text,border:`1px solid ${tab===t.id?ch.color:ch.border}`,fontWeight:tab===t.id?600:400}}>{t.label}</button>)}
+            </div>
+          </div>
+        </div>
+
+        <div style={{padding:"16px 18px"}}>
+          {tab==="functional"&&<div><div style={{fontSize:10,fontWeight:700,color:"#94a3b8",letterSpacing:".5px",marginBottom:10}}>¿QUÉ ES Y POR QUÉ IMPORTA?</div><div style={{fontSize:13,color:"#374151",lineHeight:1.85,whiteSpace:"pre-line"}}>{ch.functional}</div><div style={{marginTop:14,padding:"10px 14px",background:ch.light,border:`1px solid ${ch.border}`,borderRadius:8,fontSize:12,color:ch.text}}>Orden recomendado: <strong>Funcional → Técnico → Visual → ¿Lo entendí?</strong></div></div>}
+          {tab==="technical"&&<div><div style={{fontSize:10,fontWeight:700,color:"#94a3b8",letterSpacing:".5px",marginBottom:10}}>IMPLEMENTACIÓN Y DETALLES</div><div style={{background:"#0f172a",borderRadius:8,padding:"14px 16px"}}><div style={{fontSize:12,color:"#e2e8f0",lineHeight:1.9,whiteSpace:"pre-line",fontFamily:"monospace"}}>{ch.technical}</div></div></div>}
+          {tab==="visual"&&<div><div style={{fontSize:10,fontWeight:700,color:"#94a3b8",letterSpacing:".5px",marginBottom:10}}>REPRESENTACIÓN VISUAL</div><Visual chapter={ch}/><div style={{fontSize:12,color:"#64748b",marginTop:10}}>Mapa mental para la entrevista — memorizá antes del quiz.</div></div>}
+          {tab==="quiz"&&<div><div style={{fontSize:10,fontWeight:700,color:"#94a3b8",letterSpacing:".5px",marginBottom:12}}>VALIDA TU COMPRENSIÓN</div>{quizDone[chapter]?(<div><div style={{background:quizDone[chapter].score===quizDone[chapter].total?"#f0fdf4":"#fffbeb",border:`1px solid ${quizDone[chapter].score===quizDone[chapter].total?"#86efac":"#fcd34d"}`,borderRadius:8,padding:"12px 14px",marginBottom:12}}><div style={{fontSize:13,fontWeight:600,color:"#1e293b"}}>{quizDone[chapter].score===quizDone[chapter].total?"🎯 ¡Sección dominada!":"✅ Sección completada"}</div><div style={{fontSize:12,color:"#64748b",marginTop:4}}>{quizDone[chapter].score}/{quizDone[chapter].total} correctas</div></div><button onClick={()=>{setQuizDone(d=>{const nd={...d};delete nd[chapter];return nd;});setQuizKey(k=>k+1);}} style={{fontSize:12,padding:"8px 16px",borderRadius:7,border:"1px solid #e2e8f0",background:"#f8fafc",cursor:"pointer",color:"#64748b"}}>Repetir quiz</button></div>):(<Quiz key={quizKey} questions={ch.questions} color={ch.color} light={ch.light} onComplete={handleQuizComplete}/>)}</div>}
+        </div>
+
+        <div style={{padding:"10px 18px 14px",borderTop:"1px solid #f1f5f9",display:"flex",justifyContent:"space-between",alignItems:"center"}}>
+          <button onClick={()=>goChapter(chapter-1)} disabled={chapter===0} style={{fontSize:12,padding:"8px 16px",borderRadius:7,border:"1px solid #e2e8f0",background:"#f8fafc",cursor:chapter===0?"not-allowed":"pointer",color:chapter===0?"#cbd5e1":"#374151"}}>← Anterior</button>
+          <div style={{fontSize:11,color:"#94a3b8"}}>{chapter+1} / {CHAPTERS.length}</div>
+          <button onClick={()=>goChapter(chapter+1)} disabled={chapter===CHAPTERS.length-1} style={{fontSize:12,padding:"8px 16px",borderRadius:7,border:`1px solid ${ch.color}`,background:ch.color,color:"#fff",cursor:chapter===CHAPTERS.length-1?"not-allowed":"pointer",opacity:chapter===CHAPTERS.length-1?.5:1}}>Siguiente →</button>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+const root = ReactDOM.createRoot(document.getElementById("root"));
+root.render(<CalarisGuia />);
+</script>
+
+<script>
+// Hide loading, show content when React renders
+window.addEventListener('load', () => {
+  setTimeout(() => {
+    const root = document.getElementById('root');
+    const loading = document.getElementById('loading');
+    if (root && root.children.length > 0) {
+      loading.style.display = 'none';
+      root.style.display = 'block';
+    } else {
+      const observer = new MutationObserver(() => {
+        if (root.children.length > 0) {
+          loading.style.display = 'none';
+          root.style.display = 'block';
+          observer.disconnect();
+        }
+      });
+      observer.observe(root, { childList: true });
+    }
+  }, 100);
+});
+
+// Register SW
+if ('serviceWorker' in navigator) {
+  navigator.serviceWorker.register('./sw.js');
+}
+</script>
+</body>
+</html>
