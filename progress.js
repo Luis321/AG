@@ -1,6 +1,6 @@
 // ══════════════════════════════════════════════
-// progress.js — Persistencia de progreso
-// Compartido entre todas las guías interactivas
+// progress.js — Motor de persistencia compartido
+// Versión: 2.0 — incluye SM→ATF→Coach y Playbook
 // Usar: <script src="/AG/progress.js"></script>
 // ══════════════════════════════════════════════
 
@@ -14,7 +14,7 @@ window.AgProgress = {
         totalScore,
         totalQ,
         lastSaved: new Date().toISOString(),
-        version: 1
+        version: 2
       };
       localStorage.setItem(`ag-progress-${guideId}`, JSON.stringify(data));
     } catch(e) {
@@ -43,7 +43,10 @@ window.AgProgress = {
 
   // Obtener resumen de todas las guías para el índice
   getSummary() {
-    const guides = ['safe', 'modelos', 'less', 'atf', 'calaris', 'herramientas'];
+    const guides = [
+      'safe', 'modelos', 'less', 'atf', 'calaris',
+      'sm-atf-p1', 'sm-atf-p2', 'playbook', 'herramientas'
+    ];
     return guides.reduce((acc, id) => {
       const data = this.load(id);
       if (data && data.totalQ > 0) {
