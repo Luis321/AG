@@ -1,0 +1,1909 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#1a8a6e">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<title>Modelos Organizacionales · Guía Interactiva</title>
+<link rel="manifest" href="../manifest.json">
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;1,9..40,300&display=swap" rel="stylesheet">
+<script src="https://unpkg.com/react@18/umd/react.production.min.js" crossorigin></script>
+<script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js" crossorigin></script>
+<script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    font-family: 'DM Sans', system-ui, sans-serif;
+    background: #f8fafc;
+    --font-sans: 'DM Sans', system-ui, sans-serif;
+  }
+  .pwa-nav {
+    background: #0f172a;
+    padding: 10px 16px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    border-bottom: 1px solid rgba(255,255,255,0.06);
+  }
+  .pwa-nav a {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    color: rgba(255,255,255,0.5);
+    font-size: 12px;
+    text-decoration: none;
+    transition: color 0.2s;
+  }
+  .pwa-nav a:hover { color: white; }
+  .pwa-nav .sep { color: rgba(255,255,255,0.15); font-size: 12px; }
+  .pwa-nav .current { color: rgba(255,255,255,0.4); font-size: 12px; }
+  .content-wrap {
+    padding: 16px;
+    max-width: 820px;
+    margin: 0 auto;
+  }
+  #loading {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 60vh;
+    flex-direction: column;
+    gap: 12px;
+    color: #64748b;
+    font-size: 13px;
+  }
+  .spinner {
+    width: 32px; height: 32px;
+    border: 3px solid #e2e8f0;
+    border-top-color: #1a8a6e;
+    border-radius: 50%;
+    animation: spin 0.8s linear infinite;
+  }
+  @keyframes spin { to { transform: rotate(360deg); } }
+</style>
+</head>
+<body>
+
+<nav class="pwa-nav">
+  <a href="../">← Inicio</a>
+  <span class="sep">/</span>
+  <span class="current">🏛️ Modelos Organizacionales</span>
+</nav>
+
+<div id="loading">
+  <div class="spinner"></div>
+  Cargando guía interactiva...
+</div>
+
+<div class="content-wrap" id="root" style="display:none"></div>
+
+<script type="text/babel">
+const { useState } = React;
+
+const GROUPS = [
+  { id: "diseno",    label: "Diseño Org.",   color: "#7C3AED" },
+  { id: "operativo", label: "Modelo Op.",    color: "#0D9488" },
+  { id: "metricas",  label: "Métricas",      color: "#2563EB" },
+  { id: "mejora",    label: "Mejora Continua", color: "#16A34A" },
+];
+
+const CHAPTERS = [
+
+  // ══════════ DISEÑO ORGANIZACIONAL ══════════
+
+  {
+    id:"que-es-modelo", group:"diseno", title:"¿Qué es un Modelo Organizacional?", icon:"🏛️",
+    color:"#7C3AED", light:"#EDE9FE", border:"#C4B5FD", text:"#4C1D95",
+    functional:`Un modelo organizacional es la forma en que una empresa estructura sus personas, equipos, roles y flujos de trabajo para crear y entregar valor. No es un organigrama — es el sistema completo que define QUIÉN hace QUÉ, CÓMO se coordinan, y POR DÓNDE fluye la información y el valor.
+
+¿POR QUÉ IMPORTA PARA UN AGILE COACH?
+Sin entender el modelo organizacional, podés implementar ceremonias ágiles perfectas en equipos que el sistema organizacional condena al fracaso. Las estructuras organizacionales determinan el comportamiento de las personas más que cualquier práctica o framework.
+
+LA LEY DE CONWAY (fundamental):
+"Las organizaciones diseñan sistemas que son copias de las estructuras de comunicación de esas organizaciones." — Melvin Conway, 1967.
+Si tu organización tiene 4 silos (frontend, backend, QA, ops), va a producir software con 4 capas poco integradas, sin importar cuántas ceremonias ágiles hagas. La arquitectura del producto refleja la arquitectura de la organización.
+
+INVERSE CONWAY MANEUVER:
+Si querés cambiar la arquitectura del producto, primero cambiá la estructura de los equipos. Los equipos organizados alrededor de servicios o capacidades de negocio tienden a construir software con esas mismas características.
+
+3 PREGUNTAS CLAVE del diseño organizacional:
+1. ¿Los equipos están organizados alrededor de tecnología o alrededor de valor/negocio?
+2. ¿Las dependencias entre equipos son pocas y explícitas, o muchas y ocultas?
+3. ¿La estructura facilita o impide la entrega autónoma de valor?`,
+    technical:`LOS 4 TIPOS DE TOPOLOGÍAS DE EQUIPO (Team Topologies — Skelton & Pais):
+
+1. STREAM-ALIGNED TEAMS (equipos alineados a flujo):
+El tipo más importante. Organizados alrededor de un flujo de valor de negocio — un producto, un segmento de cliente, o un journey. Son autónomos y pueden entregar valor end-to-end con mínimas dependencias. Objetivo: que el 80%+ de los equipos sean Stream-Aligned.
+
+2. ENABLING TEAMS (equipos habilitadores):
+Ayudan temporalmente a los stream-aligned teams a adquirir capacidades. Son coaches, no "hacedores de tareas". Se miden por su capacidad de hacer que ya no los necesiten.
+
+3. COMPLICATED SUBSYSTEM TEAMS:
+Construyen subsistemas técnicos muy complejos que otros equipos consumen. Por ejemplo: motor de machine learning, motor de procesamiento financiero.
+
+4. PLATFORM TEAMS (equipos de plataforma):
+Crean y mantienen la plataforma interna que otros equipos usan como servicio. Deben tratar a los stream-aligned teams como sus "clientes". Reducen la carga cognitiva de los otros equipos.
+
+INTERACCIONES ENTRE EQUIPOS (3 modos):
+→ Collaboration: dos equipos trabajan juntos intensamente por un período definido para explorar nuevos espacios.
+→ X-as-a-Service: un equipo provee algo al otro como servicio con mínima interacción directa.
+→ Facilitation: un equipo facilita al otro para que adquiera capacidades (enabling mode).
+
+CARGA COGNITIVA — el concepto central:
+Cada equipo tiene un límite de complejidad que puede manejar. Si la carga cognitiva supera ese límite, el equipo ralentiza, comete errores y pierde foco. El diseño organizacional es gestión de la carga cognitiva de los equipos.`,
+    visual:{ type:"modelo-org" },
+    questions:[
+      {
+        q:"¿Qué establece la Ley de Conway y por qué es crítica para un Agile Coach?",
+        opts:[
+          "Establece que las organizaciones con más de 50 personas necesitan SAFe",
+          "Establece que las organizaciones diseñan sistemas que reflejan sus estructuras de comunicación — los silos organizacionales producen software en silos, sin importar las ceremonias ágiles",
+          "Establece que los equipos multifuncionales siempre producen mejor software",
+          "Es una ley de gestión de proyectos que define el tamaño óptimo de los equipos"
+        ],
+        correct:1,
+        explanation:"La Ley de Conway dice que la arquitectura del producto es un espejo de la arquitectura organizacional. Para un Agile Coach, esto significa que implementar prácticas ágiles sin cambiar la estructura no resuelve el problema real. La Inverse Conway Maneuver propone rediseñar la estructura del equipo para obtener la arquitectura de producto deseada."
+      },
+      {
+        q:"¿Cuál es el tipo de equipo más importante según Team Topologies y cuál debería ser el más numeroso?",
+        opts:[
+          "Platform Teams — porque habilitan a todos los demás",
+          "Enabling Teams — porque son los coaches que elevan las capacidades",
+          "Stream-Aligned Teams — organizados alrededor de flujos de valor de negocio, deberían ser el 80%+ de los equipos",
+          "Complicated Subsystem Teams — porque resuelven los problemas técnicos más difíciles"
+        ],
+        correct:2,
+        explanation:"Los Stream-Aligned Teams son los que realmente entregan valor al negocio. Están organizados alrededor de un producto, segmento de cliente o journey completo. Deberían ser la gran mayoría (80%+). Los otros tipos existen para reducir la carga cognitiva de los stream-aligned teams, no al revés."
+      },
+      {
+        q:"Un equipo tiene 4 productos, 3 tecnologías diferentes, soporte a clientes, y hace deploys manuales. ¿Cuál es el problema principal?",
+        opts:[
+          "Necesitan mejores ceremonias ágiles y un SM más experimentado",
+          "Necesitan más recursos — el equipo es demasiado pequeño para todo ese trabajo",
+          "Tienen sobrecarga cognitiva — el diseño organizacional pone demasiada complejidad en un solo equipo, lo que destruye el foco, la velocidad y la calidad",
+          "Necesitan mejores herramientas — Jira y Confluence resolverían la coordinación"
+        ],
+        correct:2,
+        explanation:"La carga cognitiva excesiva es el síntoma principal. Cuando un equipo maneja múltiples productos, múltiples tecnologías y responsabilidades operativas simultáneamente, su capacidad de entregar valor de calidad colapsa. El rediseño organizacional (separar en equipos más focalizados, crear un Platform Team) es la solución, no más herramientas."
+      }
+    ]
+  },
+
+  {
+    id:"estructuras", group:"diseno", title:"Estructuras Clásicas vs Ágiles", icon:"📐",
+    color:"#7C3AED", light:"#EDE9FE", border:"#C4B5FD", text:"#4C1D95",
+    functional:`La estructura organizacional define los canales de comunicación, la toma de decisiones y el flujo de valor. Cada estructura tiene sus tradeoffs — ninguna es perfecta para todos los contextos.
+
+ESTRUCTURA FUNCIONAL (jerárquica clásica):
+Equipos agrupados por función: Frontend, Backend, QA, Ops, Diseño. Cada función tiene su propio jefe.
+✓ Especialización profunda, economías de escala, comunidades de práctica naturales.
+✗ El valor debe atravesar múltiples silos → Lead Time largo, fricción en handoffs, nadie es dueño end-to-end del producto.
+
+ESTRUCTURA MATRICIAL:
+Personas reportan a un manager funcional Y a un project manager. Intentó combinar especialización con orientación a proyectos.
+✓ Flexibilidad de recursos, especialización mantenida.
+✗ Conflictos de prioridad, "dos jefes", agilidad limitada, alta fricción política.
+
+ESTRUCTURA POR PRODUCTO/STREAM:
+Equipos organizados alrededor de un producto o segmento de cliente. Multifuncionales y autónomos.
+✓ Ownership end-to-end, lead time corto, autonomía real, accountability clara.
+✗ Duplicación de especialistas, comunidades de práctica requieren esfuerzo explícito.
+
+ESTRUCTURA TRIBAL (Spotify Model):
+Squads → Chapters → Tribes → Guilds. Los squads son multifuncionales y autónomos. Los chapters agrupan especialistas de diferentes squads para práctica y desarrollo.
+✓ Combina autonomía de producto con comunidades de especialistas.
+✗ Requiere alta madurez organizacional para funcionar. Spotify misma evolucionó su propio modelo.`,
+    technical:`EL MODELO DE SPOTIFY — en detalle:
+
+SQUAD: el equipo base. Multifuncional, autónomo, dueño de una feature area o servicio. Parecido a un Scrum team pero con más autonomía en cómo trabaja.
+
+TRIBE: un grupo de squads que trabajan en áreas relacionadas (ej: "Tribe de Pagos" con 4–8 squads). La Tribe tiene un Tribe Lead (equivalente a tu rol de Tribe Lead en Lilab). Las Tribes son el equivalente del ART en SAFe.
+
+CHAPTER: especialistas de la misma función (ej: todos los backend devs de una Tribe) que se reúnen regularmente para compartir prácticas. El Chapter Lead es el manager formal. Son dentro de la misma Tribe.
+
+GUILD: comunidad de práctica que cruza Tribes. Por ejemplo: Guild de Frontend, Guild de Machine Learning. Son voluntarias, no jerárquicas.
+
+UNFiX MODEL (Jurgen Appelo — evolución post-Spotify):
+Propone reemplazar la terminología Spotify con un lenguaje más flexible:
+→ Crews: los equipos base (equivalente a squads)
+→ Forums: comunidades de práctica (equivalente a guilds)
+→ Champions: roles que cruzan equipos (equivalente a chapter leads)
+Elimina la rigidez del modelo Spotify preservando el principio de autonomía + alineación.
+
+DISEÑO ANTI-PATRÓN — lo que NO hacer:
+→ "Fake Agile": equipos Scrum dentro de una estructura completamente funcional en silos.
+→ Component teams: equipos dueños de una capa técnica (solo frontend, solo base de datos) sin ownership de negocio.
+→ "Feature teams" con demasiadas dependencias: no son realmente autónomos.`,
+    visual:{ type:"estructuras" },
+    questions:[
+      {
+        q:"Tu organización tiene equipos de Frontend, Backend, QA y Ops separados. Una feature simple tarda 3 meses en producción. ¿Cuál es la causa raíz del problema?",
+        opts:[
+          "El equipo de desarrollo es lento y necesita más recursos",
+          "La estructura funcional en silos obliga al valor a atravesar múltiples handoffs y colas — cada equipo prioriza su propia cola, no el flujo de la feature",
+          "Falta un mejor sistema de gestión de proyectos como Jira",
+          "No hay suficientes reuniones de sincronización entre equipos"
+        ],
+        correct:1,
+        explanation:"La estructura funcional en silos es la causa raíz. El valor debe esperar la cola de Frontend, luego la cola de Backend, luego QA, luego Ops. Cada handoff introduce espera y pérdida de contexto. La solución no es más reuniones sino rediseñar la estructura hacia equipos multifuncionales dueños del end-to-end de la feature."
+      },
+      {
+        q:"¿Cuál es la diferencia entre un Chapter y una Guild en el modelo Spotify?",
+        opts:[
+          "Son lo mismo — solo difieren en tamaño",
+          "Un Chapter agrupa especialistas de la misma función DENTRO de una Tribe (tiene manager formal); una Guild es una comunidad voluntaria que cruza múltiples Tribes",
+          "Un Chapter es técnico; una Guild es de negocio",
+          "Un Chapter es temporal; una Guild es permanente"
+        ],
+        correct:1,
+        explanation:"Chapter = especialistas de la misma función dentro de una Tribe (ej: todos los BE devs de la Tribe de Pagos). Tiene Chapter Lead como manager formal. Guild = comunidad que cruza Tribes (ej: Guild de Frontend con devs de múltiples Tribes). Es voluntaria, informal, sin jerarquía. Los Chapters mantienen la especialización; las Guilds mantienen la cultura técnica."
+      },
+      {
+        q:"¿Qué rol de tu experiencia actual en Lilab es más equivalente al Tribe Lead del modelo Spotify?",
+        opts:[
+          "Scrum Master — facilita los rituales de los squads",
+          "Tribe Lead — responsable de una Tribe de 4–5 squads, gestiona el portafolio multi-cliente y alinea objetivos de negocio con ejecución",
+          "Product Owner — gestiona el backlog de las features de la Tribe",
+          "RTE — equivalente al líder del Agile Release Train en SAFe"
+        ],
+        correct:1,
+        explanation:"Tu rol de Tribe Lead en Lilab es exactamente el equivalente al Tribe Lead del modelo Spotify: responsable de una Tribe de 4–5 squads (16–25 personas), gestiona la alineación entre objetivos de negocio y ejecución, facilita gobernanza inter-squads (Scrum of Scrums, QBRs, PI Planning). En SAFe sería el RTE. Tres frameworks, un mismo concepto."
+      }
+    ]
+  },
+
+  {
+    id:"topologias", group:"diseno", title:"Team Topologies en Práctica", icon:"🔗",
+    color:"#7C3AED", light:"#EDE9FE", border:"#C4B5FD", text:"#4C1D95",
+    functional:`Team Topologies es el framework más completo y práctico para diseñar organizaciones de software modernas. Su premisa central: el diseño de equipos es la decisión arquitectónica más importante que toma una organización tecnológica.
+
+EL PROBLEMA QUE RESUELVE:
+Las organizaciones tradicionales copian estructuras de otras sin entender el contexto. El resultado: equipos con demasiadas responsabilidades, dependencias ocultas que bloquean el flujo, y personas con altísima carga cognitiva que no pueden entregar valor de forma sostenible.
+
+EL MODELO EN 3 CAPAS:
+
+CAPA 1 — TIPOS DE EQUIPO (quiénes son):
+→ Stream-Aligned: orientados al valor de negocio (el 80%)
+→ Platform: reducen la carga cognitiva con servicios internos
+→ Enabling: elevan capacidades temporalmente (modo coaching)
+→ Complicated Subsystem: resuelven complejidad técnica específica
+
+CAPA 2 — MODOS DE INTERACCIÓN (cómo se relacionan):
+→ Collaboration: intensiva, por tiempo limitado, para explorar o resolver algo nuevo
+→ X-as-a-Service: uno entrega a otro con mínima fricción (API, plataforma, documentación)
+→ Facilitation: uno ayuda al otro a crecer (enabling mode)
+
+CAPA 3 — EVOLUCIÓN EN EL TIEMPO:
+Las interacciones deben evolucionar. Un Enabling Team que facilita a un Stream-Aligned Team para que aprenda DevOps, después de 3 meses debe poder retirarse. Si no puede, algo salió mal.
+
+PARA TU ROL COMO TRIBE LEAD:
+Tu trabajo no es solo facilitar ceremonias — es diagnosticar si la estructura de la Tribe permite que los squads entreguen valor con mínimas dependencias y carga cognitiva razonable.`,
+    technical:`CÓMO APLICAR TEAM TOPOLOGIES EN UNA SOFTWARE FACTORY:
+
+PASO 1 — MAPEAR LOS FLUJOS DE VALOR:
+Antes de diseñar equipos, identificar los flujos de valor de negocio. ¿Qué capacidades entregamos a los clientes? Cada flujo de valor debería tener uno o más Stream-Aligned Teams.
+
+PASO 2 — IDENTIFICAR DEPENDENCIAS:
+Mapear qué equipos dependen de qué para entregar. Las dependencias frecuentes entre dos equipos son una señal de que deberían fusionarse o de que necesitan un modo de interacción más formal.
+
+PASO 3 — EVALUAR LA CARGA COGNITIVA:
+Por equipo: ¿Cuántos repositorios mantienen? ¿Cuántas tecnologías? ¿Cuántos clientes internos? ¿Cuánto trabajo no planificado (soporte, incidentes)? Si la respuesta es "demasiado", hay un problema de diseño.
+
+PASO 4 — DISEÑAR PLATAFORMAS:
+Si múltiples Stream-Aligned Teams hacen las mismas cosas (setup de CI/CD, logging, monitoring), crear un Platform Team que lo provea como servicio reduce la carga cognitiva de todos.
+
+SEÑALES DE QUE UN EQUIPO ESTÁ MAL DISEÑADO:
+→ Alto WIP — mucho en paralelo, nada terminado
+→ Lead Time largo con bajo throughput
+→ Muchas reuniones inter-equipo para coordinar
+→ "El equipo X nos está bloqueando" aparece en cada retro
+→ Las personas no saben bien qué es lo más importante en lo que trabajar
+
+CONEXIÓN CON TU CALARIS FRAMEWORK:
+El CALARIS Framework (Contexto · Alineación · Liderazgo · Audiencia · Roadmap · Impactos · Standards) mapea directamente con Team Topologies: el "Contexto" diagnostica si los equipos están bien diseñados; la "Alineación" define las interacciones entre equipos; el "Roadmap" evoluciona la estructura en el tiempo.`,
+    visual:{ type:"topologias" },
+    questions:[
+      {
+        q:"Tenés un equipo que en cada retrospectiva menciona que 'el equipo de plataforma los bloquea'. ¿Qué diagnóstico y qué acción proponés?",
+        opts:[
+          "El equipo de plataforma necesita más personas — el bloqueo es un problema de capacidad",
+          "El modo de interacción entre equipos está mal definido. Si se bloquean frecuentemente, deben pasar de X-as-a-Service a Collaboration para resolver el problema de forma conjunta, con un SLA claro y luego volver a X-as-a-Service",
+          "El equipo quejoso necesita ser más autónomo y resolver sus propios problemas técnicos",
+          "Necesitás más reuniones de sincronización semanal entre ambos equipos"
+        ],
+        correct:1,
+        explanation:"El patrón 'nos bloquean' indica que el modo de interacción está mal configurado. Si el equipo de plataforma debería proveer X-as-a-Service pero en la práctica genera bloqueos, la solución es definir un SLA explícito, pasar temporalmente a Collaboration para resolver el problema de raíz, y luego volver a X-as-a-Service con la expectativa clara. Más reuniones sin cambiar el modo de interacción no resuelve nada."
+      },
+      {
+        q:"¿Cuál es la diferencia entre un Platform Team y un Enabling Team?",
+        opts:[
+          "Son lo mismo — ambos apoyan a los equipos de desarrollo",
+          "El Platform Team provee servicios/herramientas de forma continua (X-as-a-Service); el Enabling Team enseña capacidades temporalmente y luego se retira (si no puede retirarse, falló)",
+          "El Platform Team es técnico; el Enabling Team es de procesos",
+          "El Platform Team es permanente; el Enabling Team dura solo un sprint"
+        ],
+        correct:1,
+        explanation:"Platform Team = servicio continuo (CI/CD, observabilidad, infraestructura) que otros equipos consumen. Permanente, con SLA. Enabling Team = coaching temporal para que los Stream-Aligned Teams adquieran capacidades. Su éxito se mide por poder retirarse. Un Enabling Team que nunca puede irse significa que los equipos no están aprendiendo."
+      },
+      {
+        q:"¿Qué es la 'carga cognitiva' de un equipo y por qué es el concepto central de Team Topologies?",
+        opts:[
+          "La cantidad de reuniones y ceremonias que tiene el equipo por semana",
+          "La complejidad total que un equipo debe entender y gestionar para hacer su trabajo — cuando excede el límite del equipo, la velocidad cae, los errores aumentan y las personas se agotan",
+          "El número de historias de usuario que el equipo puede completar por sprint",
+          "El nivel de dificultad técnica del código que el equipo mantiene"
+        ],
+        correct:1,
+        explanation:"La carga cognitiva es la complejidad total que el equipo debe mantener en 'memoria': cuántos sistemas, tecnologías, clientes, procesos y responsabilidades manejan simultáneamente. Cuando excede el límite humano del equipo (que es finito), la velocidad cae, los errores aumentan y el burnout aparece. El diseño organizacional es básicamente gestión de carga cognitiva a nivel de sistema."
+      }
+    ]
+  },
+
+  // ══════════ MODELO OPERATIVO ══════════
+
+  {
+    id:"modelo-operativo", group:"operativo", title:"¿Qué es un Modelo Operativo?", icon:"⚙️",
+    color:"#0D9488", light:"#CCFBF1", border:"#5EEAD4", text:"#134E4A",
+    functional:`Un modelo operativo es el sistema completo que define CÓMO una organización crea y entrega valor. No es un organigrama (eso es la estructura) ni un proceso (eso es una parte). Es la intersección de estructura, procesos, personas, tecnología y gobernanza — cómo todo eso se conecta para producir resultados.
+
+¿POR QUÉ LO NECESITA UN AGILE COACH?
+Las organizaciones contratan Agile Coaches para "hacer Scrum" o "hacer SAFe". Pero Scrum y SAFe son herramientas — el modelo operativo es el sistema en el que esas herramientas operan. Si el modelo operativo está mal diseñado, los mejores frameworks del mundo no van a producir resultados.
+
+LOS 5 COMPONENTES de un Modelo Operativo Ágil:
+
+1. ESTRUCTURA: cómo están organizados los equipos (Team Topologies, Spotify Model, SAFe)
+2. GOBERNANZA: cómo se toman las decisiones, quién tiene autoridad sobre qué
+3. FLUJO DE VALOR: cómo fluye el trabajo desde la idea hasta el cliente
+4. PROCESOS Y PRÁCTICAS: las ceremonias, artefactos y estándares que guían el trabajo
+5. CULTURA Y LIDERAZGO: los comportamientos que el sistema incentiva o penaliza
+
+EL ERROR MÁS COMÚN:
+Organizaciones que solo cambian el componente 4 (procesos) sin tocar los otros 4. El resultado es "Agile con nombres Scrum" pero con el mismo modelo operativo waterfall debajo.
+
+PARA ENTREVISTAS EN NTT DATA:
+Cuando te pregunten sobre tu experiencia liderando transformaciones, describí en qué componentes del modelo operativo interveniste — no solo qué ceremonias implementaste.`,
+    technical:`EL MODELO OPERATIVO CANVAS — 8 dimensiones para diagnosticar:
+
+1. PURPOSE (Propósito): ¿Por qué existe el equipo/organización? ¿Qué problema resuelve para el cliente?
+
+2. CUSTOMERS (Clientes): ¿Quiénes son los clientes internos y externos? ¿Cómo se obtiene feedback de ellos?
+
+3. VALUE PROPOSITION (Propuesta de valor): ¿Qué valor único entrega este equipo que ningún otro puede entregar?
+
+4. CAPABILITIES (Capacidades): ¿Qué habilidades, procesos y tecnologías necesita el equipo para entregar su propuesta de valor?
+
+5. STRUCTURE (Estructura): ¿Cómo están organizadas las personas? ¿Quién depende de quién?
+
+6. GOVERNANCE (Gobernanza): ¿Cómo se toman las decisiones? ¿Qué es centralizado y qué es autónomo?
+
+7. METRICS (Métricas): ¿Cómo sabe el equipo que está haciendo un buen trabajo? ¿Qué miden y qué no?
+
+8. CULTURE (Cultura): ¿Qué comportamientos se incentivan? ¿Qué se penaliza implícitamente?
+
+SEÑALES DE UN MODELO OPERATIVO ROTO:
+→ Los equipos entregan "features" pero los clientes no perciben valor
+→ Las métricas miden actividad (velocity, puntos) pero no resultados de negocio
+→ Los líderes dicen que quieren agilidad pero microgestión en la práctica
+→ Las decisiones escalan a management porque los equipos no tienen autoridad para decidir
+→ La gobernanza penaliza la experimentación y el aprendizaje de errores
+
+CONEXIÓN CON TU AIDE FRAMEWORK:
+El AI-Augmented Agile Delivery Framework (AIDE) que creaste define las 6 capas del modelo operativo para software factories: Discovery, Planning, Desarrollo, QA, Delivery y Gobernanza — exactamente los 6 componentes de un modelo operativo de delivery digital.`,
+    visual:{ type:"modelo-operativo" },
+    questions:[
+      {
+        q:"¿Cuál es la diferencia entre un modelo operativo, una estructura organizacional y un proceso?",
+        opts:[
+          "Son sinónimos — todos describen cómo trabaja una organización",
+          "La estructura define quién está dónde (organigrama); el proceso define cómo se hace una tarea específica; el modelo operativo es el sistema completo que integra estructura, procesos, gobernanza, cultura y flujo de valor",
+          "El modelo operativo es para grandes empresas; la estructura y los procesos son para equipos pequeños",
+          "El modelo operativo es el organigrama; la estructura es el proceso; el proceso es la cultura"
+        ],
+        correct:1,
+        explanation:"Son tres capas de abstracción distintas. La estructura (organigrama) dice quién reporta a quién. Los procesos dicen cómo se hace cada tarea. El modelo operativo es el sistema completo — cómo la estructura, los procesos, la gobernanza, la cultura y el flujo de valor se conectan para producir resultados. Cambiar solo los procesos sin tocar el modelo operativo produce 'Agile cosmético'."
+      },
+      {
+        q:"Un equipo implementa Scrum perfectamente (todos los rituales, estimaciones, sprints) pero los stakeholders siguen insatisfechos y el Time to Market no mejoró. ¿Dónde está el problema?",
+        opts:[
+          "El equipo necesita más capacitación en Scrum y certificaciones",
+          "El modelo operativo subyacente está roto — probablemente la gobernanza, el flujo de valor o las métricas están mal. Scrum es solo una herramienta; si el sistema que lo rodea está mal diseñado, el resultado no cambia",
+          "El SM no está facilitando bien las retrospectivas",
+          "El backlog no está bien priorizado por el Product Owner"
+        ],
+        correct:1,
+        explanation:"Este es el patrón más común: 'cargo cult Agile' — los rituales correctos con el sistema incorrecto. Si los stakeholders siguen insatisfechos y el TTM no mejoró, el problema está en el modelo operativo: probablemente la gobernanza no permite que el equipo tome decisiones autónomas, o el flujo de valor tiene cuellos de botella fuera del equipo, o las métricas miden las cosas equivocadas."
+      },
+      {
+        q:"¿Cuáles son los 5 componentes de un modelo operativo ágil?",
+        opts:[
+          "Scrum, Kanban, SAFe, Lean y DevOps",
+          "Estructura, Gobernanza, Flujo de Valor, Procesos y Prácticas, y Cultura y Liderazgo",
+          "People, Process, Technology, Budget y Timeline",
+          "Vision, OKRs, Backlog, Sprint y Retro"
+        ],
+        correct:1,
+        explanation:"Los 5 componentes son: (1) Estructura — cómo están organizados los equipos; (2) Gobernanza — cómo se toman las decisiones; (3) Flujo de Valor — cómo fluye el trabajo hasta el cliente; (4) Procesos y Prácticas — las ceremonias y estándares; (5) Cultura y Liderazgo — los comportamientos que el sistema incentiva. Cambiar solo (4) sin los otros produce 'Agile cosmético'."
+      }
+    ]
+  },
+
+  {
+    id:"gobernanza", group:"operativo", title:"Gobernanza Ágil y Toma de Decisiones", icon:"🧭",
+    color:"#0D9488", light:"#CCFBF1", border:"#5EEAD4", text:"#134E4A",
+    functional:`La gobernanza ágil define QUIÉN decide QUÉ, CUÁNDO y CON QUÉ información. Es uno de los componentes más ignorados en las transformaciones ágiles — y uno de los que más impactan el día a día de los equipos.
+
+EL PROBLEMA DE LA GOBERNANZA TRADICIONAL EN ENTORNOS ÁGILES:
+Las organizaciones tradicionales tienen gobernanza centralizada: todo sube al manager antes de ejecutarse. Esto destruye la agilidad porque las decisiones son más lentas que el trabajo. Los equipos se bloquean esperando aprobaciones, pierden contexto y se desmotivan.
+
+EL PRINCIPIO CLAVE — DECIDE DONDE ESTÁ EL CONOCIMIENTO:
+Las mejores decisiones se toman donde está la información y el contexto. En entornos ágiles, el conocimiento técnico y de cliente está en el equipo — no en el management. La gobernanza ágil descentraliza las decisiones al nivel donde el conocimiento existe.
+
+3 TIPOS DE DECISIONES (modelo de descentralización):
+
+DECISIONES DEL EQUIPO (daily/sprint):
+Cómo implementar técnicamente una historia, estimaciones, orden del backlog dentro del sprint, pair programming. El equipo decide sin consultar. Velocidad: horas.
+
+DECISIONES DEL PROGRAMA (PI/mensual):
+Priorización de features entre productos, dependencias entre equipos, architecture guidelines, adopción de nuevas tecnologías. Product Management + System Architect + RTE/Tribe Lead. Velocidad: días.
+
+DECISIONES ESTRATÉGICAS (portfolio/trimestral):
+Qué Value Streams financiar, qué épicas priorizar, cómo reorganizar equipos, alianzas tecnológicas. Portfolio Leadership. Velocidad: semanas.
+
+EL ERROR: mezclar los 3 niveles. El CEO opinando sobre la implementación técnica, o el equipo decidiendo el portfolio de inversiones.`,
+    technical:`MARCOS DE TOMA DE DECISIONES para equipos ágiles:
+
+MARCO CYNEFIN (Dave Snowden):
+Un framework para diagnosticar la naturaleza del problema antes de elegir cómo decidir:
+→ OBVIO: causa-efecto clara, todos lo ven. Decisión: seguir el proceso establecido.
+→ COMPLICADO: causa-efecto existe pero requiere expertise. Decisión: analizar, consultar expertos, aplicar práctica probada.
+→ COMPLEJO: causa-efecto solo se ve en retrospectiva. Decisión: hacer experimentos controlados, amplificar lo que funciona.
+→ CAÓTICO: no hay causa-efecto perceptible. Decisión: actuar primero para estabilizar, analizar después.
+
+La mayoría del trabajo de software es COMPLEJO — por eso los experimentos (sprints, prototipos, MVPs) son más efectivos que el análisis upfront.
+
+DELEGATION POKER (Management 3.0):
+7 niveles de delegación para explicitar quién tiene autoridad sobre cada decisión:
+1. Tell — yo decido y te digo
+2. Sell — yo decido y te explico por qué
+3. Consult — consulto tu opinión antes de decidir
+4. Agree — decidimos juntos
+5. Advise — vos decidís, yo opino si querés
+6. Inquire — vos decidís, me informás después
+7. Delegate — vos decidís, ni me informás
+
+PARA TU ROL COMO TRIBE LEAD:
+Mapear qué decisiones están en qué nivel para cada tipo de trabajo. Los equipos deben saber claramente qué pueden decidir solos (nivel 7), qué consultan (nivel 3) y qué requiere aprobación (nivel 1-2).
+
+DECISION LOG como artefacto:
+Documentar las decisiones arquitectónicas y de proceso importantes con: contexto, opciones consideradas, decisión tomada, razones, consecuencias. Reduce la deuda de conocimiento y acelera el onboarding.`,
+    visual:{ type:"gobernanza" },
+    questions:[
+      {
+        q:"Un equipo técnico necesita aprobación del Director de TI para cada decisión de arquitectura, incluso cambios menores de código. ¿Qué problema describe esto y cómo lo resolverías?",
+        opts:[
+          "El Director tiene razón — todas las decisiones de arquitectura son estratégicas",
+          "El nivel de delegación es 1 (Tell) para decisiones que deberían ser 5-7 (Advise/Delegate). El equipo pierde autonomía y velocidad. Solución: mapear qué decisiones requieren qué nivel con Delegation Poker y publicar las Architecture Decision Guidelines",
+          "El equipo necesita más capacitación técnica para ganarse la confianza del Director",
+          "Necesitan más reuniones de alineación para que el Director esté siempre informado"
+        ],
+        correct:1,
+        explanation:"Este es un anti-patrón clásico de gobernanza centralizada. El equipo tiene el conocimiento técnico y el contexto, pero la autoridad de decisión está en alguien que no tiene esa información en detalle. Con Delegation Poker, se puede mapear explícitamente qué decisiones son del Director (nivel 1-2), cuáles se consultan (3-4) y cuáles el equipo decide solo (5-7). Las Architecture Decision Guidelines documentadas reducen la necesidad de aprobación caso a caso."
+      },
+      {
+        q:"¿Qué cuadrante del marco Cynefin describe mejor el trabajo de desarrollo de software y qué implica para cómo se toman las decisiones?",
+        opts:[
+          "OBVIO — se sigue el proceso establecido siempre",
+          "COMPLICADO — se analiza exhaustivamente antes de comenzar, como en waterfall",
+          "COMPLEJO — la causa-efecto solo se ve en retrospectiva; esto justifica experimentos cortos (sprints, MVPs) en lugar de análisis upfront extenso",
+          "CAÓTICO — todo es imprevisible, las estimaciones son imposibles"
+        ],
+        correct:2,
+        explanation:"El desarrollo de software es predominantemente COMPLEJO: los requisitos cambian, el comportamiento del usuario es impredecible, las integraciones revelan problemas solo al hacerlas. En dominio Complejo, la estrategia es 'probar y aprender': experimentos controlados (sprints de 2 semanas), amplificar lo que funciona, descartar lo que no. Esto es exactamente lo que justifica Agile sobre Waterfall."
+      },
+      {
+        q:"¿Qué es el Delegation Poker y para qué se usa en un equipo ágil?",
+        opts:[
+          "Un juego de cartas para estimar historias de usuario, similar al Planning Poker",
+          "Un framework de Management 3.0 con 7 niveles que clarifica quién tiene autoridad sobre cada tipo de decisión — desde 'yo decido y te digo' (nivel 1) hasta 'vos decidís, ni me informás' (nivel 7)",
+          "Una técnica para distribuir el trabajo del sprint entre los miembros del equipo",
+          "Un método para priorizar el backlog con los stakeholders"
+        ],
+        correct:1,
+        explanation:"Delegation Poker (Management 3.0) es una herramienta para hacer explícito el nivel de autoridad de cada persona sobre cada tipo de decisión. Los 7 niveles van desde control total del manager hasta delegación total al equipo. Usarlo en un equipo nuevo aclara expectativas, reduce conflictos y aumenta la autonomía real (no solo declarada) de los equipos."
+      }
+    ]
+  },
+
+  {
+    id:"flujo-valor", group:"operativo", title:"Flujo de Valor y Value Stream Mapping", icon:"🌊",
+    color:"#0D9488", light:"#CCFBF1", border:"#5EEAD4", text:"#134E4A",
+    functional:`El Value Stream Mapping (VSM) es la herramienta más poderosa para diagnosticar el modelo operativo de delivery. Permite visualizar cómo fluye el trabajo desde la idea hasta el cliente, identificar desperdicio (waste) y diseñar el estado futuro.
+
+¿QUÉ ES UN VALUE STREAM?
+Una value stream es la secuencia completa de actividades necesarias para llevar una idea de negocio hasta las manos de un cliente. Incluye todo: desde cuando alguien concibe la idea hasta que el usuario final puede usarla.
+
+¿QUÉ REVELAEL VSM?
+→ Process Time (PT): tiempo que algo está siendo procesado activamente
+→ Wait Time (WT): tiempo que algo espera en una cola sin ser procesado
+→ % Complete & Accurate (%C&A): qué % del trabajo que llega a cada paso está completo y correcto
+
+LA REGLA DEL 80/20 DEL DESPERICIO:
+En la mayoría de los flujos de desarrollo de software, el 80–90% del Lead Time total es tiempo de espera (Wait Time), no tiempo de trabajo activo. Una feature que tarda 30 días en producción probablemente tiene 3–4 días de trabajo activo y 26–27 días esperando en colas.
+
+LOS 8 TIPOS DE WASTE (Lean adaptado a software):
+1. Defectos: bugs, retrabajo
+2. Sobreproducción: features que nadie usa
+3. Espera: trabajo bloqueado en colas
+4. No utilizar el talento: personas no empoderadas para decidir
+5. Transporte: handoffs innecesarios entre equipos
+6. Inventario: trabajo iniciado pero no terminado (WIP alto)
+7. Movimiento: cambio de contexto, multitasking
+8. Procesamiento innecesario: burocracia, documentación que nadie lee`,
+    technical:`CÓMO HACER UN VALUE STREAM MAPPING:
+
+PASO 1 — ELEGIR EL VALUE STREAM:
+Seleccionar el flujo end-to-end de una capacidad de negocio representativa. Por ejemplo: "desde que un Product Owner escribe una historia hasta que el usuario puede verla en producción."
+
+PASO 2 — MAPEAR EL ESTADO ACTUAL:
+Para cada paso del flujo, documentar:
+→ ¿Qué equipo/persona lo ejecuta?
+→ Process Time (horas/días de trabajo activo)
+→ Wait Time (horas/días de espera antes de que alguien lo tome)
+→ % Complete & Accurate (¿llega bien o llega con gaps?)
+→ Número de personas involucradas
+
+PASO 3 — CALCULAR EL EFFICIENCY RATE:
+Efficiency Rate = Suma de Process Times / Lead Time Total × 100
+Un rate < 20% es común en organizaciones tradicionales.
+Un rate > 40% indica un flujo muy optimizado.
+
+PASO 4 — IDENTIFICAR KAIZENS:
+Señalar con rayos ⚡ o explosiones 💥 los puntos de mayor desperdicio o fricción — estos son los "Kaizen bursts" donde se enfocan las mejoras.
+
+PASO 5 — DISEÑAR EL ESTADO FUTURO:
+¿Cómo se vería el flujo si elimináramos el mayor desperdicio? No es perfectible de una vez — se elige 1–3 mejoras concretas y se planifica cómo implementarlas.
+
+MÉTRICAS DEL FLUJO (Flow Metrics):
+→ Lead Time: tiempo total desde que el trabajo entra hasta que sale (incluye esperas)
+→ Cycle Time: tiempo desde que alguien comienza a trabajar activamente en un ítem
+→ Throughput: número de ítems completados por unidad de tiempo
+→ WIP (Work in Progress): número de ítems en proceso simultáneamente
+
+LEY DE LITTLE (fundamental):
+Lead Time = WIP / Throughput
+Para reducir el Lead Time, podés aumentar el Throughput O reducir el WIP. Reducir el WIP suele ser más fácil y efectivo a corto plazo.`,
+    visual:{ type:"flujo-valor" },
+    questions:[
+      {
+        q:"Un feature tarda 25 días desde que entra al backlog hasta producción. Al mapearlo, encontrás 4 días de trabajo activo y 21 días de espera. ¿Qué indica el Efficiency Rate y dónde está la oportunidad?",
+        opts:[
+          "El Efficiency Rate del 16% es excelente para una software factory",
+          "El Efficiency Rate del 16% (4/25) es bajo — el 84% del tiempo es desperdicio (espera en colas). La oportunidad está en reducir el Wait Time: identificar qué cola es la más larga y por qué, no en hacer que el equipo trabaje más rápido",
+          "El problema es que el equipo trabaja solo 4 días — necesitan trabajar más horas",
+          "El Efficiency Rate del 84% indica que el proceso es muy eficiente"
+        ],
+        correct:1,
+        explanation:"Efficiency Rate = 4/25 = 16%. El 84% del Lead Time es espera pura. Hacer que el equipo trabaje más rápido en esos 4 días activos no resolvería nada — el problema está en las colas. El VSM mostraría dónde está la cola más larga (¿code review? ¿QA? ¿deploy approval?) y esa sería la prioridad de mejora: reducir el Wait Time, no el Process Time."
+      },
+      {
+        q:"¿Qué establece la Ley de Little y qué implica para gestionar un equipo de desarrollo?",
+        opts:[
+          "Establece que los equipos pequeños siempre son más rápidos",
+          "Lead Time = WIP / Throughput — para reducir el Lead Time, podés aumentar el Throughput O reducir el WIP. Limitar el WIP suele ser la palanca más efectiva e inmediata",
+          "Establece que más sprints cortos siempre producen más valor",
+          "Es una fórmula para calcular el número óptimo de personas en un equipo"
+        ],
+        correct:1,
+        explanation:"La Ley de Little (John Little, 1961) es matemáticamente exacta para sistemas en estado estable: Lead Time = WIP / Throughput. Para reducir el Lead Time podés: (a) aumentar el Throughput (más difícil, requiere cambios técnicos u organizacionales) o (b) reducir el WIP (más inmediato: definir límites de WIP explícitos). Muchos equipos ágiles duplican el WIP pensando que están siendo más productivos, y en realidad están aumentando su Lead Time."
+      },
+      {
+        q:"¿Cuál de los 8 tipos de waste de Lean es el más común y más costoso en el desarrollo de software moderno?",
+        opts:[
+          "Defectos — los bugs son el mayor desperdicio porque hay que retrabajarlos",
+          "Sobreproducción — construir features que nadie usa es el mayor desperdicio de inversión; estudios muestran que el 64–80% de las features de software se usan raramente o nunca",
+          "Movimiento — el multitasking y cambio de contexto destruyen la productividad",
+          "Procesamiento innecesario — la documentación y burocracia consumen más tiempo que cualquier otra cosa"
+        ],
+        correct:1,
+        explanation:"La sobreproducción — construir features que nadie usa — es el waste más caro en software. Estudios de Standish Group y otros muestran que el 45–64% de las features de software se usan raramente o nunca. Invertir en descubrimiento continuo (continuous exploration), validación de hipótesis y métricas de adopción previene este waste antes de que empiece a acumularse."
+      }
+    ]
+  },
+
+  // ══════════ MÉTRICAS ══════════
+
+  {
+    id:"okrs", group:"metricas", title:"OKRs — Objectives & Key Results", icon:"🎯",
+    color:"#2563EB", light:"#DBEAFE", border:"#93C5FD", text:"#1D4ED8",
+    functional:`Los OKRs son el framework de gestión de objetivos más adoptado en organizaciones ágiles. Desarrollados en Intel por Andy Grove y popularizados por Google, conectan la ambición estratégica con la ejecución cotidiana.
+
+LA ESTRUCTURA:
+→ OBJECTIVE (O): ¿A dónde queremos ir? Cualitativo, inspirador, memorable, con tiempo definido.
+→ KEY RESULTS (KR): ¿Cómo sabremos que llegamos? Cuantitativos, medibles, verificables. Típicamente 3–5 por Objective.
+
+LA DISTINCIÓN MÁS CRÍTICA — OUTPUT vs OUTCOME:
+OUTPUT: lo que producís (features entregadas, historias completadas, deploys realizados).
+OUTCOME: el cambio en el comportamiento o situación del usuario/negocio como resultado de lo que produjiste.
+
+OKR MAL FORMULADO (output):
+O: Entregar el módulo de pagos internacionales
+KR1: Completar 40 historias de usuario
+KR2: Hacer 3 deploys al mes
+KR3: Tener 0 bugs en producción
+
+OKR BIEN FORMULADO (outcome):
+O: Que los clientes puedan pagar desde cualquier país sin fricción
+KR1: 25% de las transacciones nuevas provienen de usuarios fuera de Perú
+KR2: La tasa de abandono en checkout cae del 34% al 15%
+KR3: NPS del flujo de pago sube de 42 a 65
+
+¿POR QUÉ IMPORTA LA DISTINCIÓN?
+Los outputs solo te dicen si el equipo trabajó. Los outcomes te dicen si el trabajo importó. Un equipo puede entregar 100% de sus features y tener impacto cero si las features no cambian el comportamiento del usuario.`,
+    technical:`NIVELES DE OKRs EN UNA ORGANIZACIÓN ÁGIL:
+
+NIVEL EMPRESA (anual + trimestral):
+OKRs que definen la dirección estratégica. Los aprueba el C-Level. Ejemplo: "Convertirnos en la plataforma de pagos más confiable de LATAM."
+
+NIVEL TRIBU/ART (trimestral, alineados al PI):
+OKRs de la Tribe/ART que contribuyen directamente a los OKRs de empresa. Definidos en el PI Planning o QBR. Ejemplo: "Reducir la fricción del checkout para usuarios nuevos en Perú."
+
+NIVEL EQUIPO/SQUAD (por sprint o PI):
+OKRs del equipo que contribuyen al nivel Tribe. Pueden ser semanales o por iteración.
+
+REGLAS DE ORO para OKRs bien escritos:
+
+OBJECTIVES:
+→ Debe inspirar acción — si leerlo no genera energía, reformularlo
+→ Debe ser alcanzable en el período (generalmente trimestral)
+→ Debe ser cualitativo — "convertirnos en..." no "aumentar en 20%..."
+→ Máximo 3–5 Objectives por nivel
+
+KEY RESULTS:
+→ Deben ser medibles con un número — si no tiene número, no es un KR
+→ Deben medir outcomes, no outputs — evitar "completar X features"
+→ Deben ser ambiciosos: si el equipo está 100% seguro de alcanzarlos, son demasiado fáciles
+→ Google apunta a un 70% de achievement como "éxito" en OKRs
+
+ANTI-PATRONES frecuentes:
+→ KRs que son tareas: "hacer la presentación de roadmap" no es un KR
+→ KRs binarios (sí/no): pierden la gradualidad de progreso
+→ Demasiados OKRs: más de 5 Objectives hace que todo sea prioridad (= nada lo es)
+→ OKRs de equipo sin conexión con los de la empresa: los equipos optimizan localmente
+
+CONEXIÓN CON TU EXPERIENCIA:
+Como Tribe Lead en Lilab, acompañaste a PMs, POs y jefaturas en definición y seguimiento de OKRs. La distinción output vs outcome es exactamente el gap que te identificamos en el diagnóstico inicial — y es la pregunta más frecuente en entrevistas senior.`,
+    visual:{ type:"okrs" },
+    questions:[
+      {
+        q:"¿Cuál de estos Key Results está bien formulado como outcome?",
+        opts:[
+          "KR: Completar las 45 historias del épico de onboarding",
+          "KR: Hacer 4 deploys del módulo de usuario por mes",
+          "KR: El 60% de los usuarios nuevos completan su perfil en los primeros 3 días (baseline actual: 22%)",
+          "KR: Implementar el nuevo flujo de onboarding con diseño aprobado"
+        ],
+        correct:2,
+        explanation:"Solo la opción C es un outcome: mide un cambio en el comportamiento del usuario (tasa de completado de perfil), tiene una línea base (22%) y un target (60%), y el equipo solo puede lograrlo si el nuevo flujo realmente funciona. Las otras opciones son outputs o tareas — miden actividad del equipo, no cambio en el mundo."
+      },
+      {
+        q:"Tu equipo completó el 100% de las features del sprint pero el Objective del trimestre está en 30% de avance. ¿Qué indica este gap?",
+        opts:[
+          "El equipo no trabajó suficientemente durante el trimestre",
+          "Los OKRs del trimestre eran demasiado ambiciosos — hay que reformularlos",
+          "Las features entregadas no están generando el cambio de comportamiento esperado (output sin outcome). Hay que investigar por qué: ¿discovery insuficiente? ¿features incorrectas? ¿problemas de adoption?",
+          "El equipo necesita más velocidad — más puntos por sprint resolverá el gap"
+        ],
+        correct:2,
+        explanation:"El gap entre output (100% de features) y outcome (30% de OKR) es la señal más clara de 'building the wrong thing'. Las features se entregaron pero no cambiaron el comportamiento del usuario como se esperaba. Las causas posibles: discovery insuficiente (no se validó la hipótesis antes de construir), problemas de UX/adoption, o los KRs miden algo que las features no pueden mover directamente."
+      },
+      {
+        q:"¿Por qué Google apunta a 70% de achievement en OKRs como 'éxito' en lugar del 100%?",
+        opts:[
+          "Porque Google es demasiado grande para lograr el 100% de sus objetivos",
+          "Porque OKRs al 100% de confianza son demasiado fáciles — los OKRs ambiciosos deberían generar incertidumbre; un 70% de achievement indica que el objetivo era suficientemente desafiante y el equipo se esforzó genuinamente",
+          "Porque el 30% restante se traslada automáticamente al próximo trimestre",
+          "Porque el 100% de achievement indica que el equipo manipuló los números"
+        ],
+        correct:1,
+        explanation:"Los OKRs en Google son diseñados para ser 'moonshots' — ambiciosos y con incertidumbre real. Si un equipo alcanza el 100% consistentemente, los OKRs eran demasiado conservadores (demasiado seguros). El 70% significa: 'intentamos algo difícil y llegamos lejos'. Los OKRs no se vinculan con performance reviews para evitar que los equipos los formulen conservadoramente."
+      }
+    ]
+  },
+
+  {
+    id:"dora-metricas", group:"metricas", title:"DORA Metrics y DevOps", icon:"📊",
+    color:"#2563EB", light:"#DBEAFE", border:"#93C5FD", text:"#1D4ED8",
+    functional:`Las DORA Metrics (DevOps Research and Assessment) son las 4 métricas más validadas científicamente para medir la performance de delivery de software. Desarrolladas por el equipo de investigación de Google Cloud, respaldadas por 7+ años de datos de miles de organizaciones.
+
+¿POR QUÉ DORA Y NO VELOCITY O PUNTOS?
+La velocity mide cuánto trabajo hace el equipo, no qué tan bien lo hace. DORA mide la capacidad del sistema de entrega para responder a los cambios con calidad y velocidad. Es la diferencia entre medir actividad y medir performance real.
+
+LAS 4 MÉTRICAS DORA:
+
+DEPLOYMENT FREQUENCY (DF):
+¿Con qué frecuencia despliega el equipo a producción?
+→ Elite: múltiples veces al día
+→ High: entre una vez al día y una vez por semana
+→ Medium: entre una vez a la semana y una vez al mes
+→ Low: menos de una vez al mes
+
+LEAD TIME FOR CHANGES (LTFC):
+Tiempo desde que el código es commiteado hasta que está en producción.
+→ Elite: menos de 1 hora
+→ High: entre 1 día y 1 semana
+→ Medium: entre 1 semana y 1 mes
+→ Low: más de 6 meses
+
+CHANGE FAILURE RATE (CFR):
+% de deploys que causan incidentes o requieren hotfix.
+→ Elite: 0–15%
+→ High: 16–30%
+→ Medium/Low: más de 30%
+
+TIME TO RESTORE SERVICE (TTRS):
+Tiempo para recuperar el servicio después de un incidente.
+→ Elite: menos de 1 hora
+→ High: menos de 1 día
+→ Medium: entre 1 día y 1 semana
+→ Low: más de 6 meses`,
+    technical:`LA QUINTA MÉTRICA — Reliability (agregada en 2021):
+La investigación DORA agregó Reliability como quinta dimensión: ¿el sistema cumple con los SLOs (Service Level Objectives) definidos? No es una métrica única sino un objetivo a definir por cada organización.
+
+CÓMO MEJORAR CADA MÉTRICA:
+
+DEPLOYMENT FREQUENCY baja → indicadores:
+→ Deploy manual, burocrático o con muchos pasos
+→ Branches de larga duración (feature branches de semanas)
+→ Falta de CI/CD pipeline
+Mejoras: automatizar el pipeline, trunk-based development, feature flags.
+
+LEAD TIME FOR CHANGES alto → indicadores:
+→ Code review tarda días
+→ QA manual bloqueante
+→ Aprobaciones manuales antes del deploy
+Mejoras: code review asíncrono con SLA explícito, automatización de tests, aprobar el pipeline en lugar de aprobar cada deploy.
+
+CHANGE FAILURE RATE alto → indicadores:
+→ Tests insuficientes o poco confiables
+→ Falta de observabilidad en producción
+→ Cambios grandes y poco frecuentes (más riesgo)
+Mejoras: TDD/BDD, observabilidad (logging, tracing, alertas), despliegues más pequeños y frecuentes.
+
+TIME TO RESTORE SERVICE alto → indicadores:
+→ Falta de runbooks
+→ Observabilidad insuficiente para detectar la causa raíz
+→ Sin proceso de incident management
+Mejoras: runbooks documentados, dashboards de health, on-call rotation, post-mortems sin culpa.
+
+LA RELACIÓN ENTRE LAS 4:
+Las métricas son interdependientes. Equipos elite tienen ALTA frecuencia de deploys, BAJO Lead Time, BAJO CFR y BAJO TTRS simultáneamente. No hay tradeoff entre velocidad y estabilidad en equipos elite — los mejores son rápidos Y estables.
+
+PARA ENTREVISTAS EN NTT DATA:
+Como SM/Agile Coach, no necesitás implementar el pipeline técnico, pero sí necesitás diagnosticar dónde están los cuellos de botella usando estas métricas y facilitar las conversaciones con los equipos técnicos para mejorarlas.`,
+    visual:{ type:"dora" },
+    questions:[
+      {
+        q:"Tu equipo despliega una vez al mes y el Change Failure Rate es 45%. ¿Qué relación hay entre estas dos métricas y qué acción priorizarías?",
+        opts:[
+          "No hay relación — son métricas independientes que deben mejorarse por separado",
+          "Hay una correlación inversa documentada: deploys poco frecuentes acumulan más cambios por deploy → más superficie de riesgo → más failures. La prioridad es reducir el tamaño de cada deploy (más frecuentes, más pequeños) junto con automatizar tests",
+          "El CFR alto justifica la baja frecuencia — desplegar menos reduce el riesgo de failures",
+          "El problema es el equipo de QA — necesitan más testers para verificar cada deploy"
+        ],
+        correct:1,
+        explanation:"Las métricas DORA están correlacionadas negativamente entre sí para equipos de bajo rendimiento: baja frecuencia implica deploys grandes → mayor riesgo → mayor CFR. La investigación DORA demuestra que los equipos elite tienen ALTA frecuencia Y BAJO CFR simultáneamente. La solución contraintuitiva es desplegar MÁS seguido pero con cambios más pequeños — cada deploy es menos riesgoso y más fácil de revertir."
+      },
+      {
+        q:"¿Por qué los equipos DORA Elite tienen tanto alta frecuencia de deploys como bajo Change Failure Rate? ¿No es eso contradictorio?",
+        opts:[
+          "Sí es contradictorio — solo puede lograrse uno de los dos a la vez",
+          "Porque los equipos elite tienen mejores desarrolladores que nunca cometen errores",
+          "No es contradictorio: la automatización de tests, CI/CD robusto y deploys pequeños permiten velocidad alta con riesgo bajo. Es el modelo operativo de delivery (CI/CD + built-in quality) lo que elimina el tradeoff entre velocidad y estabilidad",
+          "Porque los equipos elite trabajan más horas y tienen más revisiones manuales"
+        ],
+        correct:2,
+        explanation:"El hallazgo más importante de la investigación DORA es que velocidad y estabilidad NO son opuestos — son ortogonales. Los equipos de bajo rendimiento creen que moverse más rápido implica más riesgo (y viceversa). Los equipos elite rompieron ese tradeoff con CI/CD automatizado, tests confiables, deploys pequeños y observabilidad. La inversión en el modelo operativo de delivery es lo que hace posible ambas cosas al mismo tiempo."
+      },
+      {
+        q:"Como Agile Coach, un CTO te pregunta qué métricas usar para evaluar si la transformación DevOps está funcionando. ¿Qué respondés?",
+        opts:[
+          "Velocity del equipo y puntos completados por sprint",
+          "Las 4 métricas DORA: Deployment Frequency, Lead Time for Changes, Change Failure Rate y Time to Restore Service — son las métricas con mayor validez científica para medir performance de delivery de software, respaldadas por 7+ años de datos",
+          "El número de ceremonias ágiles adoptadas y el porcentaje de equipos certificados",
+          "El headcount del equipo de QA y el número de bugs encontrados antes de producción"
+        ],
+        correct:1,
+        explanation:"Las DORA Metrics son el estándar de la industria para medir DevOps/delivery performance. Son cuantitativas, comparables con benchmarks globales, y miden resultados del sistema (no actividad del equipo). Velocity y puntos miden trabajo realizado, no performance del delivery. Las certificaciones miden conocimiento, no comportamiento. DORA mide si el sistema de delivery está mejorando."
+      }
+    ]
+  },
+
+  {
+    id:"flow-metricas", group:"metricas", title:"Flow Metrics: Lead Time, Cycle Time, CFD", icon:"📈",
+    color:"#2563EB", light:"#DBEAFE", border:"#93C5FD", text:"#1D4ED8",
+    functional:`Las Flow Metrics son las métricas más relevantes para un Agile Coach o SM porque se pueden medir sin acceso al pipeline técnico — solo necesitás los datos del tablero Kanban o Jira. Miden la salud del flujo de trabajo del equipo.
+
+¿POR QUÉ USAR FLOW METRICS EN LUGAR DE VELOCITY?
+
+VELOCITY: mide puntos completados por sprint. Problema: los puntos son relativos a cada equipo, no comparables entre equipos, y pueden inflarse. Útil para planificación interna, inútil para diagnóstico de flujo.
+
+FLOW METRICS: miden el tiempo y el ritmo del trabajo real — independientemente del tamaño estimado.
+
+LAS 4 FLOW METRICS FUNDAMENTALES:
+
+LEAD TIME (LT):
+Tiempo total desde que un ítem entra al sistema (backlog committed/to do) hasta que sale (done/producción).
+Incluye todo el tiempo de espera. Es lo que el cliente percibe.
+"Cuánto tarda desde que pedís algo hasta que está listo."
+
+CYCLE TIME (CT):
+Tiempo desde que alguien comienza a trabajar activamente en un ítem hasta que termina.
+NO incluye el tiempo de espera en backlog.
+"Cuánto tarda el equipo en completar algo una vez que empieza a trabajarlo."
+
+THROUGHPUT (TH):
+Número de ítems completados por unidad de tiempo (por sprint, por semana).
+Métrica de capacidad real del equipo.
+
+WIP (Work In Progress):
+Número de ítems en proceso simultáneamente.
+La palanca más inmediata para mejorar el Lead Time.`,
+    technical:`EL CUMULATIVE FLOW DIAGRAM (CFD):
+
+El CFD es el diagrama más poderoso para diagnosticar el flujo de un equipo de forma visual. Muestra la cantidad acumulada de ítems en cada estado del tablero a lo largo del tiempo.
+
+CÓMO LEERLO:
+→ Eje X: tiempo (días/semanas)
+→ Eje Y: número acumulado de ítems
+→ Bandas de colores: cada estado del tablero (To Do, In Progress, Code Review, Testing, Done)
+→ Ancho de cada banda: cuánto trabajo hay en ese estado en ese momento (WIP de ese estado)
+
+PATRONES A DIAGNOSTICAR EN UN CFD:
+
+FLUJO SALUDABLE:
+Las bandas fluyen suavemente, son aproximadamente paralelas, y el ancho de cada banda es constante. El equipo tiene un ritmo regular.
+
+CUELLO DE BOTELLA:
+Una banda se ensancha mientras las que están "aguas arriba" se adelgazan y las que están "aguas abajo" se quedan sin trabajo. El estado que se ensancha es el cuello de botella.
+
+WORK STOPPAGE:
+Las líneas se aplanan horizontalmente — el equipo dejó de completar trabajo (vacaciones, bloqueo masivo, deuda técnica acumulada).
+
+ACUMULACIÓN EN BACKLOG:
+La banda de "To Do" crece más rápido de lo que se consume — se está aceptando trabajo más rápido de lo que el equipo puede procesarlo (demand > throughput).
+
+CÓMO CALCULAR LT Y CT DESDE EL CFD:
+Lead Time = distancia horizontal entre cuando un ítem entra a "To Do" y cuando sale de "Done"
+Cycle Time = distancia horizontal entre cuando entra a "In Progress" y cuando sale de "Done"
+
+PERCENTILES en lugar de promedios:
+Nunca uses el promedio para Lead Time — los outliers lo distorsionan. Usa percentiles:
+→ P50 (mediana): la mitad de los ítems se completan en este tiempo o menos
+→ P85: el 85% de los ítems se completan en este tiempo
+→ P95: casi todos los ítems se completan en este tiempo
+El P85 es el más usado para compromisos con clientes/stakeholders.`,
+    visual:{ type:"flow-metricas" },
+    questions:[
+      {
+        q:"El equipo tiene un Lead Time promedio de 12 días pero el Cycle Time promedio es de 3 días. ¿Qué indica este gap de 9 días?",
+        opts:[
+          "El equipo es lento — debería completar el trabajo en 3 días totales",
+          "Los 9 días de diferencia son tiempo de espera: el trabajo pasa 9 días en colas (esperando ser tomado, esperando code review, esperando testing) antes de que alguien lo trabaje. El Efficiency Rate es 25% (3/12)",
+          "El Cycle Time está mal calculado — debería incluir el tiempo en backlog",
+          "El Lead Time alto se debe a que las historias son demasiado grandes"
+        ],
+        correct:1,
+        explanation:"Lead Time - Cycle Time = Wait Time (tiempo de espera en colas). 12 - 3 = 9 días de pure waste. El Efficiency Rate del 25% significa que solo 1 de cada 4 días el trabajo está siendo activamente procesado. El VSM mostraría dónde están las colas más largas — probablemente code review o QA — y eso sería la prioridad de mejora."
+      },
+      {
+        q:"En el CFD del equipo, la banda de 'Code Review' se va ensanchando semana a semana mientras la banda de 'In Progress' se adelgaza. ¿Qué está pasando y qué hacés?",
+        opts:[
+          "El equipo está mejorando — más ítems en revisión significa más trabajo avanzado",
+          "Hay un cuello de botella en Code Review — el trabajo se acumula ahí más rápido de lo que se revisa. Acción: limitar el WIP de 'In Progress', dedicar tiempo explícito a revisar antes de iniciar trabajo nuevo, posiblemente reducir el batch size de los PRs",
+          "El equipo necesita contratar más reviewers especializados",
+          "Hay que reducir el número de historias que entran al sprint para aliviar la presión"
+        ],
+        correct:1,
+        explanation:"El ensanchamiento de la banda de Code Review es la señal de cuello de botella más clásica en el CFD. El trabajo se acumula ahí porque el equipo crea PRs más rápido de lo que los revisa. La solución de Kanban: limitar el WIP de 'In Progress' para que los desarrolladores deban revisar antes de iniciar cosas nuevas. 'Stop starting, start finishing.'"
+      },
+      {
+        q:"¿Por qué se recomienda usar P85 (percentil 85) para comprometerse con plazos en lugar del promedio del Lead Time?",
+        opts:[
+          "Porque el P85 es más fácil de calcular que el promedio",
+          "Porque el promedio de Lead Time es distorsionado por outliers (ítems que tardaron mucho por razones excepcionales) — el P85 significa 'el 85% de los ítems similares tardaron este tiempo o menos', lo que da una promesa basada en probabilidad real",
+          "Porque el P85 siempre es más bajo que el promedio, lo que impresiona más a los stakeholders",
+          "Porque SAFe y Scrum requieren usar percentiles en lugar de promedios"
+        ],
+        correct:1,
+        explanation:"El promedio del Lead Time se distorsiona con outliers: si 9 historias tardan 5 días y 1 tarda 50 días, el promedio es casi 10 días pero el P90 es 5 días. Para comprometerse con clientes o stakeholders, el P85 es más honesto y útil: 'el 85% de las historias similares se completan en X días o menos'. Es probabilístico, no especulativo."
+      }
+    ]
+  },
+
+  // ══════════ MEJORA CONTINUA ══════════
+
+  {
+    id:"retrospectivas", group:"mejora", title:"Retrospectivas Efectivas", icon:"🔄",
+    color:"#16A34A", light:"#DCFCE7", border:"#86EFAC", text:"#14532D",
+    functional:`La retrospectiva es el corazón de la mejora continua en equipos ágiles. Es el evento donde el equipo reflexiona sobre cómo trabajó para trabajar mejor en el próximo ciclo. Pero la mayoría de las retrospectivas no producen mejoras reales.
+
+¿POR QUÉ FALLAN LAS RETROSPECTIVAS?
+La causa más común: el equipo identifica los mismos problemas en cada retro durante meses y nada cambia. Esto destruye la confianza en el proceso y eventualmente nadie se prepara ni participa genuinamente.
+
+LAS 3 CONDICIONES PARA UNA RETRO EFECTIVA:
+
+1. SEGURIDAD PSICOLÓGICA:
+Las personas deben poder decir lo que realmente piensan sin temor a consecuencias negativas. Sin seguridad psicológica, la retro produce respuestas diplomáticas, no insights reales. La seguridad se construye con acciones del SM/Facilitador y del equipo.
+
+2. FOCO EN SISTEMAS, NO EN PERSONAS:
+Las retros que degeneran en culpa individual son destructivas. El objetivo es mejorar el SISTEMA (procesos, herramientas, estructura, prácticas) — las personas son parte del sistema, no el problema.
+
+3. ACCIÓN CON ACCOUNTABILITY:
+Cada retro debe producir 1–3 acciones concretas con owner individual y fecha de seguimiento. Si produce 10 acciones, ninguna se va a implementar. Si produce 0, fue una conversación interesante sin impacto.
+
+EL CICLO COMPLETO:
+Abrir → Recolectar datos → Generar insights → Decidir acciones → Cerrar
+Y al comienzo de la siguiente retro: revisar las acciones de la anterior — si no se implementaron, el problema es de accountability, no de ideas.`,
+    technical:`FORMATOS DE RETROSPECTIVA — más allá del "bien/mal/mejor":
+
+1. ESTRELLA DE MAR (Starfish):
+5 categorías: Keep doing · Add more of · Stop doing · Less of · Start doing
+Más granular que el clásico — fuerza al equipo a distinguir entre "más de lo mismo bueno" y "cosas nuevas a probar".
+
+2. 4L's:
+Liked · Learned · Lacked · Longed for
+Útil cuando el equipo tiene dificultad para separar emoción de observación.
+
+3. TIMELINE RETRO:
+Se reconstruye cronológicamente el sprint en el eje del tiempo. Cada persona agrega momentos positivos (verde) y negativos (rojo). Revelador para ver patrones (¿siempre al final del sprint hay rojo?) y sincronizar la percepción del equipo.
+
+4. FUTUROSPECTIVE (retrospectiva del futuro):
+"Imaginen que es el final del próximo trimestre y fue un éxito total. ¿Qué hicieron diferente?" Invierte el pensamiento — más energizante que identificar problemas, especialmente para equipos con baja moral.
+
+5. SAILBOAT:
+Anclas (lo que nos frena) · Viento (lo que nos impulsa) · Arrecifes (riesgos) · Sol (el objetivo)
+Buena para equipos visuales y para conversaciones más estratégicas.
+
+MÉTRICAS DE RETRO SALUDABLE:
+→ % de acciones del sprint anterior que se completaron (objetivo: 100%)
+→ Número de temas únicos (no repetidos del sprint anterior)
+→ Participación: ¿hablan todos o solo los mismos 2–3?
+→ Score de seguridad psicológica (encuesta anónima de 1–5)
+
+SEÑALES DE ALARMA EN UNA RETRO:
+→ Siempre los mismos 2–3 problemas sin resolución
+→ El SM habla más que el equipo
+→ Las acciones no tienen owner ni fecha
+→ Alguien dice "eso es un problema de management, nosotros no podemos cambiarlo" y el facilitador no lo cuestiona
+→ Silencio después de cada pregunta`,
+    visual:{ type:"retros" },
+    questions:[
+      {
+        q:"En la quinta retrospectiva consecutiva, el equipo vuelve a mencionar 'las estimaciones son inconsistentes'. ¿Cuál es el problema real y cómo lo abordás como SM?",
+        opts:[
+          "El equipo necesita más práctica de Planning Poker — el problema es de técnica de estimación",
+          "El problema real es de accountability y seguimiento: la misma conversación sin acción concreta indica que nadie tiene ownership de resolver el problema. Como SM, revisás las acciones anteriores en la siguiente retro, definís UN owner específico, y te comprometés a desbloquearlo activamente durante el sprint",
+          "Las estimaciones son inherentemente imprecisas en software — hay que aceptarlo y seguir adelante",
+          "El PO necesita escribir mejores historias de usuario para que las estimaciones sean más precisas"
+        ],
+        correct:1,
+        explanation:"El patrón 'mismo problema, múltiples retros, sin cambio' es el síntoma más claro de retros sin accountability. El problema no es de técnica — es de follow-through. La solución: al inicio de cada retro, revisar el estado de las acciones de la retro anterior. Si no se completaron, diagnosticar por qué (impedimento, olvido, sin owner real) antes de agregar nuevas acciones. 1 acción completada vale más que 10 acciones prometidas."
+      },
+      {
+        q:"¿Qué es la seguridad psicológica y por qué es la condición más crítica para una retrospectiva efectiva?",
+        opts:[
+          "La seguridad de que los datos de la retro no se comparten fuera del equipo",
+          "La confianza de que puedo decir lo que realmente pienso sin temor a consecuencias negativas — sin ella, las personas dan respuestas diplomáticas, no insights reales, y los problemas sistémicos permanecen invisibles",
+          "La seguridad física y emocional del equipo en su espacio de trabajo",
+          "El acuerdo de confidencialidad que firma el SM antes de facilitar la retro"
+        ],
+        correct:1,
+        explanation:"Amy Edmondson (Harvard) define seguridad psicológica como 'la creencia de que no serás castigado por hablar'. Sin ella, las personas dicen lo que creen que el manager quiere escuchar, no lo que realmente observan. La retro se convierte en teatro. El SM la construye siendo consistente entre lo que dice y lo que hace, modelando vulnerabilidad, y respondiendo a los problemas sin culpa individual."
+      },
+      {
+        q:"¿Cuántas acciones debería producir una retrospectiva efectiva y por qué?",
+        opts:[
+          "El máximo posible — más acciones significa más compromisos de mejora",
+          "1–3 acciones concretas con owner individual y fecha. Más acciones diluyen el foco y garantizan que ninguna se implemente completamente",
+          "10 acciones mínimo — equivalente a un OKR con suficientes Key Results",
+          "Las acciones son opcionales — el valor está en la conversación, no en los compromisos"
+        ],
+        correct:1,
+        explanation:"Menos es más en las retros. 1–3 acciones con owner y fecha = foco, accountability y posibilidad real de completarlas. 10 acciones = ninguna tiene prioridad real, nadie recuerda cuál era la más importante, y en el próximo sprint están todas sin hacer. El principio de Lean: trabajar en pocos ítems completamente en lugar de muchos parcialmente."
+      }
+    ]
+  },
+
+  {
+    id:"5whys", group:"mejora", title:"5 Whys y Análisis de Causa Raíz", icon:"🔍",
+    color:"#16A34A", light:"#DCFCE7", border:"#86EFAC", text:"#14532D",
+    functional:`El 5 Whys es la técnica más simple y poderosa de análisis de causa raíz. Desarrollada en Toyota como parte del Toyota Production System, es el método que usan los Problem-Solving Workshops de SAFe y las retrospectivas más maduras.
+
+LA PREMISA:
+Los problemas visibles son síntomas, no causas. Si fixes el síntoma sin encontrar la causa raíz, el problema vuelve. La causa raíz suele estar 3–5 niveles de profundidad debajo del síntoma inicial.
+
+CÓMO FUNCIONA:
+1. Articular el problema claramente: describir el síntoma observable, con datos.
+2. Preguntar "¿Por qué?" para cada respuesta, hasta 5 veces (puede ser más o menos).
+3. Identificar el "pourquoi raíz" — cuando la respuesta revela algo sistémico que el equipo puede cambiar.
+4. Diseñar una acción que ataque la causa raíz, no el síntoma.
+
+EJEMPLO PRÁCTICO:
+Síntoma: "Los releases tienen muchos bugs en producción."
+¿Por qué? → "Porque los bugs llegan a producción sin ser detectados."
+¿Por qué? → "Porque los tests automáticos no cubren los casos de edge."
+¿Por qué? → "Porque no hay tiempo para escribir tests en los sprints."
+¿Por qué? → "Porque la Definition of Done no incluye tests automáticos."
+¿Por qué? → "Porque nadie definió un estándar de calidad para el equipo."
+
+CAUSA RAÍZ: ausencia de Definition of Done con criterios de calidad.
+SOLUCIÓN: facilitar una sesión para definir la DoD con el equipo, incluirla en el próximo sprint.
+
+NO ES MAGIA — ES UN MÉTODO:
+El 5 Whys no garantiza encontrar LA única causa raíz. Los sistemas complejos tienen múltiples causas. Pero obliga al equipo a ir más profundo que el síntoma superficial.`,
+    technical:`CUÁNDO USAR CADA HERRAMIENTA DE CAUSA RAÍZ:
+
+5 WHYS: para problemas con una cadena de causa-efecto relativamente lineal. Rápido, conversacional, se puede hacer en 15 minutos. Ideal para retrospectivas y Problem-Solving Workshops.
+
+FISHBONE (Ishikawa Diagram): para problemas con múltiples causas potenciales de distintas categorías. El diagrama tiene la cabeza del "pez" = el problema, y las espinas = categorías de causas (People, Process, Technology, Environment, Materials, Measurement). Útil cuando el equipo tiene hipótesis de causas muy diferentes.
+
+AMBAS COMBINADAS: primero Fishbone para mapear categorías de causas, luego 5 Whys para profundizar en las más probables. Esta es la combinación que usa el Problem-Solving Workshop del Inspect & Adapt de SAFe.
+
+PASOS PARA UN FISHBONE EFECTIVO:
+1. Escribir el problema en la "cabeza" del pez
+2. Definir las categorías de espinas (para software: People, Process, Technology, Communication, Environment)
+3. Brainstorm de causas posibles en cada categoría (5–10 minutos)
+4. Votar las causas más probables (dot voting)
+5. Aplicar 5 Whys a las 2–3 causas con más votos
+
+ERRORES COMUNES EN EL 5 WHYS:
+→ Parar en el primer "por qué" (eso es el síntoma, no la causa)
+→ Derivar hacia culpa de persona: "¿Por qué? Porque Juan no hizo bien su trabajo." El 5 Whys debe siempre apuntar al sistema, no a personas.
+→ El mismo "por qué" para todos los problemas: cuando el equipo siempre llega a "falta de tiempo", probablemente no fueron suficientemente profundos.
+→ Detenerse cuando la respuesta "molesta" a alguien del equipo o a management.`,
+    visual:{ type:"5whys" },
+    questions:[
+      {
+        q:"El equipo completó un 5 Whys y llegó a: 'Porque no tenemos suficiente tiempo en el sprint para todo el trabajo'. ¿Qué indica esto sobre la calidad del análisis?",
+        opts:[
+          "Es una causa raíz válida — la solución es aumentar la capacidad del equipo",
+          "'Falta de tiempo' es casi siempre un síntoma disfrazado de causa. Significa que el equipo paró demasiado pronto. ¿Por qué no hay suficiente tiempo? ¿Demasiadas historias? ¿Scope no estimado? ¿Interrupciones no planificadas? Hay que continuar el análisis",
+          "Es una causa raíz válida — la solución es hacer los sprints más largos",
+          "Es una causa raíz válida — el PO necesita reducir el backlog"
+        ],
+        correct:1,
+        explanation:"'Falta de tiempo' y 'falta de recursos' son las respuestas más comunes cuando el equipo para demasiado pronto. Son síntomas, no causas. La pregunta siguiente debe ser: ¿por qué no hay suficiente tiempo? Las respuestas posibles van desde 'el sprint tiene demasiadas historias' hasta 'hay demasiado trabajo no planificado (bugs, soporte)' hasta 'la Definition of Done es inconsistente'. Cada una tiene una solución diferente."
+      },
+      {
+        q:"¿Cuándo usarías un Fishbone Diagram en lugar de (o además de) 5 Whys?",
+        opts:[
+          "Cuando tenés más de 5 personas en el equipo — el Fishbone escala mejor",
+          "Cuando el problema tiene múltiples causas potenciales de diferentes categorías y el equipo tiene hipótesis divergentes — el Fishbone mapea todas las categorías primero, luego el 5 Whys profundiza en las más probables",
+          "Cuando el 5 Whys no produjo resultados — el Fishbone es el backup",
+          "Cuando el problema está relacionado con tecnología — el Fishbone es específico para causas técnicas"
+        ],
+        correct:1,
+        explanation:"El Fishbone (Ishikawa) es superior al 5 Whys cuando el problema puede tener causas en múltiples categorías independientes (personas, procesos, tecnología, comunicación). El 5 Whys es lineal — sigue una cadena. El Fishbone es sistémico — explora simultáneamente múltiples hipótesis. La combinación ideal: Fishbone para mapear, votación para priorizar, 5 Whys para profundizar en las causas elegidas."
+      },
+      {
+        q:"Un SM está facilitando un 5 Whys y el equipo llega a: 'Porque el líder del área no aprueba los cambios que proponemos.' El líder del área está en la sesión. ¿Cómo manejás esto?",
+        opts:[
+          "Detenés el análisis — la causa es externa y el equipo no puede cambiarla",
+          "Ignorás el comentario y redirigís hacia causas que el equipo puede controlar",
+          "Reconocés la observación sin culpa, reformulás sistémicamente ('¿Qué en nuestro proceso de propuesta de cambios hace que las aprobaciones sean difíciles?') y usás la oportunidad para hacer visible la fricción con datos, abriendo una conversación productiva",
+          "Pedís al líder que salga de la sala para que el equipo pueda hablar libremente"
+        ],
+        correct:2,
+        explanation:"El 5 Whys debe revelar causas sistémicas, no culpar personas — pero tampoco ignorar causas reales que involucran a personas con autoridad. La clave es reformular sistémicamente: no '¿por qué el líder bloquea?' sino '¿qué en nuestro proceso de aprobación genera fricción?'. Esto mantiene la conversación en el sistema, invita al líder a ser parte de la solución, y hace visible el problema con datos en lugar de opiniones."
+      }
+    ]
+  },
+
+  {
+    id:"impedimentos", group:"mejora", title:"Escalamiento de Impedimentos", icon:"🚧",
+    color:"#16A34A", light:"#DCFCE7", border:"#86EFAC", text:"#14532D",
+    functional:`La gestión y escalamiento de impedimentos es una de las responsabilidades más críticas del SM/Agile Coach — y una de las más mal ejecutadas. Un impedimento no escalado a tiempo destruye el momentum del equipo y puede bloquear un sprint o PI completo.
+
+¿QUÉ ES UN IMPEDIMENTO vs UN OBSTÁCULO?
+OBSTÁCULO: algo que el equipo puede resolver por sí mismo con el tiempo o recursos disponibles. No requiere escalamiento — el SM ayuda al equipo a resolverlo.
+IMPEDIMENTO: algo que está fuera de la capacidad del equipo de resolver por sí mismo, que requiere acción de alguien externo al equipo (management, otro equipo, proveedor).
+
+EL ERROR MÁS COMÚN:
+SMs que "capturan" impedimentos en el tablero de Jira/retro pero no los escalan activamente. Los impedimentos envejecen sin resolución, el equipo pierde fe en el proceso ágil, y el SM pierde credibilidad.
+
+EL PRINCIPIO DE ESCALAMIENTO RÁPIDO:
+Un impedimento que no puede resolverse en 24–48 horas debe escalar. Cada día adicional de bloqueo tiene un costo: el equipo no puede avanzar, la capacidad se pierde, y el problema suele ser más caro de resolver cuanto más espera.
+
+3 NIVELES DE ESCALAMIENTO:
+1. EQUIPO: el SM facilita la resolución. Si no puede en 24–48h → escalar.
+2. PROGRAMA/TRIBE: el Tribe Lead/RTE actúa. Si no puede en 3–5 días → escalar.
+3. PORTFOLIO/ORGANIZACIÓN: el Portfolio Leadership decide. Urgente.
+
+PARA LA ENTREVISTA:
+Cuando te pregunten "¿cómo gestionás impedimentos?", describí el proceso completo: identificación, clasificación (obstáculo vs impedimento), acción de resolución del equipo, escalamiento con tiempo explícito y contexto, y seguimiento hasta cierre.`,
+    technical:`SISTEMA DE GESTIÓN DE IMPEDIMENTOS — cómo implementarlo:
+
+PASO 1 — IDENTIFICACIÓN:
+Crear un canal visible de impedimentos (físico en el board ágil o digital en Jira/Confluence/ClickUp). Cualquier persona del equipo puede agregar un impedimento. Formato mínimo: descripción del problema + quién lo reporta + desde cuándo + impacto en el sprint.
+
+PASO 2 — CLASIFICACIÓN (en el Daily o asíncrono):
+→ ¿El equipo puede resolverlo solo? → Obstáculo → acción del equipo en <48h
+→ ¿Requiere acción externa? → Impedimento real → SM toma ownership de escalarlo
+
+PASO 3 — ESCALAMIENTO CON CONTEXTO:
+No escalar "tenemos un problema". Escalar con: contexto del problema + impacto cuantificado ("está bloqueando la feature X, el sprint pierde 3 días de capacidad") + opciones posibles + qué decisión o acción se necesita de quién. El escalamiento efectivo hace fácil la decisión del manager.
+
+PASO 4 — SLA DE RESPUESTA:
+Nivel equipo: 24–48h. Nivel programa: 3–5 días. Si no hay respuesta en el SLA, re-escalar a nivel superior.
+
+PASO 5 — SEGUIMIENTO Y CIERRE:
+Cada impedimento tiene un owner (siempre el SM hasta que haya un owner externo que lo tome). El SM hace follow-up activo — no espera que la solución llegue sola.
+
+EL IMPEDIMENT BURNDOWN:
+Gráfico que muestra la cantidad de impedimentos abiertos vs cerrados a lo largo del tiempo. Un SM efectivo debería mostrar una tendencia descendente o estable, nunca creciente. Si el backlog de impedimentos crece sprint a sprint, el SM no está escalando o el sistema tiene demasiados blockers estructurales.
+
+IMPEDIMENTOS SISTÉMICOS vs PUNTUALES:
+Si el mismo tipo de impedimento aparece en múltiples sprints o múltiples equipos, ya no es un impedimento puntual — es un defecto del modelo operativo. Esos deben llegar al Problem-Solving Workshop del I&A o al nivel de Portfolio.`,
+    visual:{ type:"impedimentos" },
+    questions:[
+      {
+        q:"Un desarrollador del equipo menciona en el daily que lleva 3 días esperando acceso a un entorno de staging que gestiona otro equipo. ¿Cuál es la respuesta correcta del SM?",
+        opts:[
+          "Agregar el impedimento al tablero de Jira y esperar a la próxima retro para discutirlo",
+          "Pedirle al desarrollador que contacte él mismo al otro equipo para agilizar",
+          "Clasificarlo como impedimento (requiere acción externa), tomar ownership inmediato, contactar al SM o lead del equipo responsable del staging con contexto específico del impacto, y definir un SLA de resolución de 24h con escalamiento a nivel program si no se resuelve",
+          "Esperar hasta que afecte el sprint goal antes de escalar — no queremos molestar a otros equipos"
+        ],
+        correct:2,
+        explanation:"3 días de bloqueo ya es demasiado — debería haberse escalado en el primer día. La acción correcta: (1) clasificar como impedimento real (requiere acción externa); (2) SM toma ownership — el desarrollador no debería perseguir esto; (3) contactar activamente al responsable con contexto e impacto; (4) SLA de 24h; (5) si no hay respuesta, escalar a nivel programa/tribe. La velocidad del escalamiento es la diferencia entre un SM efectivo e inefectivo."
+      },
+      {
+        q:"¿Cuál es la diferencia entre un obstáculo y un impedimento en el contexto de un equipo ágil?",
+        opts:[
+          "Son sinónimos — ambos se gestionan en el tablero de impedimentos del SM",
+          "Un obstáculo es algo que el equipo puede resolver por sí mismo con los recursos disponibles; un impedimento requiere acción de alguien externo al equipo — solo los impedimentos requieren escalamiento activo del SM",
+          "Un obstáculo es técnico; un impedimento es organizacional",
+          "Un obstáculo es temporal; un impedimento es permanente"
+        ],
+        correct:1,
+        explanation:"La distinción es operacionalmente crítica. Si el equipo puede resolverlo en 24–48h sin ayuda externa, es un obstáculo — el SM facilita pero el equipo actúa. Si requiere decisión, acción o recursos de alguien fuera del equipo, es un impedimento — el SM toma ownership activo del escalamiento. Tratar obstáculos como impedimentos sobrecarga al management. Tratar impedimentos como obstáculos bloquea al equipo."
+      },
+      {
+        q:"En los últimos 4 sprints, el mismo impedimento aparece: 'esperamos acceso a entornos del cliente antes de poder testear.' ¿Qué tipo de problema es esto y cómo lo abordás diferente?",
+        opts:[
+          "Es un impedimento puntual recurrente — hay que escalarlo más rápido cada sprint",
+          "Es un defecto sistémico del modelo operativo — ya no se trata sprint a sprint sino que requiere una solución estructural: un acuerdo formal de SLA con el cliente para entornos, o una estrategia de testing con entornos mock. Lleva al I&A y/o al Portfolio para decisión estructural",
+          "Es un problema del cliente — el equipo no puede hacer nada y debe adaptarse",
+          "Es responsabilidad del PM negociar directamente con el cliente — el SM no tiene ese rol"
+        ],
+        correct:1,
+        explanation:"Un impedimento recurrente en múltiples sprints es un defecto sistémico, no un impedimento puntual. Resolverlo sprint a sprint es parchar un sistema roto. La respuesta correcta es escalar como issue sistémico al I&A (Problem-Solving Workshop) para diseñar una solución estructural: SLA formal, entornos mock/sintéticos, acuerdo contractual con el cliente. El SM que no convierte impedimentos recurrentes en mejoras sistémicas no está aprovechando el ciclo de mejora continua."
+      }
+    ]
+  },
+
+  {
+    id:"team-health", group:"mejora", title:"Team Health y Madurez Ágil", icon:"💚",
+    color:"#16A34A", light:"#DCFCE7", border:"#86EFAC", text:"#14532D",
+    functional:`El Team Health es la medición del estado del equipo como sistema social y de delivery. Un equipo puede tener buenas métricas de flujo y aun así estar en un estado frágil o insostenible. El Team Health hace visible lo que las métricas técnicas no miden.
+
+¿POR QUÉ MEDIR TEAM HEALTH?
+Los equipos de alto rendimiento son el resultado de un entorno saludable, no solo de buenas prácticas técnicas. El burnout, la desmotivación, la falta de propósito y la desconfianza destruyen la performance mucho más rápido que la deuda técnica.
+
+LOS MODELOS MÁS USADOS:
+
+SPOTIFY HEALTH CHECK MODEL:
+11 dimensiones medidas por el equipo en 3 colores (verde/amarillo/rojo):
+→ Easy to release · Suitable process · Tech quality · Value · Speed · Mission · Fun · Learning · Support · Pawns or players · Teamwork
+
+TEAM RADAR (customizable):
+El equipo define 6–8 dimensiones propias (que reflejan su contexto) y se auto-evalúa periódicamente (cada PI o trimestre). Comparar radarás en el tiempo muestra la evolución.
+
+NIKO-NIKO CALENDAR:
+Cada persona marca diariamente cómo se sintió (😊😐😔). Revelador para ver patrones (¿siempre triste los viernes antes del release?) y para identificar quién puede estar en riesgo de burnout.
+
+LA CONEXIÓN CON TUS OKRs:
+El "30% de empleados más motivados" que SAFe reporta como resultado no es magia — es consecuencia de: autonomía real sobre cómo trabajar, propósito claro (saben para qué sirve lo que hacen), maestría (están aprendiendo y creciendo). Estos son los 3 pilares de motivación intrínseca de Daniel Pink (Autonomy, Mastery, Purpose).`,
+    technical:`CÓMO FACILITAR UN TEAM HEALTH CHECK EFECTIVO:
+
+PASO 1 — DISEÑAR LAS DIMENSIONES:
+Usar el modelo Spotify o crear dimensiones propias con el equipo. 8–12 dimensiones es el rango óptimo. Menos = demasiado superficial. Más = fatiga y dilución.
+
+PASO 2 — VOTACIÓN ANÓNIMA:
+Cada persona vota de forma independiente (antes de revelar el resultado colectivo). Usar herramientas como Mentimeter, Mural, FunRetro, o post-its físicos.
+
+PASO 3 — CALIBRACIÓN COLECTIVA:
+Mostrar los resultados y discutir las divergencias. ¿Dos personas marcaron "verde" en Technical Quality y otras dos marcaron "rojo"? Esa divergencia es el dato más valioso — significa que tienen percepciones muy diferentes de la misma realidad.
+
+PASO 4 — SELECCIONAR 1–2 DIMENSIONES:
+No intentar mejorar todo. Elegir la dimensión roja más impactante y definir una acción concreta para mejorarla en el próximo ciclo.
+
+PASO 5 — SEGUIMIENTO Y TENDENCIAS:
+Guardar los resultados históricos. La tendencia importa más que el snapshot. Un equipo que mejoró de 40% verde a 70% verde en 2 trimestres está en mejor posición que uno estancado en 80% verde.
+
+MADUREZ ÁGIL — modelos para diagnosticar:
+
+MODELO DE 5 NIVELES (simplificado):
+Nivel 1 — Iniciando: ceremonias básicas, sin métricas, alta dependencia del SM
+Nivel 2 — Desarrollando: ceremonias consistentes, primeras métricas, equipo empieza a auto-organizarse
+Nivel 3 — Definido: prácticas establecidas, métricas de flujo activas, equipo resuelve la mayoría de sus impedimentos
+Nivel 4 — Gestionado cuantitativamente: decisiones basadas en datos, predictibilidad alta, carga cognitiva gestionada
+Nivel 5 — Optimizando: mejora continua sistémica, el equipo experimenta y aprende activamente
+
+Para la entrevista en NTT DATA: podés describir la madurez actual de tus squads en Lilab usando este modelo y qué acciones tomaste para evolucionar de nivel 2 a nivel 3 o 4.`,
+    visual:{ type:"team-health" },
+    questions:[
+      {
+        q:"¿Cuáles son los 3 pilares de motivación intrínseca de Daniel Pink y cómo se conectan con el diseño de equipos ágiles?",
+        opts:[
+          "Sueldo, reconocimiento y seguridad laboral — los motivadores extrínsecos clásicos",
+          "Autonomía (control sobre cómo trabajar), Maestría (aprendizaje y crecimiento continuo) y Propósito (saber para qué sirve lo que hacen) — el diseño ágil (autonomía del equipo, retrospectivas para aprender, visión clara) activa estos 3 pilares",
+          "Velocidad, calidad y satisfacción del cliente — las métricas de performance del equipo",
+          "Frameworks, ceremonias y métricas — los elementos técnicos de SAFe y Scrum"
+        ],
+        correct:1,
+        explanation:"Daniel Pink (Drive, 2009) demostró que para trabajo cognitivo complejo, los motivadores extrínsecos (bonus, premios) son menos efectivos que los intrínsecos. Los 3 pilares son: Autonomy (los equipos deciden cómo trabajar), Mastery (el trabajo desafía y enseña), Purpose (los equipos saben por qué lo que hacen importa). El diseño ágil — equipos autónomos, retrospectivas, visión clara — activa los 3. Es por eso que el engagement mejora con transformaciones ágiles bien hechas."
+      },
+      {
+        q:"En el Spotify Health Check, el equipo vota y hay una gran divergencia: 3 personas marcan 'verde' en 'Technical Quality' y 2 personas marcan 'rojo'. ¿Qué es lo más valioso de este resultado?",
+        opts:[
+          "El promedio — entre verde y rojo, el resultado es amarillo, hay que mejorar parcialmente",
+          "La divergencia en sí misma — indica que los miembros del equipo tienen percepciones muy diferentes de la misma realidad, lo que sugiere que hay aspectos de la calidad técnica que algunos ven y otros no. La conversación sobre POR QUÉ divergen es el dato más valioso",
+          "El resultado de la mayoría — si 3 dicen verde, el equipo está bien en esa dimensión",
+          "Nada — el Health Check es subjetivo y las divergencias son solo ruido"
+        ],
+        correct:1,
+        explanation:"Las divergencias en el Health Check son el hallazgo más valioso porque revelan puntos ciegos del equipo. Si algunos ven 'verde' y otros 'rojo' en la misma dimensión, tienen experiencias o perspectivas muy diferentes. ¿Están hablando de lo mismo cuando dicen 'technical quality'? ¿Algunos solo ven el frontend y otros el backend? ¿Hay deuda técnica que algunos conocen y otros no? La conversación que genera esta divergencia es más valiosa que el número final."
+      },
+      {
+        q:"¿Cuál es la diferencia entre un equipo de madurez ágil Nivel 2 y uno de Nivel 4 en términos de cómo gestiona el trabajo?",
+        opts:[
+          "El Nivel 4 tiene más ceremonias y más artefactos documentados",
+          "El Nivel 2 tiene ceremonias consistentes pero alta dependencia del SM y pocas métricas; el Nivel 4 toma decisiones basadas en datos con alta predictibilidad, gestiona la carga cognitiva activamente y el equipo se auto-organiza sin necesitar al SM para el flujo normal",
+          "El Nivel 4 entrega más puntos por sprint que el Nivel 2",
+          "El Nivel 4 tiene más personas certificadas en SAFe y Scrum"
+        ],
+        correct:1,
+        explanation:"La diferencia no es ceremonias sino autonomía y uso de datos. Nivel 2: el SM facilita todo, las decisiones suben al manager, las métricas son básicas o no existen. Nivel 4: el equipo se auto-organiza, las métricas de flujo (Lead Time, Throughput, CFD) guían las decisiones del sprint, la predictabilidad es alta, y el SM actúa más como coach que como facilitador. La madurez ágil se mide en autonomía real, no en ritualismo."
+      }
+    ]
+  }
+];
+
+const tabs = [
+  { id:"functional", label:"Funcional" },
+  { id:"technical",  label:"Técnico" },
+  { id:"visual",     label:"Visual" },
+  { id:"quiz",       label:"¿Lo entendí?" }
+];
+
+// ══════════════════ VISUALS ══════════════════
+
+function VisualModeloOrg() {
+  const tipos = [
+    { n:"Stream-Aligned", s:"Orientado al flujo de valor del negocio (el 80%)", c:"#16A34A", bg:"#DCFCE7", b:"#86EFAC" },
+    { n:"Platform Team", s:"Provee servicios internos · reduce carga cognitiva", c:"#2563EB", bg:"#DBEAFE", b:"#93C5FD" },
+    { n:"Enabling Team", s:"Coach temporal · enseña y se retira", c:"#D97706", bg:"#FEF3C7", b:"#FCD34D" },
+    { n:"Complicated Subsystem", s:"Resuelve complejidad técnica específica", c:"#7C3AED", bg:"#EDE9FE", b:"#C4B5FD" },
+  ];
+  return (
+    <div style={{display:"flex",flexDirection:"column",gap:8}}>
+      <div style={{background:"#0f172a",borderRadius:8,padding:"10px 14px",marginBottom:4}}>
+        <div style={{fontSize:11,fontWeight:700,color:"#fbbf24",marginBottom:4}}>LEY DE CONWAY</div>
+        <div style={{fontSize:11,color:"#e2e8f0",lineHeight:1.6}}>"Las organizaciones diseñan sistemas que son copias de sus estructuras de comunicación." → Rediseñar equipos antes de rediseñar arquitectura.</div>
+      </div>
+      <div style={{fontSize:11,fontWeight:700,color:"#64748b",marginBottom:2}}>4 TIPOS DE EQUIPO (Team Topologies)</div>
+      {tipos.map((t,i)=>(<div key={i} style={{background:t.bg,border:`1px solid ${t.b}`,borderRadius:8,padding:"10px 14px",borderLeft:`4px solid ${t.c}`}}><div style={{fontSize:12,fontWeight:700,color:t.c}}>{t.n}</div><div style={{fontSize:11,color:"#374151",marginTop:3}}>{t.s}</div></div>))}
+      <div style={{display:"grid",gridTemplateColumns:"repeat(3,1fr)",gap:6,marginTop:4}}>
+        {[{m:"Collaboration",d:"Intensiva, temporal",c:"#DC2626"},{m:"X-as-a-Service",d:"Mínima fricción, continua",c:"#16A34A"},{m:"Facilitation",d:"Habilita y se retira",c:"#D97706"}].map((x,i)=>(<div key={i} style={{background:"#f8fafc",border:"1px solid #e2e8f0",borderRadius:6,padding:"8px",textAlign:"center"}}><div style={{fontSize:11,fontWeight:700,color:x.c}}>{x.m}</div><div style={{fontSize:10,color:"#64748b",marginTop:2}}>{x.d}</div></div>))}
+      </div>
+    </div>
+  );
+}
+
+function VisualEstructuras() {
+  const ests = [
+    { n:"Funcional", pro:"Especialización profunda", con:"Silos + handoffs lentos", c:"#DC2626", bg:"#FEE2E2" },
+    { n:"Matricial", pro:"Flexibilidad de recursos", con:"Conflictos de prioridad", c:"#D97706", bg:"#FEF3C7" },
+    { n:"Por Producto", pro:"Ownership end-to-end", con:"Duplicación de especialistas", c:"#16A34A", bg:"#DCFCE7" },
+    { n:"Tribal (Spotify)", pro:"Autonomía + comunidades", con:"Requiere alta madurez", c:"#2563EB", bg:"#DBEAFE" },
+  ];
+  return (
+    <div style={{display:"flex",flexDirection:"column",gap:8}}>
+      <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:8}}>
+        {ests.map((e,i)=>(<div key={i} style={{background:e.bg,border:`1px solid ${e.c}40`,borderRadius:8,padding:"10px 12px",borderLeft:`4px solid ${e.c}`}}><div style={{fontSize:12,fontWeight:700,color:e.c,marginBottom:6}}>{e.n}</div><div style={{fontSize:10,color:"#16A34A"}}>✓ {e.pro}</div><div style={{fontSize:10,color:"#DC2626",marginTop:3}}>✗ {e.con}</div></div>))}
+      </div>
+      <div style={{background:"#0f172a",borderRadius:8,padding:"10px 14px"}}>
+        <div style={{fontSize:10,fontWeight:700,color:"#5EEAD4",marginBottom:6}}>MODELO SPOTIFY — capas</div>
+        {[{l:"Squad",s:"Equipo base · autónomo · multifuncional · dueño de una feature area"},{l:"Tribe",s:"Grupo de squads relacionados (4–8 squads) · tiene Tribe Lead"},{l:"Chapter",s:"Especialistas misma función DENTRO de la Tribe · Chapter Lead = manager formal"},{l:"Guild",s:"Comunidad voluntaria que CRUZA Tribes · sin jerarquía · comparte prácticas"}].map((x,i)=>(<div key={i} style={{display:"flex",gap:8,marginBottom:5}}><div style={{fontSize:11,color:"#fbbf24",fontWeight:700,minWidth:70}}>{x.l}</div><div style={{fontSize:10,color:"#94a3b8",lineHeight:1.4}}>{x.s}</div></div>))}
+      </div>
+    </div>
+  );
+}
+
+function VisualTopologias() {
+  return (
+    <div style={{display:"flex",flexDirection:"column",gap:8}}>
+      <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:6}}>
+        {[
+          {n:"Alta carga cognitiva",s:"Demasiados productos, tecnologías y responsabilidades en un equipo",icon:"⚠️",c:"#DC2626",bg:"#FEE2E2"},
+          {n:"Carga cognitiva balanceada",s:"Un equipo, una responsabilidad clara, una plataforma que absorbe la complejidad",icon:"✓",c:"#16A34A",bg:"#DCFCE7"},
+        ].map((x,i)=>(<div key={i} style={{background:x.bg,border:`1px solid ${x.c}40`,borderRadius:8,padding:"10px 12px"}}><div style={{fontSize:14,marginBottom:4}}>{x.icon}</div><div style={{fontSize:11,fontWeight:700,color:x.c,marginBottom:4}}>{x.n}</div><div style={{fontSize:10,color:"#374151",lineHeight:1.5}}>{x.s}</div></div>))}
+      </div>
+      <div style={{background:"#f8fafc",border:"1px solid #e2e8f0",borderRadius:8,padding:"10px 14px"}}>
+        <div style={{fontSize:11,fontWeight:700,color:"#1e293b",marginBottom:8}}>SEÑALES DE EQUIPO MAL DISEÑADO</div>
+        {["Alto WIP — mucho en paralelo, nada terminado","Lead Time largo con bajo throughput","Muchas reuniones inter-equipo para coordinar","'El equipo X nos está bloqueando' aparece en cada retro","Las personas no saben bien qué es lo más importante"].map((s,i)=>(<div key={i} style={{fontSize:11,color:"#DC2626",lineHeight:1.7}}>✗ {s}</div>))}
+      </div>
+      <div style={{background:"#DCFCE7",border:"1px solid #86EFAC",borderRadius:8,padding:"10px 14px"}}>
+        <div style={{fontSize:11,fontWeight:700,color:"#14532D",marginBottom:6}}>CONEXIÓN CON TU CALARIS FRAMEWORK</div>
+        <div style={{display:"flex",gap:6,flexWrap:"wrap"}}>
+          {[{k:"Contexto",v:"Diagnóstica si equipos bien diseñados"},{k:"Alineación",v:"Define interacciones entre equipos"},{k:"Roadmap",v:"Evoluciona la estructura en el tiempo"}].map((x,i)=>(<div key={i} style={{background:"white",border:"1px solid #86EFAC",borderRadius:6,padding:"6px 8px"}}><div style={{fontSize:10,fontWeight:700,color:"#16A34A"}}>{x.k}</div><div style={{fontSize:9,color:"#64748b",marginTop:2}}>{x.v}</div></div>))}
+        </div>
+      </div>
+    </div>
+  );
+}
+
+function VisualModeloOperativo() {
+  const comps = [
+    {n:"Estructura",d:"Cómo están organizados los equipos",c:"#7C3AED",bg:"#EDE9FE"},
+    {n:"Gobernanza",d:"Cómo se toman las decisiones",c:"#0D9488",bg:"#CCFBF1"},
+    {n:"Flujo de Valor",d:"Cómo fluye el trabajo hasta el cliente",c:"#2563EB",bg:"#DBEAFE"},
+    {n:"Procesos y Prácticas",d:"Ceremonias, artefactos y estándares",c:"#D97706",bg:"#FEF3C7"},
+    {n:"Cultura y Liderazgo",d:"Comportamientos que el sistema incentiva",c:"#16A34A",bg:"#DCFCE7"},
+  ];
+  return (
+    <div style={{display:"flex",flexDirection:"column",gap:6}}>
+      <div style={{fontSize:11,color:"#64748b",marginBottom:4}}>MODELO OPERATIVO = los 5 componentes integrados</div>
+      {comps.map((c,i)=>(<div key={i} style={{background:c.bg,border:`1px solid ${c.c}40`,borderRadius:8,padding:"10px 14px",borderLeft:`4px solid ${c.c}`}}><div style={{fontSize:12,fontWeight:700,color:c.c}}>{i+1}. {c.n}</div><div style={{fontSize:11,color:"#374151",marginTop:3}}>{c.d}</div></div>))}
+      <div style={{background:"#FEE2E2",border:"1px solid #FCA5A5",borderRadius:7,padding:"8px 12px",marginTop:4}}>
+        <div style={{fontSize:11,fontWeight:700,color:"#DC2626",marginBottom:4}}>ERROR MÁS COMÚN: cambiar solo (4) sin tocar los otros 4</div>
+        <div style={{fontSize:11,color:"#7F1D1D"}}>"Agile cosmético" = ceremonias Scrum + modelo operativo waterfall</div>
+      </div>
+    </div>
+  );
+}
+
+function VisualGobernanza() {
+  const niveles = [
+    {tipo:"DECISIONES DEL EQUIPO",vel:"Horas",ejemplos:"Cómo implementar técnicamente, orden del backlog en el sprint",deleg:"Nivel 6–7",c:"#16A34A",bg:"#DCFCE7"},
+    {tipo:"DECISIONES DEL PROGRAMA",vel:"Días",ejemplos:"Priorización de features, dependencias entre equipos, tech guidelines",deleg:"Nivel 3–5",c:"#D97706",bg:"#FEF3C7"},
+    {tipo:"DECISIONES ESTRATÉGICAS",vel:"Semanas",ejemplos:"Qué Value Streams financiar, cómo reorganizar equipos, alianzas",deleg:"Nivel 1–2",c:"#7C3AED",bg:"#EDE9FE"},
+  ];
+  return (
+    <div style={{display:"flex",flexDirection:"column",gap:8}}>
+      {niveles.map((n,i)=>(<div key={i} style={{background:n.bg,border:`1px solid ${n.c}40`,borderRadius:8,padding:"10px 14px",borderLeft:`4px solid ${n.c}`}}><div style={{display:"flex",justifyContent:"space-between",alignItems:"flex-start",flexWrap:"wrap",gap:4,marginBottom:5}}><div style={{fontSize:12,fontWeight:700,color:n.c}}>{n.tipo}</div><div style={{background:n.c,color:"#fff",borderRadius:4,padding:"2px 8px",fontSize:10,fontWeight:700}}>{n.deleg} Delegation</div></div><div style={{fontSize:11,color:"#374151",lineHeight:1.5}}><strong>Velocidad:</strong> {n.vel} · <strong>Ejemplos:</strong> {n.ejemplos}</div></div>))}
+      <div style={{background:"#0f172a",borderRadius:8,padding:"10px 14px"}}>
+        <div style={{fontSize:10,fontWeight:700,color:"#fbbf24",marginBottom:6}}>7 NIVELES DE DELEGATION POKER (Management 3.0)</div>
+        <div style={{display:"grid",gridTemplateColumns:"repeat(4,1fr)",gap:4}}>
+          {[{n:"1 Tell",c:"#DC2626"},{n:"2 Sell",c:"#D97706"},{n:"3 Consult",c:"#F59E0B"},{n:"4 Agree",c:"#FBBF24"},{n:"5 Advise",c:"#84CC16"},{n:"6 Inquire",c:"#22C55E"},{n:"7 Delegate",c:"#16A34A"}].map((x,i)=>(<div key={i} style={{background:x.c,borderRadius:4,padding:"4px 6px",textAlign:"center"}}><div style={{fontSize:9,fontWeight:700,color:"#fff"}}>{x.n}</div></div>))}
+        </div>
+      </div>
+    </div>
+  );
+}
+
+function VisualFlujoValor() {
+  return (
+    <div style={{display:"flex",flexDirection:"column",gap:8}}>
+      <div style={{overflowX:"auto"}}>
+        <table style={{borderCollapse:"collapse",width:"100%",fontSize:11,minWidth:500}}>
+          <thead><tr>
+            <th style={{padding:"7px 10px",background:"#1e293b",color:"#94a3b8",textAlign:"left"}}>Paso del flujo</th>
+            <th style={{padding:"7px 10px",background:"#1e293b",color:"#5EEAD4",textAlign:"center"}}>Process Time</th>
+            <th style={{padding:"7px 10px",background:"#1e293b",color:"#FCA5A5",textAlign:"center"}}>Wait Time</th>
+            <th style={{padding:"7px 10px",background:"#1e293b",color:"#FCD34D",textAlign:"center"}}>%C&A</th>
+          </tr></thead>
+          <tbody>
+            {[
+              ["Discovery / Análisis","1 día","3 días","70%","#FEE2E2"],
+              ["Development","3 días","1 día","90%","#DCFCE7"],
+              ["Code Review","0.5 días","2 días","80%","#FEF3C7"],
+              ["QA / Testing","1 día","3 días","75%","#FEE2E2"],
+              ["Deploy a producción","0.5 días","2 días","95%","#DBEAFE"],
+            ].map((r,i)=>(<tr key={i}>
+              <td style={{padding:"8px 10px",background:r[4],fontWeight:500,color:"#374151",borderBottom:"1px solid #f1f5f9"}}>{r[0]}</td>
+              <td style={{padding:"8px",borderBottom:"1px solid #f1f5f9",textAlign:"center",color:"#16A34A",fontWeight:600}}>{r[1]}</td>
+              <td style={{padding:"8px",borderBottom:"1px solid #f1f5f9",textAlign:"center",color:"#DC2626",fontWeight:600}}>{r[2]}</td>
+              <td style={{padding:"8px",borderBottom:"1px solid #f1f5f9",textAlign:"center",color:"#D97706",fontWeight:600}}>{r[3]}</td>
+            </tr>))}
+          </tbody>
+        </table>
+      </div>
+      <div style={{display:"grid",gridTemplateColumns:"1fr 1fr 1fr",gap:6}}>
+        {[
+          {n:"Lead Time total","v":"~17 días","sub":"(todo incluido)",c:"#DC2626",bg:"#FEE2E2"},
+          {n:"Process Time total","v":"6 días","sub":"trabajo activo",c:"#16A34A",bg:"#DCFCE7"},
+          {n:"Efficiency Rate","v":"35%","sub":"(6/17)",c:"#D97706",bg:"#FEF3C7"},
+        ].map((x,i)=>(<div key={i} style={{background:x.bg,border:`1px solid ${x.c}40`,borderRadius:7,padding:"10px",textAlign:"center"}}><div style={{fontSize:10,color:x.c,fontWeight:600,marginBottom:3}}>{x.n}</div><div style={{fontSize:18,fontWeight:700,color:x.c}}>{x.v}</div><div style={{fontSize:10,color:"#64748b"}}>{x.sub}</div></div>))}
+      </div>
+      <div style={{background:"#f8fafc",border:"1px solid #e2e8f0",borderRadius:6,padding:"8px 12px",fontSize:11,color:"#374151"}}>
+        <strong>Ley de Little:</strong> Lead Time = WIP / Throughput. Para reducir Lead Time → reducir WIP (palanca más inmediata).
+      </div>
+    </div>
+  );
+}
+
+function VisualOKRs() {
+  return (
+    <div style={{display:"flex",flexDirection:"column",gap:8}}>
+      <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:8}}>
+        <div style={{background:"#FEE2E2",border:"1px solid #FCA5A5",borderRadius:8,padding:"12px 14px"}}>
+          <div style={{fontSize:12,fontWeight:700,color:"#DC2626",marginBottom:8}}>❌ OKR con OUTPUTS</div>
+          <div style={{fontSize:11,color:"#7F1D1D",lineHeight:1.7}}>
+            <div><strong>O:</strong> Entregar módulo de pagos</div>
+            <div>KR1: Completar 40 historias</div>
+            <div>KR2: Hacer 3 deploys/mes</div>
+            <div>KR3: 0 bugs en producción</div>
+          </div>
+          <div style={{marginTop:8,fontSize:10,color:"#991B1B",fontStyle:"italic"}}>Mide actividad del equipo, no impacto en el cliente</div>
+        </div>
+        <div style={{background:"#DCFCE7",border:"1px solid #86EFAC",borderRadius:8,padding:"12px 14px"}}>
+          <div style={{fontSize:12,fontWeight:700,color:"#16A34A",marginBottom:8}}>✓ OKR con OUTCOMES</div>
+          <div style={{fontSize:11,color:"#14532D",lineHeight:1.7}}>
+            <div><strong>O:</strong> Pagar desde cualquier país sin fricción</div>
+            <div>KR1: 25% transacciones fuera de Perú</div>
+            <div>KR2: Abandono checkout 34% → 15%</div>
+            <div>KR3: NPS pago 42 → 65</div>
+          </div>
+          <div style={{marginTop:8,fontSize:10,color:"#166534",fontStyle:"italic"}}>Mide cambio de comportamiento del usuario</div>
+        </div>
+      </div>
+      <div style={{background:"#0f172a",borderRadius:8,padding:"10px 14px"}}>
+        <div style={{fontSize:10,fontWeight:700,color:"#fbbf24",marginBottom:6}}>NIVELES DE OKRs EN UNA ORGANIZACIÓN ÁGIL</div>
+        {[{n:"Empresa (anual)",s:"Dirección estratégica · C-Level"},{n:"Tribe/ART (trimestral/PI)",s:"Contribuye a OKRs empresa · definido en PI Planning"},{n:"Equipo/Squad (sprint/PI)",s:"Contribuye a OKRs de Tribe · operacional"}].map((x,i)=>(<div key={i} style={{display:"flex",gap:8,marginBottom:5}}><div style={{fontSize:11,color:"#e2e8f0",fontWeight:600,minWidth:160}}>{x.n}</div><div style={{fontSize:10,color:"#94a3b8"}}>{x.s}</div></div>))}
+      </div>
+      <div style={{background:"#DBEAFE",border:"1px solid #93C5FD",borderRadius:7,padding:"8px 12px",fontSize:11,color:"#1D4ED8"}}>
+        <strong>Google:</strong> 70% de achievement = éxito. OKRs al 100% de confianza son demasiado fáciles.
+      </div>
+    </div>
+  );
+}
+
+function VisualDORA() {
+  const metricas = [
+    {n:"Deployment Frequency",elite:"Múltiples/día",high:"Diario–semanal",icon:"🚀",c:"#16A34A"},
+    {n:"Lead Time for Changes",elite:"< 1 hora",high:"1 día–1 semana",icon:"⚡",c:"#2563EB"},
+    {n:"Change Failure Rate",elite:"0–15%",high:"16–30%",icon:"🛡️",c:"#D97706"},
+    {n:"Time to Restore",elite:"< 1 hora",high:"< 1 día",icon:"🔧",c:"#7C3AED"},
+  ];
+  return (
+    <div style={{display:"flex",flexDirection:"column",gap:8}}>
+      <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:6}}>
+        {metricas.map((m,i)=>(<div key={i} style={{background:"#f8fafc",border:"1px solid #e2e8f0",borderRadius:8,padding:"10px 12px"}}>
+          <div style={{fontSize:16,marginBottom:4}}>{m.icon}</div>
+          <div style={{fontSize:11,fontWeight:700,color:m.c,marginBottom:6}}>{m.n}</div>
+          <div style={{display:"flex",gap:4,marginBottom:3}}>
+            <div style={{background:"#DCFCE7",border:"1px solid #86EFAC",borderRadius:4,padding:"3px 6px",fontSize:10,color:"#14532D",fontWeight:600}}>Elite: {m.elite}</div>
+          </div>
+          <div style={{fontSize:10,color:"#64748b"}}>High: {m.high}</div>
+        </div>))}
+      </div>
+      <div style={{background:"#0f172a",borderRadius:8,padding:"10px 14px"}}>
+        <div style={{fontSize:11,fontWeight:700,color:"#4ade80",marginBottom:6}}>EL HALLAZGO MÁS IMPORTANTE DE DORA</div>
+        <div style={{fontSize:11,color:"#e2e8f0",lineHeight:1.6}}>Velocidad y estabilidad <strong style={{color:"#4ade80"}}>NO son opuestos</strong> — los equipos Elite tienen ALTA frecuencia de deploys Y BAJO Change Failure Rate simultáneamente. El tradeoff es un mito del modelo operativo tradicional.</div>
+      </div>
+      <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:6}}>
+        {[{n:"Baja DF + Alto CFR",s:"Deploys grandes = más riesgo → más failures",icon:"⬇️",c:"#DC2626",bg:"#FEE2E2"},{n:"Alta DF + Bajo CFR",s:"Deploys pequeños + CI/CD = velocidad y estabilidad",icon:"⬆️",c:"#16A34A",bg:"#DCFCE7"}].map((x,i)=>(<div key={i} style={{background:x.bg,border:`1px solid ${x.c}40`,borderRadius:7,padding:"8px 10px"}}><div style={{fontSize:13,marginBottom:3}}>{x.icon}</div><div style={{fontSize:11,fontWeight:700,color:x.c,marginBottom:3}}>{x.n}</div><div style={{fontSize:10,color:"#374151"}}>{x.s}</div></div>))}
+      </div>
+    </div>
+  );
+}
+
+function VisualFlowMetricas() {
+  return (
+    <div style={{display:"flex",flexDirection:"column",gap:8}}>
+      <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:6}}>
+        {[
+          {n:"Lead Time",d:"ENTRADA (backlog) → SALIDA (done). Todo el tiempo incluido. Lo que percibe el cliente.",c:"#DC2626",bg:"#FEE2E2"},
+          {n:"Cycle Time",d:"INICIO del trabajo activo → SALIDA. Excluye espera en backlog. Capacidad real del equipo.",c:"#2563EB",bg:"#DBEAFE"},
+          {n:"Throughput",d:"Ítems completados por unidad de tiempo. Capacidad real, sin estimar.",c:"#16A34A",bg:"#DCFCE7"},
+          {n:"WIP",d:"Work In Progress. La palanca más inmediata para reducir Lead Time.",c:"#D97706",bg:"#FEF3C7"},
+        ].map((x,i)=>(<div key={i} style={{background:x.bg,border:`1px solid ${x.c}40`,borderRadius:8,padding:"10px 12px",borderLeft:`4px solid ${x.c}`}}><div style={{fontSize:12,fontWeight:700,color:x.c,marginBottom:4}}>{x.n}</div><div style={{fontSize:11,color:"#374151",lineHeight:1.5}}>{x.d}</div></div>))}
+      </div>
+      <div style={{background:"#0f172a",borderRadius:8,padding:"10px 14px"}}>
+        <div style={{fontSize:10,fontWeight:700,color:"#fbbf24",marginBottom:6}}>PATRONES DEL CUMULATIVE FLOW DIAGRAM (CFD)</div>
+        {[
+          {p:"Flujo saludable",s:"Bandas paralelas, ancho constante, ritmo regular",c:"#4ade80"},
+          {p:"Cuello de botella",s:"Una banda se ensancha (acumulación) mientras otras se adelgazan",c:"#fbbf24"},
+          {p:"Work Stoppage",s:"Líneas horizontales — el equipo dejó de completar trabajo",c:"#f87171"},
+          {p:"Backlog acumula",s:"Banda To Do crece — demanda > throughput",c:"#f87171"},
+        ].map((x,i)=>(<div key={i} style={{display:"flex",gap:8,marginBottom:5}}><div style={{fontSize:11,fontWeight:700,color:x.c,minWidth:140}}>{x.p}</div><div style={{fontSize:10,color:"#94a3b8"}}>{x.s}</div></div>))}
+      </div>
+      <div style={{background:"#DBEAFE",border:"1px solid #93C5FD",borderRadius:7,padding:"8px 12px",fontSize:11,color:"#1D4ED8"}}>
+        <strong>Ley de Little:</strong> LT = WIP / Throughput · <strong>Usar P85, no promedio</strong> para comprometerse con plazos.
+      </div>
+    </div>
+  );
+}
+
+function VisualRetros() {
+  const formatos = [
+    {n:"Estrella de Mar",d:"Keep · Add more · Stop · Less of · Start",c:"#7C3AED"},
+    {n:"4L's",d:"Liked · Learned · Lacked · Longed for",c:"#0D9488"},
+    {n:"Timeline Retro",d:"Cronología del sprint con momentos + y -",c:"#2563EB"},
+    {n:"Futurospective",d:"Imaginar el éxito futuro e identificar qué cambiar",c:"#16A34A"},
+    {n:"Sailboat",d:"Anclas · Viento · Arrecifes · Sol (objetivo)",c:"#D97706"},
+  ];
+  return (
+    <div style={{display:"flex",flexDirection:"column",gap:8}}>
+      <div style={{display:"grid",gridTemplateColumns:"repeat(5,1fr)",gap:5}}>
+        {formatos.map((f,i)=>(<div key={i} style={{background:"#f8fafc",border:`2px solid ${f.c}40`,borderRadius:8,padding:"8px 6px",textAlign:"center"}}><div style={{fontSize:11,fontWeight:700,color:f.c,marginBottom:4}}>{f.n}</div><div style={{fontSize:9,color:"#64748b",lineHeight:1.4}}>{f.d}</div></div>))}
+      </div>
+      <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:6}}>
+        <div style={{background:"#DCFCE7",border:"1px solid #86EFAC",borderRadius:8,padding:"10px 12px"}}>
+          <div style={{fontSize:12,fontWeight:700,color:"#14532D",marginBottom:6}}>✓ RETRO EFECTIVA</div>
+          {["Seguridad psicológica alta","Foco en el SISTEMA, no personas","1–3 acciones con owner y fecha","Se revisan acciones de la retro anterior","Participan todos, no solo los mismos 2"].map((x,i)=>(<div key={i} style={{fontSize:10,color:"#14532D",lineHeight:1.7}}>{x}</div>))}
+        </div>
+        <div style={{background:"#FEE2E2",border:"1px solid #FCA5A5",borderRadius:8,padding:"10px 12px"}}>
+          <div style={{fontSize:12,fontWeight:700,color:"#DC2626",marginBottom:6}}>✗ RETRO QUE FALLA</div>
+          {["Mismos problemas sin resolución","SM habla más que el equipo","Acciones sin owner ni fecha","No se revisan acciones previas","Silencio y respuestas diplomáticas"].map((x,i)=>(<div key={i} style={{fontSize:10,color:"#7F1D1D",lineHeight:1.7}}>{x}</div>))}
+        </div>
+      </div>
+      <div style={{background:"#f8fafc",border:"1px solid #e2e8f0",borderRadius:7,padding:"8px 12px",fontSize:11,color:"#374151",textAlign:"center"}}>
+        <strong>1 acción completada vale más que 10 acciones prometidas.</strong>
+      </div>
+    </div>
+  );
+}
+
+function Visual5Whys() {
+  const pasos = [
+    {n:"SÍNTOMA","ex":"Los releases tienen muchos bugs en producción",c:"#DC2626"},
+    {n:"¿Por qué? (1)","ex":"Los bugs llegan a producción sin ser detectados",c:"#D97706"},
+    {n:"¿Por qué? (2)","ex":"Los tests automáticos no cubren los edge cases",c:"#F59E0B"},
+    {n:"¿Por qué? (3)","ex":"No hay tiempo para escribir tests en los sprints",c:"#FBBF24"},
+    {n:"¿Por qué? (4)","ex":"La Definition of Done no incluye tests automáticos",c:"#84CC16"},
+    {n:"¿Por qué? (5) = CAUSA RAÍZ","ex":"Nadie definió un estándar de calidad para el equipo",c:"#16A34A"},
+  ];
+  return (
+    <div style={{display:"flex",flexDirection:"column",gap:6}}>
+      {pasos.map((p,i)=>(<div key={i} style={{display:"flex",gap:10,alignItems:"flex-start"}}>
+        <div style={{width:6,minWidth:6,height:6,borderRadius:"50%",background:p.c,marginTop:7}}></div>
+        <div style={{flex:1,background:"#f8fafc",border:`1px solid ${p.c}40`,borderRadius:6,padding:"8px 12px"}}>
+          <div style={{fontSize:10,fontWeight:700,color:p.c,marginBottom:3}}>{p.n}</div>
+          <div style={{fontSize:11,color:"#374151"}}>{p.ex}</div>
+        </div>
+      </div>))}
+      <div style={{background:"#DCFCE7",border:"1px solid #86EFAC",borderRadius:8,padding:"10px 14px",marginTop:4}}>
+        <div style={{fontSize:12,fontWeight:700,color:"#14532D",marginBottom:4}}>ACCIÓN sobre la causa raíz</div>
+        <div style={{fontSize:11,color:"#374151"}}>Facilitar sesión de equipo para definir la Definition of Done con criterios de calidad explícitos. Owner: SM. Fecha: Sprint siguiente.</div>
+      </div>
+      <div style={{background:"#FEF3C7",border:"1px solid #FCD34D",borderRadius:7,padding:"8px 12px",fontSize:11,color:"#78350F"}}>
+        <strong>Anti-patrón:</strong> parar cuando la respuesta es "falta de tiempo" — eso es un síntoma, no una causa raíz.
+      </div>
+    </div>
+  );
+}
+
+function VisualImpedimentos() {
+  return (
+    <div style={{display:"flex",flexDirection:"column",gap:8}}>
+      <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:6}}>
+        <div style={{background:"#DBEAFE",border:"1px solid #93C5FD",borderRadius:8,padding:"10px 12px"}}>
+          <div style={{fontSize:12,fontWeight:700,color:"#1D4ED8",marginBottom:5}}>OBSTÁCULO</div>
+          <div style={{fontSize:11,color:"#374151",lineHeight:1.6}}>El equipo puede resolverlo solo en &lt;48h con recursos disponibles.<br/>SM: facilita pero no toma ownership.</div>
+        </div>
+        <div style={{background:"#FEE2E2",border:"1px solid #FCA5A5",borderRadius:8,padding:"10px 12px"}}>
+          <div style={{fontSize:12,fontWeight:700,color:"#DC2626",marginBottom:5}}>IMPEDIMENTO</div>
+          <div style={{fontSize:11,color:"#374151",lineHeight:1.6}}>Requiere acción de alguien externo al equipo.<br/>SM: toma ownership y escala activamente.</div>
+        </div>
+      </div>
+      <div style={{background:"#f8fafc",border:"1px solid #e2e8f0",borderRadius:8,padding:"10px 14px"}}>
+        <div style={{fontSize:11,fontWeight:700,color:"#1e293b",marginBottom:6}}>ESCALAMIENTO EN 3 NIVELES</div>
+        {[
+          {n:"Equipo",t:"24–48h",s:"SM facilita → si no resuelve en ese tiempo, escalar",c:"#16A34A"},
+          {n:"Programa / Tribe",t:"3–5 días",s:"Tribe Lead / RTE actúa → si no resuelve, escalar",c:"#D97706"},
+          {n:"Portfolio / Org.",t:"Urgente",s:"Portfolio Leadership decide",c:"#DC2626"},
+        ].map((x,i)=>(<div key={i} style={{display:"flex",alignItems:"flex-start",gap:8,marginBottom:6}}><div style={{minWidth:70,background:x.c,color:"#fff",borderRadius:4,padding:"3px 6px",fontSize:10,fontWeight:700,textAlign:"center"}}>{x.n}</div><div style={{flex:1}}><div style={{fontSize:10,color:x.c,fontWeight:600}}>{x.t}</div><div style={{fontSize:11,color:"#374151",lineHeight:1.5}}>{x.s}</div></div></div>))}
+      </div>
+      <div style={{background:"#DCFCE7",border:"1px solid #86EFAC",borderRadius:7,padding:"8px 12px"}}>
+        <div style={{fontSize:11,fontWeight:700,color:"#14532D",marginBottom:4}}>ESCALAMIENTO EFECTIVO incluye:</div>
+        {["Contexto del problema","Impacto cuantificado (días perdidos, features bloqueadas)","Opciones posibles de solución","Qué decisión o acción se necesita de quién"].map((x,i)=>(<div key={i} style={{fontSize:11,color:"#374151",lineHeight:1.7}}>→ {x}</div>))}
+      </div>
+    </div>
+  );
+}
+
+function VisualTeamHealth() {
+  const dimensiones = ["Easy to release","Tech quality","Teamwork","Fun","Learning","Mission","Speed","Support"];
+  return (
+    <div style={{display:"flex",flexDirection:"column",gap:8}}>
+      <div style={{background:"#f8fafc",border:"1px solid #e2e8f0",borderRadius:8,padding:"10px 14px"}}>
+        <div style={{fontSize:11,fontWeight:700,color:"#1e293b",marginBottom:8}}>SPOTIFY HEALTH CHECK — 11 dimensiones (ejemplo simplificado)</div>
+        <div style={{display:"flex",flexWrap:"wrap",gap:5}}>
+          {dimensiones.map((d,i)=>{
+            const color = i<3?"#16A34A":i<5?"#D97706":"#DC2626";
+            const bg = i<3?"#DCFCE7":i<5?"#FEF3C7":"#FEE2E2";
+            return(<div key={i} style={{background:bg,border:`1px solid ${color}40`,borderRadius:5,padding:"4px 8px",fontSize:10,color:color,fontWeight:600}}>{d}</div>);
+          })}
+        </div>
+        <div style={{display:"flex",gap:8,marginTop:8}}>
+          {[{c:"#16A34A",bg:"#DCFCE7",l:"Verde"},{c:"#D97706",bg:"#FEF3C7",l:"Amarillo"},{c:"#DC2626",bg:"#FEE2E2",l:"Rojo"}].map((x,i)=>(<div key={i} style={{display:"flex",alignItems:"center",gap:4}}><div style={{width:8,height:8,borderRadius:"50%",background:x.c}}></div><span style={{fontSize:10,color:"#64748b"}}>{x.l}</span></div>))}
+        </div>
+      </div>
+      <div style={{display:"grid",gridTemplateColumns:"repeat(3,1fr)",gap:6}}>
+        {[{n:"Autonomy",d:"Control sobre cómo trabajar",c:"#7C3AED",bg:"#EDE9FE"},{n:"Mastery",d:"Aprendizaje y crecimiento continuo",c:"#0D9488",bg:"#CCFBF1"},{n:"Purpose",d:"Saber para qué sirve lo que hacen",c:"#D97706",bg:"#FEF3C7"}].map((x,i)=>(<div key={i} style={{background:x.bg,border:`1px solid ${x.c}40`,borderRadius:8,padding:"10px 10px",textAlign:"center"}}><div style={{fontSize:13,fontWeight:700,color:x.c,marginBottom:3}}>{x.n}</div><div style={{fontSize:10,color:"#64748b"}}>{x.d}</div></div>))}
+      </div>
+      <div style={{background:"#0f172a",borderRadius:8,padding:"10px 14px"}}>
+        <div style={{fontSize:10,fontWeight:700,color:"#fbbf24",marginBottom:5}}>MADUREZ ÁGIL — 5 NIVELES</div>
+        {[
+          {n:"Nivel 1: Iniciando",s:"Ceremonias básicas, alta dependencia del SM"},
+          {n:"Nivel 2: Desarrollando",s:"Ceremonias consistentes, primeras métricas"},
+          {n:"Nivel 3: Definido",s:"Prácticas establecidas, métricas activas, auto-organización parcial"},
+          {n:"Nivel 4: Gestionado",s:"Decisiones basadas en datos, alta predictibilidad"},
+          {n:"Nivel 5: Optimizando",s:"Mejora continua sistémica, experimentación activa"},
+        ].map((x,i)=>{
+          const colors=["#DC2626","#D97706","#FBBF24","#84CC16","#16A34A"];
+          return(<div key={i} style={{display:"flex",gap:8,marginBottom:4}}><div style={{minWidth:10,height:10,borderRadius:"50%",background:colors[i],marginTop:3}}></div><div style={{fontSize:10,color:"#e2e8f0"}}><strong style={{color:colors[i]}}>{x.n}:</strong> {x.s}</div></div>);
+        })}
+      </div>
+    </div>
+  );
+}
+
+function Visual({ chapter }) {
+  const t = chapter.visual.type;
+  if(t==="modelo-org")      return <VisualModeloOrg/>;
+  if(t==="estructuras")     return <VisualEstructuras/>;
+  if(t==="topologias")      return <VisualTopologias/>;
+  if(t==="modelo-operativo") return <VisualModeloOperativo/>;
+  if(t==="gobernanza")      return <VisualGobernanza/>;
+  if(t==="flujo-valor")     return <VisualFlujoValor/>;
+  if(t==="okrs")            return <VisualOKRs/>;
+  if(t==="dora")            return <VisualDORA/>;
+  if(t==="flow-metricas")   return <VisualFlowMetricas/>;
+  if(t==="retros")          return <VisualRetros/>;
+  if(t==="5whys")           return <Visual5Whys/>;
+  if(t==="impedimentos")    return <VisualImpedimentos/>;
+  if(t==="team-health")     return <VisualTeamHealth/>;
+  return null;
+}
+
+// ══════════════════════════ QUIZ ══════════════════════════
+
+function Quiz({ questions, color, light, onComplete }) {
+  const [answers, setAnswers] = useState({});
+  const [submitted, setSubmitted] = useState(false);
+  function answer(qi, oi) { if (submitted || answers[qi] !== undefined) return; setAnswers(a => ({...a, [qi]: oi})); }
+  function submit() {
+    if (Object.keys(answers).length < questions.length) return;
+    const score = questions.reduce((s, q, i) => s + (answers[i] === q.correct ? 1 : 0), 0);
+    setSubmitted(true); onComplete(score);
+  }
+  return (
+    <div>
+      {questions.map((q, qi) => (
+        <div key={qi} style={{marginBottom:16}}>
+          <div style={{fontSize:13,fontWeight:500,color:"#1e293b",marginBottom:8,lineHeight:1.5}}>{qi+1}. {q.q}</div>
+          <div style={{display:"flex",flexDirection:"column",gap:5}}>
+            {q.opts.map((o, oi) => {
+              let bg="#f8fafc", border="1px solid #e2e8f0", tc="#374151";
+              if (answers[qi]===oi)     { bg=light; border=`1px solid ${color}`; tc="#1e293b"; }
+              if (submitted && oi===q.correct) { bg="#f0fdf4"; border="1px solid #86efac"; tc="#14532d"; }
+              if (submitted && answers[qi]===oi && oi!==q.correct) { bg="#fef2f2"; border="1px solid #fca5a5"; tc="#7f1d1d"; }
+              return (
+                <div key={oi} onClick={() => answer(qi, oi)}
+                  style={{padding:"9px 13px",borderRadius:7,border,background:bg,cursor:submitted||answers[qi]!==undefined?"default":"pointer",fontSize:12,color:tc,transition:".15s",lineHeight:1.4}}>
+                  {o}
+                </div>
+              );
+            })}
+          </div>
+          {submitted && (
+            <div style={{marginTop:8,padding:"8px 12px",background:answers[qi]===q.correct?"#f0fdf4":"#fef2f2",border:`1px solid ${answers[qi]===q.correct?"#86efac":"#fca5a5"}`,borderRadius:6,fontSize:12,color:answers[qi]===q.correct?"#14532d":"#7f1d1d",lineHeight:1.6}}>
+              {answers[qi]===q.correct?"✓ ":"✗ "}{q.explanation}
+            </div>
+          )}
+        </div>
+      ))}
+      {!submitted && (
+        <button onClick={submit} disabled={Object.keys(answers).length < questions.length}
+          style={{marginTop:4,padding:"9px 20px",borderRadius:7,border:"none",background:Object.keys(answers).length<questions.length?"#e2e8f0":color,color:Object.keys(answers).length<questions.length?"#94a3b8":"#fff",fontSize:13,fontWeight:600,cursor:Object.keys(answers).length<questions.length?"not-allowed":"pointer"}}>
+          Verificar respuestas
+        </button>
+      )}
+    </div>
+  );
+}
+
+// ══════════════════════════ APP ══════════════════════════
+
+function ModelosGuia() {
+  const [chapter, setChapter] = useState(0);
+  const [tab, setTab] = useState("functional");
+  const [quizDone, setQuizDone] = useState({});
+  const [totalScore, setTotalScore] = useState(0);
+  const [totalQ, setTotalQ] = useState(0);
+  const [quizKey, setQuizKey] = useState(0);
+
+  const ch = CHAPTERS[chapter];
+  const pct = totalQ > 0 ? Math.round((totalScore / totalQ) * 100) : 0;
+  const doneCh = Object.keys(quizDone).length;
+  const totalChapters = CHAPTERS.length;
+  const totalQuestions = CHAPTERS.reduce((s, c) => s + c.questions.length, 0);
+
+  function handleQuizComplete(score) {
+    const prev = quizDone[chapter];
+    if (!prev) { setTotalScore(s => s + score); setTotalQ(t => t + ch.questions.length); }
+    setQuizDone(d => ({...d, [chapter]: {done:true, score, total:ch.questions.length}}));
+  }
+  function goChapter(idx) { setChapter(idx); setTab("functional"); setQuizKey(k => k+1); }
+
+  return (
+    <div style={{fontFamily:"var(--font-sans)", maxWidth:780, margin:"0 auto"}}>
+
+      {/* TOP BAR */}
+      <div style={{background:"#0f172a", borderRadius:"12px 12px 0 0", padding:"12px 16px", display:"flex", alignItems:"center", gap:10}}>
+        <div style={{width:32,height:32,borderRadius:8,background:"rgba(13,148,136,.25)",border:"1px solid rgba(94,234,212,.4)",display:"flex",alignItems:"center",justifyContent:"center",flexShrink:0,fontSize:16}}>🏛️</div>
+        <div style={{flex:1}}>
+          <div style={{fontSize:13,fontWeight:500,color:"#f1f5f9"}}>Modelos Organizacionales y Métricas · Guía interactiva</div>
+          <div style={{fontSize:11,color:"#64748b"}}>{totalChapters} secciones · {totalQuestions} preguntas · Diseño Org · Modelo Op · Métricas · Mejora Continua</div>
+        </div>
+        {doneCh > 0 && (
+          <div style={{textAlign:"right"}}>
+            <div style={{fontSize:18,fontWeight:700,color:pct>=80?"#4ade80":pct>=60?"#fbbf24":"#f87171"}}>{pct}%</div>
+            <div style={{fontSize:10,color:"#64748b"}}>{doneCh}/{totalChapters} secciones</div>
+          </div>
+        )}
+      </div>
+
+      {/* GROUP + CHAPTER NAV */}
+      <div style={{background:"#1e293b", padding:"8px 12px", borderBottom:"1px solid #0f172a"}}>
+        {GROUPS.map(group => {
+          const gc = CHAPTERS.filter(c => c.group === group.id);
+          return (
+            <div key={group.id} style={{marginBottom:6}}>
+              <div style={{fontSize:10,fontWeight:700,color:group.color,letterSpacing:".05em",marginBottom:4,paddingLeft:2}}>
+                {group.label.toUpperCase()}
+              </div>
+              <div style={{display:"flex",gap:4,flexWrap:"wrap"}}>
+                {gc.map(c => {
+                  const idx = CHAPTERS.indexOf(c);
+                  return (
+                    <button key={idx} onClick={() => goChapter(idx)}
+                      style={{fontSize:11,padding:"5px 10px",borderRadius:6,cursor:"pointer",background:chapter===idx?c.color:"transparent",color:chapter===idx?"#fff":"#94a3b8",border:`1px solid ${chapter===idx?c.color:"#334155"}`,fontWeight:chapter===idx?600:400,display:"flex",alignItems:"center",gap:4,transition:".15s"}}>
+                      {quizDone[idx] && <span style={{fontSize:9}}>{quizDone[idx].score===quizDone[idx].total?"✓":"~"}</span>}
+                      {c.icon} {c.title}
+                    </button>
+                  );
+                })}
+              </div>
+            </div>
+          );
+        })}
+      </div>
+
+      {/* MAIN */}
+      <div style={{background:"#fff", border:"1px solid #e2e8f0", borderTop:"none"}}>
+
+        {/* Chapter header */}
+        <div style={{background:ch.light, borderBottom:`2px solid ${ch.border}`, padding:"14px 18px"}}>
+          <div style={{display:"flex",alignItems:"center",gap:10,flexWrap:"wrap"}}>
+            <div style={{width:42,height:42,borderRadius:10,background:ch.color,display:"flex",alignItems:"center",justifyContent:"center",fontSize:20,flexShrink:0}}>{ch.icon}</div>
+            <div style={{flex:1}}>
+              <div style={{fontSize:15,fontWeight:700,color:ch.text}}>{ch.title}</div>
+              <div style={{fontSize:11,color:ch.color,marginTop:2}}>
+                {ch.questions.length} preguntas
+                {quizDone[chapter] && ` · ${quizDone[chapter].score}/${quizDone[chapter].total} correctas`}
+              </div>
+            </div>
+            <div style={{display:"flex",gap:5,flexWrap:"wrap"}}>
+              {tabs.map(t => (
+                <button key={t.id} onClick={() => setTab(t.id)}
+                  style={{fontSize:11,padding:"5px 12px",borderRadius:6,cursor:"pointer",background:tab===t.id?ch.color:"transparent",color:tab===t.id?"#fff":ch.text,border:`1px solid ${tab===t.id?ch.color:ch.border}`,fontWeight:tab===t.id?600:400,transition:".15s"}}>
+                  {t.label}
+                </button>
+              ))}
+            </div>
+          </div>
+        </div>
+
+        {/* Tab content */}
+        <div style={{padding:"16px 18px"}}>
+
+          {tab === "functional" && (
+            <div>
+              <div style={{fontSize:10,fontWeight:700,color:"#94a3b8",letterSpacing:".5px",marginBottom:10}}>¿QUÉ ES Y POR QUÉ IMPORTA?</div>
+              <div style={{fontSize:13,color:"#374151",lineHeight:1.85,whiteSpace:"pre-line"}}>{ch.functional}</div>
+              <div style={{marginTop:14,padding:"10px 14px",background:ch.light,border:`1px solid ${ch.border}`,borderRadius:8,fontSize:12,color:ch.text}}>
+                Orden recomendado: <strong>Funcional → Técnico → Visual → ¿Lo entendí?</strong>
+              </div>
+            </div>
+          )}
+
+          {tab === "technical" && (
+            <div>
+              <div style={{fontSize:10,fontWeight:700,color:"#94a3b8",letterSpacing:".5px",marginBottom:10}}>CÓMO SE IMPLEMENTA — DETALLES</div>
+              <div style={{background:"#0f172a",borderRadius:8,padding:"14px 16px"}}>
+                <div style={{fontSize:12,color:"#e2e8f0",lineHeight:1.9,whiteSpace:"pre-line",fontFamily:"monospace"}}>{ch.technical}</div>
+              </div>
+            </div>
+          )}
+
+          {tab === "visual" && (
+            <div>
+              <div style={{fontSize:10,fontWeight:700,color:"#94a3b8",letterSpacing:".5px",marginBottom:10}}>DIAGRAMA / ESTRUCTURA VISUAL</div>
+              <Visual chapter={ch} />
+              <div style={{fontSize:12,color:"#64748b",marginTop:10,lineHeight:1.6}}>
+                Mapa mental para la entrevista — estudiá la estructura antes del quiz.
+              </div>
+            </div>
+          )}
+
+          {tab === "quiz" && (
+            <div>
+              <div style={{fontSize:10,fontWeight:700,color:"#94a3b8",letterSpacing:".5px",marginBottom:12}}>VALIDA TU COMPRENSIÓN</div>
+              {quizDone[chapter] ? (
+                <div>
+                  <div style={{background:quizDone[chapter].score===quizDone[chapter].total?"#f0fdf4":"#fffbeb",border:`1px solid ${quizDone[chapter].score===quizDone[chapter].total?"#86efac":"#fcd34d"}`,borderRadius:8,padding:"12px 14px",marginBottom:12}}>
+                    <div style={{fontSize:13,fontWeight:600,color:"#1e293b"}}>{quizDone[chapter].score===quizDone[chapter].total?"🎯 ¡Sección dominada!":"✅ Sección completada"}</div>
+                    <div style={{fontSize:12,color:"#64748b",marginTop:4}}>{quizDone[chapter].score}/{quizDone[chapter].total} correctas</div>
+                  </div>
+                  <button onClick={() => { setQuizDone(d => { const nd={...d}; delete nd[chapter]; return nd; }); setQuizKey(k=>k+1); }}
+                    style={{fontSize:12,padding:"8px 16px",borderRadius:7,border:"1px solid #e2e8f0",background:"#f8fafc",cursor:"pointer",color:"#64748b"}}>
+                    Repetir quiz
+                  </button>
+                </div>
+              ) : (
+                <Quiz key={quizKey} questions={ch.questions} color={ch.color} light={ch.light} onComplete={handleQuizComplete} />
+              )}
+            </div>
+          )}
+        </div>
+
+        {/* Navigation */}
+        <div style={{padding:"10px 18px 14px",borderTop:"1px solid #f1f5f9",display:"flex",justifyContent:"space-between",alignItems:"center"}}>
+          <button onClick={() => goChapter(chapter-1)} disabled={chapter===0}
+            style={{fontSize:12,padding:"8px 16px",borderRadius:7,border:"1px solid #e2e8f0",background:"#f8fafc",cursor:chapter===0?"not-allowed":"pointer",color:chapter===0?"#cbd5e1":"#374151"}}>
+            ← Anterior
+          </button>
+          <div style={{fontSize:11,color:"#94a3b8"}}>{chapter+1} / {totalChapters}</div>
+          <button onClick={() => goChapter(chapter+1)} disabled={chapter===totalChapters-1}
+            style={{fontSize:12,padding:"8px 16px",borderRadius:7,border:`1px solid ${ch.color}`,background:ch.color,color:"#fff",cursor:chapter===totalChapters-1?"not-allowed":"pointer",opacity:chapter===totalChapters-1?.5:1}}>
+            Siguiente →
+          </button>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+
+const root = ReactDOM.createRoot(document.getElementById("root"));
+root.render(<ModelosGuia />);
+</script>
+
+<script>
+// Hide loading, show content when React renders
+window.addEventListener('load', () => {
+  setTimeout(() => {
+    const root = document.getElementById('root');
+    const loading = document.getElementById('loading');
+    if (root && root.children.length > 0) {
+      loading.style.display = 'none';
+      root.style.display = 'block';
+    } else {
+      const observer = new MutationObserver(() => {
+        if (root.children.length > 0) {
+          loading.style.display = 'none';
+          root.style.display = 'block';
+          observer.disconnect();
+        }
+      });
+      observer.observe(root, { childList: true });
+    }
+  }, 100);
+});
+
+// Register SW
+if ('serviceWorker' in navigator) {
+  navigator.serviceWorker.register('../sw.js');
+}
+</script>
+</body>
+</html>

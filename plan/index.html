@@ -1,0 +1,1186 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<link rel="manifest" href="../manifest.json">
+<meta name="theme-color" content="#1a1814">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Plan de Cierre de Brechas · Luis Otoya</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;1,9..40,300&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --ink: #1a1814;
+    --ink-soft: #5a5650;
+    --ink-faint: #9a9690;
+    --page: #faf8f4;
+    --page-warm: #f2ede4;
+    --rule: #e4dfd6;
+    --w1: #7c5cbf;
+    --w1-bg: #f0eafa;
+    --w2: #1a8a6e;
+    --w2-bg: #e6f6f2;
+    --w3: #c26a1e;
+    --w3-bg: #fdf0e3;
+    --w4: #2a6db5;
+    --w4-bg: #e8f2fc;
+    --ok: #1a8a6e;
+    --gap: #c0392b;
+    --mid: #c26a1e;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: 'DM Sans', sans-serif;
+    background: var(--page);
+    color: var(--ink);
+    min-height: 100vh;
+  }
+
+  /* HEADER */
+  .header {
+    background: var(--ink);
+    color: var(--page);
+    padding: 3.5rem 3rem 3rem;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .header::before {
+    content: '';
+    position: absolute;
+    top: -60px; right: -60px;
+    width: 300px; height: 300px;
+    border-radius: 50%;
+    background: rgba(255,255,255,0.03);
+  }
+
+  .header::after {
+    content: '';
+    position: absolute;
+    bottom: -30px; left: 40%;
+    width: 200px; height: 200px;
+    border-radius: 50%;
+    background: rgba(255,255,255,0.025);
+  }
+
+  .header-label {
+    font-size: 11px;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: rgba(255,255,255,0.45);
+    margin-bottom: 1rem;
+  }
+
+  .header-title {
+    font-family: 'DM Serif Display', serif;
+    font-size: clamp(2.2rem, 5vw, 3.4rem);
+    line-height: 1.1;
+    margin-bottom: 1rem;
+    max-width: 600px;
+  }
+
+  .header-title em {
+    font-style: italic;
+    color: rgba(255,255,255,0.55);
+  }
+
+  .header-sub {
+    font-size: 14px;
+    color: rgba(255,255,255,0.5);
+    font-weight: 300;
+    margin-bottom: 2rem;
+  }
+
+  .header-meta {
+    display: flex;
+    gap: 2rem;
+    flex-wrap: wrap;
+  }
+
+  .meta-item {
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+  }
+
+  .meta-value {
+    font-size: 20px;
+    font-weight: 500;
+    color: white;
+  }
+
+  .meta-label {
+    font-size: 11px;
+    color: rgba(255,255,255,0.4);
+    letter-spacing: 0.05em;
+  }
+
+  .meta-divider {
+    width: 1px;
+    background: rgba(255,255,255,0.12);
+    align-self: stretch;
+  }
+
+  /* LEVEL SUMMARY */
+  .level-strip {
+    background: var(--page-warm);
+    border-bottom: 1px solid var(--rule);
+    padding: 1.5rem 3rem;
+    display: flex;
+    gap: 0;
+    overflow-x: auto;
+  }
+
+  .level-item {
+    flex: 1;
+    min-width: 140px;
+    padding: 0 1.5rem 0 0;
+    border-right: 1px solid var(--rule);
+    margin-right: 1.5rem;
+  }
+
+  .level-item:last-child { border-right: none; margin-right: 0; }
+
+  .level-area {
+    font-size: 11px;
+    letter-spacing: 0.05em;
+    color: var(--ink-faint);
+    margin-bottom: 4px;
+    text-transform: uppercase;
+  }
+
+  .level-name {
+    font-size: 14px;
+    font-weight: 500;
+    color: var(--ink);
+    margin-bottom: 6px;
+  }
+
+  .level-bar {
+    height: 3px;
+    background: var(--rule);
+    border-radius: 2px;
+    overflow: hidden;
+  }
+
+  .level-fill { height: 100%; border-radius: 2px; }
+
+  /* MAIN */
+  .main { max-width: 900px; margin: 0 auto; padding: 3rem 3rem; }
+
+  /* SECTION DIVIDER */
+  .divider-label {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    margin: 0 0 2rem;
+  }
+
+  .divider-label span {
+    font-size: 11px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--ink-faint);
+    white-space: nowrap;
+  }
+
+  .divider-line {
+    flex: 1;
+    height: 1px;
+    background: var(--rule);
+  }
+
+  /* WEEK CARD */
+  .week { margin-bottom: 3rem; }
+
+  .week-head {
+    display: grid;
+    grid-template-columns: 64px 1fr;
+    gap: 1.5rem;
+    align-items: start;
+    margin-bottom: 1.5rem;
+  }
+
+  .week-number {
+    width: 64px; height: 64px;
+    border-radius: 16px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+  }
+
+  .week-num-label {
+    font-size: 9px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    font-weight: 500;
+    opacity: 0.65;
+    margin-bottom: 1px;
+  }
+
+  .week-num-value {
+    font-family: 'DM Serif Display', serif;
+    font-size: 26px;
+    line-height: 1;
+  }
+
+  .week-info {}
+
+  .week-title {
+    font-family: 'DM Serif Display', serif;
+    font-size: 1.5rem;
+    line-height: 1.2;
+    margin-bottom: 4px;
+  }
+
+  .week-focus {
+    font-size: 13px;
+    color: var(--ink-soft);
+    font-weight: 300;
+  }
+
+  /* TASKS */
+  .tasks { display: flex; flex-direction: column; gap: 1px; }
+
+  .task {
+    background: white;
+    border: 1px solid var(--rule);
+    border-radius: 10px;
+    padding: 1.25rem 1.5rem;
+    display: grid;
+    grid-template-columns: 1fr auto;
+    gap: 1rem;
+    align-items: start;
+    transition: border-color 0.2s;
+  }
+
+  .task:hover { border-color: #c8c3ba; }
+
+  .task + .task { margin-top: 8px; }
+
+  .task-icon-title {
+    display: flex;
+    gap: 0.75rem;
+    align-items: flex-start;
+    margin-bottom: 6px;
+  }
+
+  .task-num {
+    width: 22px; height: 22px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 11px;
+    font-weight: 500;
+    flex-shrink: 0;
+    margin-top: 1px;
+  }
+
+  .task-title {
+    font-size: 14px;
+    font-weight: 500;
+    line-height: 1.4;
+    color: var(--ink);
+  }
+
+  .task-desc {
+    font-size: 13px;
+    color: var(--ink-soft);
+    line-height: 1.65;
+    padding-left: calc(22px + 0.75rem);
+    margin-top: 4px;
+  }
+
+  .tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 5px;
+    padding-left: calc(22px + 0.75rem);
+    margin-top: 8px;
+  }
+
+  .tag {
+    font-size: 11px;
+    background: var(--page-warm);
+    color: var(--ink-soft);
+    border-radius: 5px;
+    padding: 3px 8px;
+    border: 1px solid var(--rule);
+  }
+
+  .effort-badge {
+    font-size: 11px;
+    padding: 4px 10px;
+    border-radius: 20px;
+    white-space: nowrap;
+    font-weight: 500;
+    align-self: start;
+  }
+
+  /* ENTREGABLE */
+  .entregable {
+    margin-top: 1rem;
+    padding: 12px 16px;
+    border-radius: 10px;
+    display: flex;
+    gap: 10px;
+    align-items: flex-start;
+    border: 1px dashed;
+  }
+
+  .entregable-icon {
+    font-size: 16px;
+    flex-shrink: 0;
+    margin-top: 1px;
+  }
+
+  .entregable-text {
+    font-size: 13px;
+    line-height: 1.5;
+  }
+
+  .entregable-text strong { font-weight: 500; }
+
+  /* BRECHAS */
+  .brechas { margin-bottom: 3rem; }
+
+  .brecha-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+  }
+
+  .brecha-card {
+    background: white;
+    border: 1px solid var(--rule);
+    border-radius: 10px;
+    padding: 1rem 1.25rem;
+    display: flex;
+    gap: 10px;
+    align-items: flex-start;
+  }
+
+  .brecha-dot {
+    width: 8px; height: 8px;
+    border-radius: 50%;
+    flex-shrink: 0;
+    margin-top: 5px;
+  }
+
+  .brecha-title { font-size: 13px; font-weight: 500; margin-bottom: 3px; }
+  .brecha-desc { font-size: 12px; color: var(--ink-soft); line-height: 1.5; }
+
+  /* RECS */
+  .rec-list { display: flex; flex-direction: column; gap: 8px; }
+
+  .rec-item {
+    background: white;
+    border: 1px solid var(--rule);
+    border-left: 3px solid;
+    border-radius: 0 10px 10px 0;
+    padding: 12px 1.25rem;
+    font-size: 13px;
+    color: var(--ink);
+    line-height: 1.6;
+  }
+
+  /* FOOTER */
+  .footer {
+    background: var(--ink);
+    color: rgba(255,255,255,0.4);
+    text-align: center;
+    padding: 2rem;
+    font-size: 12px;
+  }
+
+  .footer strong { color: rgba(255,255,255,0.75); }
+
+  /* WEEK COLORS */
+  .wc1 { background: var(--w1-bg); color: var(--w1); }
+  .wc2 { background: var(--w2-bg); color: var(--w2); }
+  .wc3 { background: var(--w3-bg); color: var(--w3); }
+  .wc4 { background: var(--w4-bg); color: var(--w4); }
+
+  @media (max-width: 640px) {
+    .header { padding: 2rem 1.5rem; }
+    .main { padding: 2rem 1.5rem; }
+    .level-strip { padding: 1.25rem 1.5rem; }
+    .brecha-grid { grid-template-columns: 1fr; }
+    .task { grid-template-columns: 1fr; }
+  }
+
+  /* VOCABULARY */
+  .vocab-section { margin-bottom: 3rem; }
+
+  .vocab-tabs {
+    display: flex;
+    gap: 6px;
+    flex-wrap: wrap;
+    margin-bottom: 1.5rem;
+  }
+
+  .vtab {
+    font-size: 12px;
+    font-weight: 500;
+    padding: 6px 14px;
+    border-radius: 20px;
+    border: 1px solid var(--rule);
+    background: white;
+    color: var(--ink-soft);
+    cursor: pointer;
+    transition: all 0.2s;
+    user-select: none;
+  }
+
+  .vtab:hover { border-color: #b8b3aa; color: var(--ink); }
+
+  .vtab.active {
+    background: var(--ink);
+    color: white;
+    border-color: var(--ink);
+  }
+
+  .vocab-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+    gap: 10px;
+  }
+
+  .vocab-card {
+    background: white;
+    border: 1px solid var(--rule);
+    border-radius: 12px;
+    padding: 1.1rem 1.25rem;
+    display: none;
+    transition: border-color 0.2s;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .vocab-card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0;
+    width: 3px;
+    height: 100%;
+  }
+
+  .vocab-card.show { display: block; }
+  .vocab-card:hover { border-color: #c8c3ba; }
+
+  .vocab-term {
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--ink);
+    margin-bottom: 2px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .vocab-en {
+    font-size: 11px;
+    color: var(--ink-faint);
+    font-weight: 400;
+    font-style: italic;
+  }
+
+  .vocab-cat {
+    font-size: 10px;
+    font-weight: 500;
+    padding: 2px 7px;
+    border-radius: 10px;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    margin-left: auto;
+  }
+
+  .cat-safe { background: var(--w1-bg); color: var(--w1); }
+  .cat-qa   { background: var(--w2-bg); color: var(--w2); }
+  .cat-ai   { background: var(--w3-bg); color: var(--w3); }
+  .cat-agil { background: var(--w4-bg); color: var(--w4); }
+  .cat-okr  { background: #fff0f5; color: #a0305a; }
+
+  .vocab-def {
+    font-size: 12.5px;
+    color: var(--ink-soft);
+    line-height: 1.65;
+    margin-top: 6px;
+  }
+
+  .vocab-use {
+    margin-top: 8px;
+    padding-top: 8px;
+    border-top: 1px solid var(--rule);
+    font-size: 11.5px;
+    color: var(--ink-faint);
+    line-height: 1.5;
+  }
+
+  .vocab-use strong { color: var(--ink-soft); font-weight: 500; }
+
+  /* Print */
+  @media print {
+    .header { background: var(--ink) !important; -webkit-print-color-adjust: exact; }
+    body { background: white; }
+  }
+</style>
+</head>
+<body>
+<div style="background:#111;padding:12px 1.5rem;display:flex;align-items:center;gap:10px;position:sticky;top:0;z-index:100;border-bottom:1px solid rgba(255,255,255,0.06);">
+  <a href="../" style="display:inline-flex;align-items:center;gap:6px;color:rgba(255,255,255,0.5);font-size:12px;text-decoration:none;font-family:sans-serif;transition:color 0.2s;" onmouseover="this.style.color='white'" onmouseout="this.style.color='rgba(255,255,255,0.5)'">
+    ← Inicio
+  </a>
+  <span style="color:rgba(255,255,255,0.15);font-size:12px;">/</span>
+  <span style="color:rgba(255,255,255,0.4);font-size:12px;font-family:sans-serif;">Plan de Cierre de Brechas</span>
+</div>
+
+
+<!-- HEADER -->
+<div class="header">
+  <div class="header-label">Luis Otoya Sarca · Agile Coach & AI Practitioner</div>
+  <h1 class="header-title">Plan de cierre<br><em>de brechas</em></h1>
+  <p class="header-sub">Diagnóstico basado en evaluación de 12 preguntas · 4 áreas de competencia</p>
+  <div class="header-meta">
+    <div class="meta-item">
+      <span class="meta-value">4</span>
+      <span class="meta-label">Semanas</span>
+    </div>
+    <div class="meta-divider"></div>
+    <div class="meta-item">
+      <span class="meta-value">~5–6h</span>
+      <span class="meta-label">Por semana</span>
+    </div>
+    <div class="meta-divider"></div>
+    <div class="meta-item">
+      <span class="meta-value">4</span>
+      <span class="meta-label">Entregables</span>
+    </div>
+    <div class="meta-divider"></div>
+    <div class="meta-item">
+      <span class="meta-value">Mar 2026</span>
+      <span class="meta-label">Inicio sugerido</span>
+    </div>
+  </div>
+</div>
+
+<!-- LEVEL STRIP -->
+<div class="level-strip">
+  <div class="level-item">
+    <div class="level-area">Área 1</div>
+    <div class="level-name">Liderazgo & Delivery</div>
+    <div class="level-bar"><div class="level-fill" style="width:62%;background:#7c5cbf"></div></div>
+    <div style="font-size:11px;color:var(--ink-faint);margin-top:4px">Intermedio-Alto · 5.5/10</div>
+  </div>
+  <div class="level-item">
+    <div class="level-area">Área 2</div>
+    <div class="level-name">Frameworks Ágiles</div>
+    <div class="level-bar"><div class="level-fill" style="width:45%;background:#c26a1e"></div></div>
+    <div style="font-size:11px;color:var(--ink-faint);margin-top:4px">Intermedio · 4.5/10</div>
+  </div>
+  <div class="level-item">
+    <div class="level-area">Área 3</div>
+    <div class="level-name">IA Aplicada al Delivery</div>
+    <div class="level-bar"><div class="level-fill" style="width:42%;background:#c26a1e"></div></div>
+    <div style="font-size:11px;color:var(--ink-faint);margin-top:4px">Intermedio · 4.0/10</div>
+  </div>
+  <div class="level-item">
+    <div class="level-area">Área 4</div>
+    <div class="level-name">QA & Tecnología</div>
+    <div class="level-bar"><div class="level-fill" style="width:35%;background:#c0392b"></div></div>
+    <div style="font-size:11px;color:var(--ink-faint);margin-top:4px">Básico-Intermedio · 3.5/10</div>
+  </div>
+</div>
+
+<!-- MAIN -->
+<div class="main">
+
+  <!-- BRECHAS -->
+  <div class="brechas">
+    <div class="divider-label">
+      <span>Brechas identificadas</span>
+      <div class="divider-line"></div>
+    </div>
+    <div class="brecha-grid">
+      <div class="brecha-card">
+        <div class="brecha-dot" style="background:var(--gap)"></div>
+        <div>
+          <div class="brecha-title">SAFe operativo</div>
+          <div class="brecha-desc">Conocimiento declarativo sin herramientas concretas: ROAM Board, Program Board, crítica fundamentada al framework.</div>
+        </div>
+      </div>
+      <div class="brecha-card">
+        <div class="brecha-dot" style="background:var(--gap)"></div>
+        <div>
+          <div class="brecha-title">QA técnico & CI/CD</div>
+          <div class="brecha-desc">Shift-left, Quality Gates y pipeline CI/CD son la brecha más visible entre el CV declarado y el nivel demostrado.</div>
+        </div>
+      </div>
+      <div class="brecha-card">
+        <div class="brecha-dot" style="background:var(--mid)"></div>
+        <div>
+          <div class="brecha-title">Vocabulario técnico de IA</div>
+          <div class="brecha-desc">Práctica real pero falta precisión: ReAct loop, HITL, tipos de memoria de agente. En entrevista senior esto pesa.</div>
+        </div>
+      </div>
+      <div class="brecha-card">
+        <div class="brecha-dot" style="background:var(--mid)"></div>
+        <div>
+          <div class="brecha-title">OKRs: output vs outcome</div>
+          <div class="brecha-desc">Se identifica el error sintáctico pero no el antipatrón más frecuente: KRs de actividad en vez de resultados de negocio.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SEMANA 1 -->
+  <div class="week">
+    <div class="divider-label">
+      <span>Semanas del plan</span>
+      <div class="divider-line"></div>
+    </div>
+    <div class="week-head">
+      <div class="week-number wc1">
+        <span class="week-num-label">Sem</span>
+        <span class="week-num-value">01</span>
+      </div>
+      <div class="week-info">
+        <div class="week-title">SAFe en profundidad</div>
+        <div class="week-focus">Objetivo: pasar de conocimiento declarativo a operativo · Brecha crítica #1</div>
+      </div>
+    </div>
+    <div class="tasks">
+
+      <div class="task">
+        <div>
+          <div class="task-icon-title">
+            <div class="task-num wc1">1</div>
+            <div class="task-title">Estudia el SAFe Big Picture completo</div>
+          </div>
+          <div class="task-desc">Enfócate en los 4 niveles: Team, Program, Large Solution y Portfolio. Al terminar, dibuja el Big Picture de memoria sin consultar. Si puedes explicarlo sin apoyarte en notas, lo dominas.</div>
+          <div class="tags">
+            <span class="tag">scaledagileframework.com</span>
+            <span class="tag">2h total</span>
+            <span class="tag">Diagrama propio al terminar</span>
+          </div>
+        </div>
+        <span class="effort-badge wc1">2h</span>
+      </div>
+
+      <div class="task">
+        <div>
+          <div class="task-icon-title">
+            <div class="task-num wc1">2</div>
+            <div class="task-title">Domina el ROAM Board y Program Board</div>
+          </div>
+          <div class="task-desc">Practica clasificar riesgos en Resolved / Owned / Accepted / Mitigated con 10 riesgos reales de tus proyectos actuales. El Program Board conecta dependencias entre equipos — dibuja uno desde cero con los squads de tu tribu.</div>
+          <div class="tags">
+            <span class="tag">Ejercicio: 10 riesgos reales → ROAM</span>
+            <span class="tag">1.5h</span>
+          </div>
+        </div>
+        <span class="effort-badge wc1">1.5h</span>
+      </div>
+
+      <div class="task">
+        <div>
+          <div class="task-icon-title">
+            <div class="task-num wc1">3</div>
+            <div class="task-title">Construye tu crítica fundamentada a SAFe</div>
+          </div>
+          <div class="task-desc">Investiga el concepto de "agilidad cosmética", el overhead ceremonial y por qué SAFe falla en equipos pequeños y startups. Lee artículos de Ron Jeffries y Dave Thomas. Escribe 5 bullets con tu postura propia — esto es lo que distingue a un senior en entrevistas.</div>
+          <div class="tags">
+            <span class="tag">Ron Jeffries: "SAFe is not Agile"</span>
+            <span class="tag">Dave Thomas: "Agile is Dead"</span>
+            <span class="tag">1.5h</span>
+          </div>
+        </div>
+        <span class="effort-badge wc1">1.5h</span>
+      </div>
+
+    </div>
+    <div class="entregable wc1" style="border-color: var(--w1);">
+      <span class="entregable-icon">📋</span>
+      <div class="entregable-text">
+        <strong>Entregable semana 1:</strong> Big Picture anotado con vocabulario propio + ROAM de 10 riesgos reales de tu tribu + 5 bullets de tu crítica a SAFe.
+      </div>
+    </div>
+  </div>
+
+  <!-- SEMANA 2 -->
+  <div class="week">
+    <div class="week-head">
+      <div class="week-number wc2">
+        <span class="week-num-label">Sem</span>
+        <span class="week-num-value">02</span>
+      </div>
+      <div class="week-info">
+        <div class="week-title">QA técnico y CI/CD</div>
+        <div class="week-focus">Objetivo: cerrar la brecha más visible entre CV y nivel demostrado · Brecha crítica #2</div>
+      </div>
+    </div>
+    <div class="tasks">
+
+      <div class="task">
+        <div>
+          <div class="task-icon-title">
+            <div class="task-num wc2">1</div>
+            <div class="task-title">Shift-left en la práctica: Definition of Ready con QA</div>
+          </div>
+          <div class="task-desc">Define una DoR (Definition of Ready) con criterios testeables para tu equipo actual. Incluye: ACs verificables antes de que el dev empiece, cobertura esperada por historia, casos de borde identificados, pair testing dev+QA durante el sprint. Aplícala esta misma semana.</div>
+          <div class="tags">
+            <span class="tag">Template DoR + checklist QA</span>
+            <span class="tag">2h práctica</span>
+            <span class="tag">Aplicación directa en sprint</span>
+          </div>
+        </div>
+        <span class="effort-badge wc2">2h</span>
+      </div>
+
+      <div class="task">
+        <div>
+          <div class="task-icon-title">
+            <div class="task-num wc2">2</div>
+            <div class="task-title">Quality Gates vs Criterios de Aceptación: el flujo real</div>
+          </div>
+          <div class="task-desc">Aprende cómo los ACs se traducen a tests automatizados y cómo los Quality Gates los ejecutan en el pipeline. El flujo básico: commit → lint → unit tests → integration tests → gate → merge. Si el gate falla, el merge no pasa. Eso es shift-left en CI/CD.</div>
+          <div class="tags">
+            <span class="tag">Martin Fowler: continuousdelivery.com</span>
+            <span class="tag">Ejemplo en GitHub Actions (gratis)</span>
+            <span class="tag">1.5h</span>
+          </div>
+        </div>
+        <span class="effort-badge wc2">1.5h</span>
+      </div>
+
+      <div class="task">
+        <div>
+          <div class="task-icon-title">
+            <div class="task-num wc2">3</div>
+            <div class="task-title">Diseña tu runbook de incidente en producción</div>
+          </div>
+          <div class="task-desc">Crea un protocolo de 1 página para bugs críticos: decisión de rollback en los primeros 5 min, escalation path cuando el dev no está disponible, comunicación al cliente cada 30-45 min con estado real, template de post-mortem. Este documento se usa en entrevistas técnicas senior.</div>
+          <div class="tags">
+            <span class="tag">Google SRE Workbook (gratis online)</span>
+            <span class="tag">1h de diseño</span>
+          </div>
+        </div>
+        <span class="effort-badge wc2">1h</span>
+      </div>
+
+    </div>
+    <div class="entregable wc2" style="border-color: var(--w2);">
+      <span class="entregable-icon">📋</span>
+      <div class="entregable-text">
+        <strong>Entregable semana 2:</strong> DoR con QA integrado aplicada en tu sprint actual + Runbook de incidente de 1 página listo para mostrar en entrevista.
+      </div>
+    </div>
+  </div>
+
+  <!-- SEMANA 3 -->
+  <div class="week">
+    <div class="week-head">
+      <div class="week-number wc3">
+        <span class="week-num-label">Sem</span>
+        <span class="week-num-value">03</span>
+      </div>
+      <div class="week-info">
+        <div class="week-title">IA aplicada: vocabulario y arquitectura</div>
+        <div class="week-focus">Objetivo: de practicante a arquitecto de soluciones IA con lenguaje técnico preciso</div>
+      </div>
+    </div>
+    <div class="tasks">
+
+      <div class="task">
+        <div>
+          <div class="task-icon-title">
+            <div class="task-num wc3">1</div>
+            <div class="task-title">Domina el vocabulario técnico de agentes IA</div>
+          </div>
+          <div class="task-desc">Aprende y usa con precisión estos términos: ReAct loop (Reason + Act), tool calling, memoria de corto y largo plazo, RAG (Retrieval Augmented Generation), human-in-the-loop (HITL), orchestrator vs subagent. Escribe una definición propia de cada uno en 2-3 líneas.</div>
+          <div class="tags">
+            <span class="tag">docs.anthropic.com/agents</span>
+            <span class="tag">LangChain conceptual docs</span>
+            <span class="tag">2h</span>
+          </div>
+        </div>
+        <span class="effort-badge wc3">2h</span>
+      </div>
+
+      <div class="task">
+        <div>
+          <div class="task-icon-title">
+            <div class="task-num wc3">2</div>
+            <div class="task-title">Actualiza el AIDE Framework con vocabulario técnico</div>
+          </div>
+          <div class="task-desc">Revisa cada capa del AIDE (Discovery, Planning, Dev, QA, Delivery, Gobernanza) y mapea qué tipo de agente o herramienta IA se usa en cada una. Especifica: qué tipo de memoria usa, si hay HITL, qué herramienta (tool) llama el agente. Eso convierte el AIDE en un framework técnicamente sólido, no solo conceptual.</div>
+          <div class="tags">
+            <span class="tag">Revisión de 6 capas del AIDE</span>
+            <span class="tag">Documento actualizado</span>
+            <span class="tag">2h</span>
+          </div>
+        </div>
+        <span class="effort-badge wc3">2h</span>
+      </div>
+
+      <div class="task">
+        <div>
+          <div class="task-icon-title">
+            <div class="task-num wc3">3</div>
+            <div class="task-title">Caso de uso IA para PM sin perfil técnico</div>
+          </div>
+          <div class="task-desc">Elige un pain point real de tu PM (ej: redactar criterios de aceptación). Documenta: prompt estructurado en Claude, flujo de validación HITL, métricas de éxito (tiempo ahorrado, calidad de ACs) y riesgos controlados (alucinaciones, dependencia). Este caso es tu demostración práctica en entrevistas.</div>
+          <div class="tags">
+            <span class="tag">Caso real documentado</span>
+            <span class="tag">Métricas antes/después</span>
+            <span class="tag">1h</span>
+          </div>
+        </div>
+        <span class="effort-badge wc3">1h</span>
+      </div>
+
+    </div>
+    <div class="entregable wc3" style="border-color: var(--w3);">
+      <span class="entregable-icon">📋</span>
+      <div class="entregable-text">
+        <strong>Entregable semana 3:</strong> AIDE Framework v2 con vocabulario técnico mapeado por capa + caso de uso IA para PM documentado con métricas.
+      </div>
+    </div>
+  </div>
+
+  <!-- SEMANA 4 -->
+  <div class="week">
+    <div class="week-head">
+      <div class="week-number wc4">
+        <span class="week-num-label">Sem</span>
+        <span class="week-num-value">04</span>
+      </div>
+      <div class="week-info">
+        <div class="week-title">OKRs sólidos + simulacro de entrevista</div>
+        <div class="week-focus">Objetivo: consolidar todo lo aprendido y validar el avance real</div>
+      </div>
+    </div>
+    <div class="tasks">
+
+      <div class="task">
+        <div>
+          <div class="task-icon-title">
+            <div class="task-num wc4">1</div>
+            <div class="task-title">Reformula los OKRs de tu tribu: output → outcome</div>
+          </div>
+          <div class="task-desc">Aplica el filtro a cada KR existente: ¿esto mide una actividad o un resultado de negocio? Reescríbelos midiendo outcomes reales: retención de usuarios, reducción de defectos en producción, tiempo al mercado. Ejemplo de transformación — malo: "lanzar 3 features nuevas" · bueno: "reducir churn en 15% cerrando los 3 friction points más reportados".</div>
+          <div class="tags">
+            <span class="tag">Libro: Measure What Matters · John Doerr</span>
+            <span class="tag">OKRs propios reformulados</span>
+            <span class="tag">1.5h</span>
+          </div>
+        </div>
+        <span class="effort-badge wc4">1.5h</span>
+      </div>
+
+      <div class="task">
+        <div>
+          <div class="task-icon-title">
+            <div class="task-num wc4">2</div>
+            <div class="task-title">Simulacro de las 12 preguntas de evaluación</div>
+          </div>
+          <div class="task-desc">Responde en voz alta o por escrito (cronometrado, 5 min por pregunta) las 12 preguntas de la evaluación original. Compara con tus respuestas iniciales. La diferencia entre ambas versiones es tu avance real y te indica si estás listo para entrevistas o necesitas más tiempo en alguna área.</div>
+          <div class="tags">
+            <span class="tag">Auto-evaluación con rúbrica</span>
+            <span class="tag">1h total · grabación de voz recomendada</span>
+          </div>
+        </div>
+        <span class="effort-badge wc4">1h</span>
+      </div>
+
+      <div class="task">
+        <div>
+          <div class="task-icon-title">
+            <div class="task-num wc4">3</div>
+            <div class="task-title">Actualiza el CV con evidencia concreta y lenguaje técnico</div>
+          </div>
+          <div class="task-desc">Cada competencia del CV debe tener al menos 1 logro medible. Reemplaza verbos genéricos por resultados específicos. En lugar de "lideré equipos ágiles" → "reduje Lead Time 25% en Q3 2025 mediante slicing de historias y automatización de smoke tests en CI/CD con 4 squads en portafolio multi-cliente". Incorpora el vocabulario técnico que aprendiste en las semanas anteriores.</div>
+          <div class="tags">
+            <span class="tag">CV v2 con lenguaje técnico</span>
+            <span class="tag">Logros medibles por rol</span>
+            <span class="tag">1.5h</span>
+          </div>
+        </div>
+        <span class="effort-badge wc4">1.5h</span>
+      </div>
+
+    </div>
+    <div class="entregable wc4" style="border-color: var(--w4);">
+      <span class="entregable-icon">📋</span>
+      <div class="entregable-text">
+        <strong>Entregable semana 4:</strong> OKRs reformulados con filtro outcome + simulacro completado + CV v2 con logros medibles y vocabulario técnico actualizado.
+      </div>
+    </div>
+  </div>
+
+  <!-- RECOMENDACIONES FINALES -->
+  <div>
+    <div class="divider-label">
+      <span>Recomendaciones para cerrar brechas</span>
+      <div class="divider-line"></div>
+    </div>
+    <div class="rec-list">
+      <div class="rec-item" style="border-left-color: var(--w1);">Estudia el <strong>SAFe Big Picture</strong> completo antes de cualquier entrevista en NTT Data o Globant: ROAM Board, ART events, Program Board y la diferencia entre Value Stream y ART son preguntas frecuentes en el proceso de selección.</div>
+      <div class="rec-item" style="border-left-color: var(--w2);">Para QA: el documento más valioso que puedes presentar en una entrevista es una <strong>Definition of Ready con criterios testeables</strong> y un runbook de incidente real. Es evidencia práctica que pocos candidatos tienen.</div>
+      <div class="rec-item" style="border-left-color: var(--w3);">Incorpora el vocabulario de agentes (<strong>ReAct, HITL, memory types, tool calling</strong>) al AIDE Framework. Eso transforma el framework de un modelo conceptual a una arquitectura técnicamente defendible.</div>
+      <div class="rec-item" style="border-left-color: var(--w4);">El factor que más limita tu acceso a Encora y Globant no es tu experiencia — es el <strong>inglés</strong>. Sumar inglés técnico en paralelo a este plan puede subir tu probabilidad de acceso a Globant de 35% a 60%+.</div>
+    </div>
+  </div>
+
+  <!-- VOCABULARIO TÉCNICO -->
+  <div class="vocab-section">
+    <div class="divider-label">
+      <span>Vocabulario técnico detectado</span>
+      <div class="divider-line"></div>
+    </div>
+    <p style="font-size:13px; color:var(--ink-soft); margin-bottom:1.25rem; font-weight:300;">Términos que aparecieron en la evaluación con imprecisiones. Dominarlos con precisión marca la diferencia en entrevistas senior.</p>
+
+    <div class="vocab-tabs">
+      <button class="vtab active" onclick="filterVocab('all', this)">Todos</button>
+      <button class="vtab" onclick="filterVocab('safe', this)">SAFe</button>
+      <button class="vtab" onclick="filterVocab('ai', this)">IA & Agentes</button>
+      <button class="vtab" onclick="filterVocab('qa', this)">QA & CI/CD</button>
+      <button class="vtab" onclick="filterVocab('agil', this)">Ágil</button>
+      <button class="vtab" onclick="filterVocab('okr', this)">OKRs</button>
+    </div>
+
+    <div class="vocab-grid" id="vocab-grid">
+
+      <!-- SAFe -->
+      <div class="vocab-card show" data-cat="safe">
+        <div style="position:absolute;top:0;left:0;width:3px;height:100%;background:var(--w1);border-radius:3px 0 0 3px"></div>
+        <div class="vocab-term">ROAM Board <span class="vocab-cat cat-safe">SAFe</span></div>
+        <div class="vocab-en">Resolved · Owned · Accepted · Mitigated</div>
+        <div class="vocab-def">Herramienta del PI Planning para clasificar riesgos entre squads. Cada riesgo se categoriza: ya resuelto, alguien lo tomó, se acepta el impacto, o hay plan de mitigación. Es el artefacto que faltó mencionar en tu respuesta sobre PI Planning.</div>
+        <div class="vocab-use"><strong>Cómo usarlo:</strong> "ROAMeamos las dependencias críticas; 2 quedaron sin owner — ahí convoco al Architecture Owner antes de cerrar el PI."</div>
+      </div>
+
+      <div class="vocab-card show" data-cat="safe">
+        <div style="position:absolute;top:0;left:0;width:3px;height:100%;background:var(--w1);border-radius:3px 0 0 3px"></div>
+        <div class="vocab-term">Program Board <span class="vocab-cat cat-safe">SAFe</span></div>
+        <div class="vocab-def">Artefacto visual del PI Planning que muestra las features de cada equipo en el PI con sus dependencias marcadas. Es el mapa de compromisos del ART. Sin él, el PI Planning queda incompleto.</div>
+        <div class="vocab-use"><strong>Cómo usarlo:</strong> "El Program Board reveló que 3 squads dependían del mismo componente — lo escalé como riesgo ROAM antes de cerrar el PI."</div>
+      </div>
+
+      <div class="vocab-card show" data-cat="safe">
+        <div style="position:absolute;top:0;left:0;width:3px;height:100%;background:var(--w1);border-radius:3px 0 0 3px"></div>
+        <div class="vocab-term">ART <span class="vocab-cat cat-safe">SAFe</span></div>
+        <div class="vocab-en">Agile Release Train</div>
+        <div class="vocab-def">Unidad de 50–125 personas (8–12 equipos) que planifican, comprometen y ejecutan juntos en un PI de 8–12 semanas. Equivale a una tribu. Es la estructura organizacional central de SAFe a nivel Program.</div>
+        <div class="vocab-use"><strong>Cómo usarlo:</strong> "Una tribu de 4–5 squads como la de Lilab funcionaría como un ART pequeño dentro de SAFe."</div>
+      </div>
+
+      <div class="vocab-card show" data-cat="safe">
+        <div style="position:absolute;top:0;left:0;width:3px;height:100%;background:var(--w1);border-radius:3px 0 0 3px"></div>
+        <div class="vocab-term">Agilidad cosmética <span class="vocab-cat cat-safe">SAFe</span></div>
+        <div class="vocab-def">Antipatrón donde se adoptan ceremonias y nomenclatura ágil sin cambiar el mindset ni la toma de decisiones. Se "hace Agile" sin "ser ágil". Es la crítica más válida a SAFe mal implementado y la respuesta que faltó en la evaluación.</div>
+        <div class="vocab-use"><strong>Cómo usarlo:</strong> "El riesgo de SAFe en organizaciones jerárquicas es la agilidad cosmética: adoptas el Big Picture pero las decisiones siguen siendo top-down."</div>
+      </div>
+
+      <div class="vocab-card show" data-cat="safe">
+        <div style="position:absolute;top:0;left:0;width:3px;height:100%;background:var(--w1);border-radius:3px 0 0 3px"></div>
+        <div class="vocab-term">unFIX — Crews <span class="vocab-cat cat-safe">SAFe</span></div>
+        <div class="vocab-en">Jurgen Appelo · 2022</div>
+        <div class="vocab-def">Modelo que define tipos de crews con propósitos específicos: Value Crews (valor), Facilitation Crews (coaching), Governance Crews (decisiones), Capabilities Crews (expertise). A diferencia de SAFe, no prescribe jerarquía fija — la estructura emerge. Esta era la respuesta esperada en la evaluación.</div>
+        <div class="vocab-use"><strong>Cómo usarlo:</strong> "unFIX para organizaciones con alta madurez que diseñan su propia estructura. SAFe para empresas grandes que necesitan prescripción."</div>
+      </div>
+
+      <!-- IA & AGENTES -->
+      <div class="vocab-card show" data-cat="ai">
+        <div style="position:absolute;top:0;left:0;width:3px;height:100%;background:var(--w3);border-radius:3px 0 0 3px"></div>
+        <div class="vocab-term">ReAct Loop <span class="vocab-cat cat-ai">IA</span></div>
+        <div class="vocab-en">Reason + Act · Yao et al., 2022</div>
+        <div class="vocab-def">Patrón de razonamiento donde el agente alterna entre razonar sobre el problema (Reason) y ejecutar una acción (Act), evaluando el resultado antes de continuar. Esto diferencia al agente de un prompt encadenado: el agente decide el siguiente paso según la salida anterior.</div>
+        <div class="vocab-use"><strong>Cómo usarlo:</strong> "El agente de QA usa ReAct loop: razona sobre los ACs, ejecuta los test cases, evalúa resultados y decide si escalar al equipo."</div>
+      </div>
+
+      <div class="vocab-card show" data-cat="ai">
+        <div style="position:absolute;top:0;left:0;width:3px;height:100%;background:var(--w3);border-radius:3px 0 0 3px"></div>
+        <div class="vocab-term">HITL <span class="vocab-cat cat-ai">IA</span></div>
+        <div class="vocab-en">Human-in-the-Loop</div>
+        <div class="vocab-def">Diseño donde un humano valida las salidas del agente IA antes de que sean usadas o ejecutadas. Es el mecanismo principal para controlar la dependencia del equipo en IA y evitar alucinaciones. Lo que describes en tu práctica actual tiene nombre: HITL.</div>
+        <div class="vocab-use"><strong>Cómo usarlo:</strong> "En nuestro flujo de generación de historias, implementamos HITL: el PM revisa y ajusta antes de que el squad las tome al sprint."</div>
+      </div>
+
+      <div class="vocab-card show" data-cat="ai">
+        <div style="position:absolute;top:0;left:0;width:3px;height:100%;background:var(--w3);border-radius:3px 0 0 3px"></div>
+        <div class="vocab-term">Tool Calling <span class="vocab-cat cat-ai">IA</span></div>
+        <div class="vocab-def">Capacidad de un agente IA de invocar herramientas externas: APIs, bases de datos, buscadores, código. Permite al agente leer Jira, escribir en Confluence, ejecutar scripts. Es lo que hace al agente más poderoso que un chat conversacional.</div>
+        <div class="vocab-use"><strong>Cómo usarlo:</strong> "El agente de reporting usa tool calling para leer métricas de Jira, calcular DORA metrics y redactar el QBR automáticamente."</div>
+      </div>
+
+      <div class="vocab-card show" data-cat="ai">
+        <div style="position:absolute;top:0;left:0;width:3px;height:100%;background:var(--w3);border-radius:3px 0 0 3px"></div>
+        <div class="vocab-term">Tipos de memoria de agente <span class="vocab-cat cat-ai">IA</span></div>
+        <div class="vocab-def">4 tipos: <strong>en contexto</strong> (prompt actual), <strong>externa</strong> (base vectorial consultable), <strong>episódica</strong> (historial de sesiones pasadas), <strong>semántica</strong> (conocimiento general). La elección impacta el costo, la precisión y la latencia del agente.</div>
+        <div class="vocab-use"><strong>Cómo usarlo:</strong> "Para el agente de requerimientos uso memoria externa con RAG sobre la documentación del cliente, y memoria en contexto para la sesión actual."</div>
+      </div>
+
+      <div class="vocab-card show" data-cat="ai">
+        <div style="position:absolute;top:0;left:0;width:3px;height:100%;background:var(--w3);border-radius:3px 0 0 3px"></div>
+        <div class="vocab-term">RAG <span class="vocab-cat cat-ai">IA</span></div>
+        <div class="vocab-en">Retrieval-Augmented Generation</div>
+        <div class="vocab-def">Técnica donde el agente consulta una base de conocimiento externa (documentos, wikis, tickets) antes de generar una respuesta. Ancla las salidas en información real y reduce alucinaciones. Esencial en pipelines de delivery con documentación de proyecto.</div>
+        <div class="vocab-use"><strong>Cómo usarlo:</strong> "El agente de análisis usa RAG sobre el backlog histórico del cliente para detectar duplicados y contradicciones antes de refinar las historias."</div>
+      </div>
+
+      <div class="vocab-card show" data-cat="ai">
+        <div style="position:absolute;top:0;left:0;width:3px;height:100%;background:var(--w3);border-radius:3px 0 0 3px"></div>
+        <div class="vocab-term">Orchestrator vs Subagent <span class="vocab-cat cat-ai">IA</span></div>
+        <div class="vocab-def">El <strong>orchestrator</strong> coordina el flujo y decide qué subagente invocar. Los <strong>subagentes</strong> ejecutan tareas específicas (buscar, escribir, analizar). Es la arquitectura del AIDE cuando automatiza múltiples capas en paralelo.</div>
+        <div class="vocab-use"><strong>Cómo usarlo:</strong> "En el AIDE, el orchestrator de Planning coordina 3 subagentes: uno analiza el backlog, uno genera historias y uno detecta dependencias."</div>
+      </div>
+
+      <!-- QA & CI/CD -->
+      <div class="vocab-card show" data-cat="qa">
+        <div style="position:absolute;top:0;left:0;width:3px;height:100%;background:var(--w2);border-radius:3px 0 0 3px"></div>
+        <div class="vocab-term">Shift-left Testing <span class="vocab-cat cat-qa">QA</span></div>
+        <div class="vocab-def">Mover QA hacia la izquierda del ciclo: en lugar de probar al final del sprint, QA co-define ACs testeables en el refinamiento y las pruebas se escriben junto con el código. Involucra un cambio en la DoR, no solo en los procesos del equipo de testing.</div>
+        <div class="vocab-use"><strong>Cómo usarlo:</strong> "Implementamos shift-left: cada historia tiene ACs con Given-When-Then antes de entrar al sprint — es parte de la Definition of Ready."</div>
+      </div>
+
+      <div class="vocab-card show" data-cat="qa">
+        <div style="position:absolute;top:0;left:0;width:3px;height:100%;background:var(--w2);border-radius:3px 0 0 3px"></div>
+        <div class="vocab-term">Quality Gates <span class="vocab-cat cat-qa">QA</span></div>
+        <div class="vocab-def">Puntos de control automáticos en el pipeline CI/CD que bloquean el merge si no se cumplen criterios técnicos: cobertura mínima, cero vulnerabilidades críticas, build verde, tests pasando. Son automáticos y técnicos — distintos de los criterios de aceptación funcionales del negocio.</div>
+        <div class="vocab-use"><strong>Cómo usarlo:</strong> "Los ACs definen qué espera el negocio. Los Quality Gates garantizan los estándares técnicos — no se puede mergear sin pasar ambos."</div>
+      </div>
+
+      <div class="vocab-card show" data-cat="qa">
+        <div style="position:absolute;top:0;left:0;width:3px;height:100%;background:var(--w2);border-radius:3px 0 0 3px"></div>
+        <div class="vocab-term">Definition of Ready (DoR) <span class="vocab-cat cat-qa">QA</span></div>
+        <div class="vocab-def">Criterios que una historia debe cumplir antes de entrar al sprint. Con shift-left incluye: ACs testeables, casos de borde identificados, dependencias resueltas, diseño UX aprobado. Es la barrera que previene el retrabajo post-sprint y el antipatrón de "QA al final".</div>
+        <div class="vocab-use"><strong>Cómo usarlo:</strong> "Nuestra DoR con QA integrado redujo el retrabajo post-sprint porque los criterios de borde ya estaban definidos antes de que el dev empezara."</div>
+      </div>
+
+      <div class="vocab-card show" data-cat="qa">
+        <div style="position:absolute;top:0;left:0;width:3px;height:100%;background:var(--w2);border-radius:3px 0 0 3px"></div>
+        <div class="vocab-term">Runbook de incidente <span class="vocab-cat cat-qa">QA</span></div>
+        <div class="vocab-def">Documento operativo con pasos exactos ante un incidente en producción: árbol de decisión de rollback, escalation path con tiempos, plantilla de comunicación al cliente cada 30–45 min, template de post-mortem. Reduce improvisación bajo presión y es evidencia de madurez operativa.</div>
+        <div class="vocab-use"><strong>Cómo usarlo:</strong> "Cuando detectamos el bug crítico, activamos el runbook: 5 min para evaluar rollback, 15 min primer update al cliente, cada 30 min hasta resolver."</div>
+      </div>
+
+      <div class="vocab-card show" data-cat="qa">
+        <div style="position:absolute;top:0;left:0;width:3px;height:100%;background:var(--w2);border-radius:3px 0 0 3px"></div>
+        <div class="vocab-term">DORA Metrics <span class="vocab-cat cat-qa">QA</span></div>
+        <div class="vocab-en">DevOps Research and Assessment</div>
+        <div class="vocab-def">4 métricas de rendimiento de equipos de software: <strong>Deployment Frequency</strong>, <strong>Lead Time for Changes</strong> (commit al deploy), <strong>Change Failure Rate</strong> (% de deploys con incidente) y <strong>Time to Restore</strong>. Son el estándar para reportar madurez de delivery en entrevistas de empresas como NTT Data y Globant.</div>
+        <div class="vocab-use"><strong>Cómo usarlo:</strong> "Nuestro Lead Time bajó de 18 a 11 días en Q3 y el Change Failure Rate se mantuvo bajo 5% — calidad sin sacrificar velocidad."</div>
+      </div>
+
+      <!-- ÁGIL -->
+      <div class="vocab-card show" data-cat="agil">
+        <div style="position:absolute;top:0;left:0;width:3px;height:100%;background:var(--w4);border-radius:3px 0 0 3px"></div>
+        <div class="vocab-term">CFD <span class="vocab-cat cat-agil">Ágil</span></div>
+        <div class="vocab-en">Cumulative Flow Diagram</div>
+        <div class="vocab-def">Gráfico que acumula el trabajo en cada estado del flujo a lo largo del tiempo. Una banda que se ensancha indica un cuello de botella. Antes de diagnosticar un lead time alto, el CFD ya te dice dónde está el bloqueo — esta era la respuesta esperada antes de actuar sobre el squad con 28 días de lead time.</div>
+        <div class="vocab-use"><strong>Cómo usarlo:</strong> "Antes de actuar, leo el CFD: si la banda de 'in progress' crece hacia la derecha, el problema es WIP sin límite, no dependencias externas."</div>
+      </div>
+
+      <div class="vocab-card show" data-cat="agil">
+        <div style="position:absolute;top:0;left:0;width:3px;height:100%;background:var(--w4);border-radius:3px 0 0 3px"></div>
+        <div class="vocab-term">Aging WIP <span class="vocab-cat cat-agil">Ágil</span></div>
+        <div class="vocab-en">Work In Progress envejecido</div>
+        <div class="vocab-def">Reporte que muestra cuánto tiempo lleva cada ítem en progreso sin completarse. Los outliers (ítems muy superiores al promedio) son la causa raíz del lead time elevado. Es la primera herramienta de diagnóstico antes de cualquier intervención.</div>
+        <div class="vocab-use"><strong>Cómo usarlo:</strong> "El Aging WIP mostró 4 ítems con más de 20 días — todos bloqueados por el mismo sistema externo. Ese fue el dato para escalar al cliente."</div>
+      </div>
+
+      <div class="vocab-card show" data-cat="agil">
+        <div style="position:absolute;top:0;left:0;width:3px;height:100%;background:var(--w4);border-radius:3px 0 0 3px"></div>
+        <div class="vocab-term">Story Slicing <span class="vocab-cat cat-agil">Ágil</span></div>
+        <div class="vocab-en">Descomposición vertical</div>
+        <div class="vocab-def">Técnica para dividir historias grandes en piezas pequeñas con valor independiente, reduciendo el Lead Time por ítem. INVEST: cada historia Independiente, Negociable, Valiosa, Estimable, Small y Testeable. Una historia de 28 días probablemente es una épica disfrazada.</div>
+        <div class="vocab-use"><strong>Cómo usarlo:</strong> "Con slicing bajamos las historias de 18 a 5 puntos promedio — el Lead Time cayó 30% sin cambiar la velocidad del equipo."</div>
+      </div>
+
+      <div class="vocab-card show" data-cat="agil">
+        <div style="position:absolute;top:0;left:0;width:3px;height:100%;background:var(--w4);border-radius:3px 0 0 3px"></div>
+        <div class="vocab-term">Spike <span class="vocab-cat cat-agil">Ágil</span></div>
+        <div class="vocab-def">Historia técnica timeboxed cuyo único objetivo es reducir incertidumbre, no entregar funcionalidad. El output es conocimiento documentado: una decisión técnica, una arquitectura propuesta, una estimación confiable. Se usa cuando el equipo no puede estimar por falta de información.</div>
+        <div class="vocab-use"><strong>Cómo usarlo:</strong> "Antes de estimar la integración con el legado, abrí un spike de 2 días. El resultado fue una arquitectura propuesta y una estimación confiable para el backlog."</div>
+      </div>
+
+      <!-- OKRs -->
+      <div class="vocab-card show" data-cat="okr">
+        <div style="position:absolute;top:0;left:0;width:3px;height:100%;background:#a0305a;border-radius:3px 0 0 3px"></div>
+        <div class="vocab-term">Output vs Outcome <span class="vocab-cat cat-okr">OKRs</span></div>
+        <div class="vocab-def">La distinción más crítica en OKRs. Un <strong>output</strong> es una entrega o actividad ("lanzar 3 features"). Un <strong>outcome</strong> es un resultado con impacto medible ("reducir churn en 15%"). Los KRs de actividad crean ilusión de progreso sin confirmar que el negocio mejoró. Este era el antipatrón faltante en la evaluación.</div>
+        <div class="vocab-use"><strong>Test rápido:</strong> "¿Podría entregar esto y que el negocio no mejore?" Si la respuesta es sí, es output.</div>
+      </div>
+
+      <div class="vocab-card show" data-cat="okr">
+        <div style="position:absolute;top:0;left:0;width:3px;height:100%;background:#a0305a;border-radius:3px 0 0 3px"></div>
+        <div class="vocab-term">KR bien formulado <span class="vocab-cat cat-okr">OKRs</span></div>
+        <div class="vocab-def">Un Key Result correcto tiene: métrica específica, baseline (valor de inicio), objetivo, plazo y responsable. Sin baseline no se mide el avance real. Sin objetivo no se sabe cuándo se logró. La formulación correcta es: "Reducir [métrica] de [baseline] a [objetivo] para [fecha]."</div>
+        <div class="vocab-use"><strong>Ejemplo correcto:</strong> "Reducir bugs escapados a producción de 28% a 12% — baseline Q4 2025 — para fin de Q2 2026."</div>
+      </div>
+
+      <div class="vocab-card show" data-cat="okr">
+        <div style="position:absolute;top:0;left:0;width:3px;height:100%;background:#a0305a;border-radius:3px 0 0 3px"></div>
+        <div class="vocab-term">OKR de salud vs ambición <span class="vocab-cat cat-okr">OKRs</span></div>
+        <div class="vocab-def">Los <strong>OKRs de salud</strong> mantienen el negocio funcionando (disponibilidad, satisfacción). Los <strong>OKRs de ambición</strong> buscan transformación — lograr el 70% ya es éxito. Mezclarlos sin diferenciarlos genera frustración en equipos que "fallan" en objetivos diseñados para ser stretch goals.</div>
+        <div class="vocab-use"><strong>Cómo usarlo:</strong> "2 OKRs de salud (SLAs, capacidad del equipo) y 1 OKR de ambición (reducir time-to-market 40%) — evaluados con criterios distintos."</div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- RESUMEN DE ESFUERZO -->
+  <div style="margin-top:2.5rem; background: var(--ink); color: white; border-radius: 14px; padding: 1.5rem 2rem; display: flex; gap: 2rem; flex-wrap: wrap; align-items: center;">
+    <div>
+      <div style="font-family:'DM Serif Display',serif; font-size:1.2rem; margin-bottom:4px;">Esfuerzo total estimado</div>
+      <div style="font-size:13px; color:rgba(255,255,255,0.5)">4 semanas · aplicación directa en tu trabajo actual</div>
+    </div>
+    <div style="flex:1; display:flex; gap:2rem; justify-content:flex-end; flex-wrap:wrap;">
+      <div style="text-align:center">
+        <div style="font-size:22px; font-weight:500">~22h</div>
+        <div style="font-size:11px; color:rgba(255,255,255,0.4); margin-top:2px">Horas totales</div>
+      </div>
+      <div style="text-align:center">
+        <div style="font-size:22px; font-weight:500">4</div>
+        <div style="font-size:11px; color:rgba(255,255,255,0.4); margin-top:2px">Entregables</div>
+      </div>
+      <div style="text-align:center">
+        <div style="font-size:22px; font-weight:500">Sem. 4</div>
+        <div style="font-size:11px; color:rgba(255,255,255,0.4); margin-top:2px">Simulacro de cierre</div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<!-- FOOTER -->
+<div class="footer">
+  Generado para <strong>Luis Otoya Sarca</strong> · Agile Coach & AI Practitioner · Lima, Perú · Marzo 2026
+</div>
+
+<script>
+  function filterVocab(cat, btn) {
+    document.querySelectorAll('.vtab').forEach(t => t.classList.remove('active'));
+    btn.classList.add('active');
+    document.querySelectorAll('.vocab-card').forEach(card => {
+      if (cat === 'all' || card.dataset.cat === cat) {
+        card.classList.add('show');
+      } else {
+        card.classList.remove('show');
+      }
+    });
+  }
+</script>
+<script>
+if ('serviceWorker' in navigator) {
+  navigator.serviceWorker.register('../sw.js');
+}
+</script>
+</body>
+</html>
