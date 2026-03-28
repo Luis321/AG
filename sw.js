@@ -5,7 +5,7 @@
 // los dispositivos sin borrar cache manualmente
 // ══════════════════════════════════════════════
 
-const CACHE_VERSION = 'v8-playbook-smcoach';
+const CACHE_VERSION = 'v9-fix-404-directories';
 const CACHE_NAME    = `ag-prep-${CACHE_VERSION}`;
 
 const PRECACHE_URLS = [
