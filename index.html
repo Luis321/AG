@@ -5,62 +5,140 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Luis Otoya — Prep NTT DATA</title>
   <meta name="theme-color" content="#0f172a"/>
-  <meta name="description" content="Plan de cierre de brechas + guías de estudio con quizzes"/>
+  <meta name="description" content="Plan de cierre de brechas + guías de estudio con quizzes · Luis Otoya Sarca"/>
   <link rel="manifest" href="manifest.json"/>
   <link rel="apple-touch-icon" href="icons/icon-192.png"/>
-  <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;1,9..40,300&display=swap" rel="stylesheet">
   <style>
     *{box-sizing:border-box;margin:0;padding:0}
-    :root{--bg:#0f172a;--surface:#1e293b;--border:#334155;--text:#f1f5f9;--muted:#94a3b8}
-    body{font-family:'DM Sans',-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;padding-bottom:env(safe-area-inset-bottom)}
-    .header{padding:3rem 2rem 2rem;text-align:center;border-bottom:1px solid var(--border)}
-    .header-eyebrow{font-size:11px;letter-spacing:0.15em;text-transform:uppercase;color:rgba(255,255,255,0.4);margin-bottom:0.75rem}
-    .header h1{font-family:'DM Serif Display',serif;font-size:clamp(1.8rem,5vw,2.8rem);font-weight:400;line-height:1.15;margin-bottom:0.5rem}
-    .header h1 em{font-style:italic;color:rgba(255,255,255,0.45)}
-    .header-sub{font-size:13px;color:var(--muted);font-weight:300;margin-bottom:1.5rem}
-    .header-badge{display:inline-flex;align-items:center;gap:6px;background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.1);border-radius:20px;padding:6px 14px;font-size:11px;color:rgba(255,255,255,0.5);margin-bottom:0.5rem}
-    .header-badge .dot{width:6px;height:6px;border-radius:50%;background:#4ade80;animation:pulse 2s infinite}
-    @keyframes pulse{0%,100%{opacity:1}50%{opacity:0.4}}
-    .global-progress{margin:16px 20px;background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:14px 16px;display:none}
-    .global-progress-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:10px}
-    .global-progress-title{font-size:12px;color:var(--muted);font-weight:600}
-    .global-progress-pct{font-size:18px;font-weight:700;color:#4ade80}
-    .progress-bar-bg{background:#0f172a;border-radius:99px;height:6px;overflow:hidden}
-    .progress-bar-fill{height:100%;border-radius:99px;background:linear-gradient(90deg,#7C3AED,#0D9488,#16A34A);transition:width .5s ease}
-    #install-banner{display:none;margin:0 20px 8px;background:linear-gradient(135deg,#4C1D95,#1D4ED8);border-radius:12px;padding:14px 16px}
-    #install-banner p{font-size:12px;color:#c4b5fd;margin-bottom:10px;line-height:1.5}
-    #install-banner button{background:#7C3AED;color:#fff;border:none;border-radius:8px;padding:8px 16px;font-size:12px;font-weight:600;cursor:pointer;width:100%}
-    .section-label{font-size:10px;font-weight:700;letter-spacing:.08em;color:var(--muted);padding:20px 20px 8px;text-transform:uppercase}
-    .card{margin:0 16px 8px;background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:14px 16px;display:flex;align-items:center;gap:14px;text-decoration:none;color:var(--text);transition:background .15s;cursor:pointer}
-    .card:active{background:#263044}
-    .card-icon{width:44px;height:44px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:20px;flex-shrink:0}
+    :root{
+      --bg:#0f172a;--surface:#1e293b;--border:#334155;
+      --text:#f1f5f9;--muted:#94a3b8;
+    }
+    body{
+      font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;
+      background:var(--bg);color:var(--text);min-height:100vh;
+      padding-bottom:calc(env(safe-area-inset-bottom) + 16px);
+    }
+
+    /* ── HEADER ── */
+    .header{
+      padding:36px 20px 20px;text-align:center;
+      border-bottom:1px solid var(--border);
+    }
+    .header-badge{
+      display:inline-flex;align-items:center;gap:6px;
+      background:rgba(124,58,237,.15);border:1px solid rgba(196,181,253,.3);
+      border-radius:20px;padding:4px 12px;font-size:11px;color:#a78bfa;margin-bottom:14px;
+    }
+    .header h1{font-size:20px;font-weight:700;line-height:1.3;margin-bottom:6px}
+    .header p{font-size:12px;color:var(--muted);line-height:1.5}
+
+    /* ── GLOBAL PROGRESS ── */
+    .global-progress{
+      margin:14px 16px 0;background:var(--surface);
+      border:1px solid var(--border);border-radius:12px;
+      padding:12px 14px;display:none;
+    }
+    .global-progress-header{
+      display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;
+    }
+    .global-progress-title{font-size:11px;color:var(--muted);font-weight:600;letter-spacing:.04em}
+    .global-progress-pct{font-size:20px;font-weight:700;color:#4ade80}
+    .progress-bar-bg{background:#0f172a;border-radius:99px;height:5px;overflow:hidden}
+    .progress-bar-fill{
+      height:100%;border-radius:99px;
+      background:linear-gradient(90deg,#7C3AED,#0D9488,#16A34A);
+      transition:width .6s ease;
+    }
+
+    /* ── INSTALL BANNER ── */
+    #install-banner{
+      display:none;margin:12px 16px 0;
+      background:linear-gradient(135deg,#4C1D95,#1D4ED8);
+      border-radius:12px;padding:12px 14px;
+    }
+    #install-banner p{font-size:12px;color:#c4b5fd;margin-bottom:8px;line-height:1.5}
+    #install-banner button{
+      background:#7C3AED;color:#fff;border:none;
+      border-radius:8px;padding:8px 14px;font-size:12px;font-weight:600;
+      cursor:pointer;width:100%;
+    }
+
+    /* ── SECTION LABELS ── */
+    .section-label{
+      font-size:10px;font-weight:700;letter-spacing:.08em;
+      color:var(--muted);padding:18px 16px 6px;text-transform:uppercase;
+    }
+    .section-count{
+      font-size:10px;color:#475569;font-weight:400;
+      letter-spacing:0;text-transform:none;float:right;margin-top:1px;
+    }
+
+    /* ── CARDS ── */
+    .card{
+      margin:0 16px 6px;background:var(--surface);border:1px solid var(--border);
+      border-radius:14px;padding:12px 14px;
+      display:flex;align-items:center;gap:12px;
+      text-decoration:none;color:var(--text);
+      transition:background .15s,border-color .15s;
+      -webkit-tap-highlight-color:transparent;
+    }
+    .card:active{background:#263044;border-color:#475569}
+    .card-icon{
+      width:42px;height:42px;border-radius:10px;
+      display:flex;align-items:center;justify-content:center;
+      font-size:19px;flex-shrink:0;
+    }
     .card-body{flex:1;min-width:0}
-    .card-title{font-size:14px;font-weight:600;margin-bottom:3px}
-    .card-sub{font-size:11px;color:var(--muted);line-height:1.4}
-    .card-right{display:flex;flex-direction:column;align-items:flex-end;gap:4px;flex-shrink:0}
-    .card-arrow{color:var(--muted);font-size:16px}
-    .progress-badge{font-size:11px;font-weight:700;border-radius:8px;padding:2px 8px;min-width:36px;text-align:center}
-    .badge-done{background:#052e16;color:#4ade80;border:1px solid #166534}
+    .card-title{font-size:13px;font-weight:600;margin-bottom:2px;
+      white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+    .card-sub{font-size:10px;color:var(--muted);line-height:1.4}
+    .card-right{
+      display:flex;flex-direction:column;align-items:flex-end;
+      gap:4px;flex-shrink:0;min-width:40px;
+    }
+    .card-arrow{color:var(--muted);font-size:16px;line-height:1}
+
+    /* ── PROGRESS BADGES ── */
+    .progress-badge{
+      font-size:11px;font-weight:700;border-radius:6px;
+      padding:2px 7px;text-align:center;
+    }
+    .badge-done   {background:#052e16;color:#4ade80;border:1px solid #166534}
     .badge-partial{background:#172554;color:#93c5fd;border:1px solid #1e40af}
-    .badge-none{display:none}
-    .card-progress-bar{width:48px;height:3px;background:#0f172a;border-radius:99px;overflow:hidden}
-    .card-progress-fill{height:100%;border-radius:99px;transition:width .3s}
+    .badge-none   {display:none}
+    .card-progress-bar{
+      width:40px;height:3px;background:#0f172a;border-radius:99px;overflow:hidden;
+    }
+    .card-progress-fill{height:100%;border-radius:99px;transition:width .4s}
+
+    /* ── ICON BG COLORS ── */
     .c-purple{background:rgba(124,58,237,.2)}
-    .c-teal{background:rgba(13,148,136,.2)}
-    .c-blue{background:rgba(37,99,235,.2)}
+    .c-teal  {background:rgba(13,148,136,.2)}
+    .c-blue  {background:rgba(37,99,235,.2)}
+    .c-green {background:rgba(22,163,74,.2)}
     .c-orange{background:rgba(217,119,6,.2)}
-    footer{text-align:center;padding:24px 20px;font-size:11px;color:#475569;line-height:1.8;border-top:1px solid var(--border);margin-top:16px}
+    .c-red   {background:rgba(220,38,38,.2)}
+    .c-indigo{background:rgba(99,102,241,.2)}
+
+    /* ── FOOTER ── */
+    footer{
+      text-align:center;padding:20px 16px;font-size:11px;
+      color:#475569;line-height:1.8;
+      border-top:1px solid var(--border);margin-top:12px;
+    }
   </style>
 </head>
 <body>
 
+<!-- HEADER -->
 <div class="header">
-  <div class="header-eyebrow">Luis Otoya Sarca · Agile Coach &amp; AI Practitioner</div>
-  <h1>Guías de preparación<br><em>interactivas</em></h1>
-  <p class="header-sub">Plan de cierre de brechas + 4 guías de estudio con quizzes</p>
-  <div class="header-badge"><div class="dot"></div>Disponible sin internet después del primer acceso</div>
+  <div class="header-badge">⚡ Disponible sin internet después del primer acceso</div>
+  <h1>Plan de cierre de brechas<br/>+ guías de estudio con quizzes</h1>
+  <p>Luis Otoya Sarca · Prep NTT DATA / BCP · Marzo 2026</p>
 </div>
 
+<!-- GLOBAL PROGRESS -->
 <div class="global-progress" id="global-progress">
   <div class="global-progress-header">
     <span class="global-progress-title">PROGRESO TOTAL</span>
@@ -71,14 +149,16 @@
   </div>
 </div>
 
+<!-- INSTALL BANNER -->
 <div id="install-banner">
   <p>📲 Instalá esta app en tu pantalla de inicio para acceso rápido sin internet</p>
   <button id="install-btn">Instalar app</button>
 </div>
 
+<!-- ── PLAN PERSONAL ── -->
 <div class="section-label">Plan Personal</div>
 
-<a class="card" href="plan.html">
+<a class="card" href="plan/">
   <div class="card-icon c-purple">📋</div>
   <div class="card-body">
     <div class="card-title">Plan de Cierre de Brechas</div>
@@ -87,21 +167,14 @@
   <div class="card-right"><div class="card-arrow">›</div></div>
 </a>
 
-<a class="card" href="herramientas.html">
-  <div class="card-icon c-orange">🔧</div>
-  <div class="card-body">
-    <div class="card-title">Herramientas NTT Data</div>
-    <div class="card-sub">8 secciones · 24 preguntas · Jira · Azure · Miro · Mural</div>
-  </div>
-  <div class="card-right">
-    <div class="progress-badge badge-none" id="badge-herramientas"></div>
-    <div class="card-progress-bar"><div class="card-progress-fill" id="bar-herramientas" style="width:0%;background:#D97706"></div></div>
-  </div>
-</a>
+<!-- ── GUÍAS DE ESTUDIO ── -->
+<div class="section-label">
+  Guías de Estudio con Quiz
+  <span class="section-count">8 guías · 280+ preguntas</span>
+</div>
 
-<div class="section-label">Guías de Estudio con Quiz</div>
-
-<a class="card" href="safe.html">
+<!-- SAFe -->
+<a class="card" href="safe/">
   <div class="card-icon c-purple">🏗️</div>
   <div class="card-body">
     <div class="card-title">SAFe — Guía completa</div>
@@ -113,7 +186,8 @@
   </div>
 </a>
 
-<a class="card" href="modelos.html">
+<!-- Modelos Organizacionales -->
+<a class="card" href="modelos/">
   <div class="card-icon c-teal">🏛️</div>
   <div class="card-body">
     <div class="card-title">Modelos Organizacionales</div>
@@ -125,7 +199,8 @@
   </div>
 </a>
 
-<a class="card" href="less.html">
+<!-- LeSS TDD BDD -->
+<a class="card" href="less/">
   <div class="card-icon c-blue">🔵</div>
   <div class="card-body">
     <div class="card-title">LeSS · TDD · BDD</div>
@@ -137,7 +212,8 @@
   </div>
 </a>
 
-<a class="card" href="atf.html">
+<!-- ATF -->
+<a class="card" href="atf/">
   <div class="card-icon c-teal">🧭</div>
   <div class="card-body">
     <div class="card-title">Agile Team Facilitator</div>
@@ -149,7 +225,8 @@
   </div>
 </a>
 
-<a class="card" href="calaris.html">
+<!-- CALARIS -->
+<a class="card" href="calaris/">
   <div class="card-icon c-purple">🧩</div>
   <div class="card-body">
     <div class="card-title">CALARIS Framework</div>
@@ -161,51 +238,117 @@
   </div>
 </a>
 
+<!-- SM → ATF → Coach P1 -->
+<a class="card" href="sm-atf-coach-p1/">
+  <div class="card-icon c-indigo">🎯</div>
+  <div class="card-body">
+    <div class="card-title">SM → ATF → Coach · Parte 1</div>
+    <div class="card-sub">7 secciones · 21 preguntas · Roles · Herramientas · Facilitación</div>
+  </div>
+  <div class="card-right">
+    <div class="progress-badge badge-none" id="badge-sm-atf-p1"></div>
+    <div class="card-progress-bar"><div class="card-progress-fill" id="bar-sm-atf-p1" style="width:0%;background:#6366F1"></div></div>
+  </div>
+</a>
+
+<!-- SM → ATF → Coach P2 -->
+<a class="card" href="sm-atf-coach-p2/">
+  <div class="card-icon c-red">🔥</div>
+  <div class="card-body">
+    <div class="card-title">SM → ATF → Coach · Parte 2</div>
+    <div class="card-sub">7 secciones · 21 preguntas · Psicología · Casos Reales · Nivel Experto</div>
+  </div>
+  <div class="card-right">
+    <div class="progress-badge badge-none" id="badge-sm-atf-p2"></div>
+    <div class="card-progress-bar"><div class="card-progress-fill" id="bar-sm-atf-p2" style="width:0%;background:#DC2626"></div></div>
+  </div>
+</a>
+
+<!-- Playbook Facilitación -->
+<a class="card" href="playbook/">
+  <div class="card-icon c-orange">🎙️</div>
+  <div class="card-body">
+    <div class="card-title">Playbook de Facilitación</div>
+    <div class="card-sub">8 secciones · 24 preguntas · 10 situaciones difíciles · Frases reales</div>
+  </div>
+  <div class="card-right">
+    <div class="progress-badge badge-none" id="badge-playbook"></div>
+    <div class="card-progress-bar"><div class="card-progress-fill" id="bar-playbook" style="width:0%;background:#D97706"></div></div>
+  </div>
+</a>
+
+<!-- ── HERRAMIENTAS ── -->
+<div class="section-label">Herramientas NTT DATA</div>
+
+<a class="card" href="herramientas/">
+  <div class="card-icon c-orange">🔧</div>
+  <div class="card-body">
+    <div class="card-title">Herramientas NTT Data</div>
+    <div class="card-sub">8 secciones · 24 preguntas · Jira · Azure · Miro · Mural · ServiceNow</div>
+  </div>
+  <div class="card-right">
+    <div class="progress-badge badge-none" id="badge-herramientas"></div>
+    <div class="card-progress-bar"><div class="card-progress-fill" id="bar-herramientas" style="width:0%;background:#D97706"></div></div>
+  </div>
+</a>
+
 <footer>
   <strong>Luis Otoya Sarca</strong> · Lima, Perú · Marzo 2026<br/>
-  PWA — funciona sin conexión después del primer acceso
+  PWA · funciona sin conexión · 10 guías · 280+ preguntas
 </footer>
 
 <script src="progress.js"></script>
 <script>
+// ── IDs de todas las guías ──
+const GUIDES = [
+  {id:'safe',        color:'#7C3AED'},
+  {id:'modelos',     color:'#0D9488'},
+  {id:'less',        color:'#2563EB'},
+  {id:'atf',         color:'#0D9488'},
+  {id:'calaris',     color:'#7C3AED'},
+  {id:'sm-atf-p1',   color:'#6366F1'},
+  {id:'sm-atf-p2',   color:'#DC2626'},
+  {id:'playbook',    color:'#D97706'},
+  {id:'herramientas',color:'#D97706'},
+];
+
 function loadAllProgress() {
   if (!window.AgProgress) return;
-  const guides = [
-    {id:'safe',      color:'#7C3AED'},
-    {id:'modelos',   color:'#0D9488'},
-    {id:'less',      color:'#2563EB'},
-    {id:'atf',       color:'#0D9488'},
-    {id:'calaris',   color:'#7C3AED'},
-    {id:'herramientas', color:'#D97706'},
-  ];
   let totalPct = 0, withProgress = 0;
-  guides.forEach(({id, color}) => {
-    const data = window.AgProgress.load(id);
-    const badge = document.getElementById(`badge-${id}`);
-    const bar   = document.getElementById(`bar-${id}`);
+
+  GUIDES.forEach(({id, color}) => {
+    const data   = window.AgProgress.load(id);
+    const badge  = document.getElementById(`badge-${id}`);
+    const bar    = document.getElementById(`bar-${id}`);
     if (!badge || !bar) return;
+
     if (data && data.totalQ > 0) {
       const pct = Math.round((data.totalScore / data.totalQ) * 100);
       badge.textContent = `${pct}%`;
       badge.className = `progress-badge ${pct === 100 ? 'badge-done' : 'badge-partial'}`;
-      bar.style.width = `${pct}%`;
+      bar.style.width  = `${pct}%`;
       bar.style.background = color;
       totalPct += pct;
       withProgress++;
+    } else {
+      badge.className = 'progress-badge badge-none';
     }
   });
+
   if (withProgress > 0) {
-    const avg = Math.round(totalPct / guides.length);
+    const avg = Math.round(totalPct / GUIDES.length);
     document.getElementById('global-pct').textContent = `${avg}%`;
-    document.getElementById('global-bar').style.width = `${avg}%`;
+    document.getElementById('global-bar').style.width  = `${avg}%`;
     document.getElementById('global-progress').style.display = 'block';
   }
 }
+
 document.addEventListener('DOMContentLoaded', loadAllProgress);
 document.addEventListener('visibilitychange', () => {
   if (document.visibilityState === 'visible') loadAllProgress();
 });
 
+// ── Service Worker ──
 if ('serviceWorker' in navigator) {
   navigator.serviceWorker.register('/AG/sw.js', {scope:'/AG/'})
     .then(reg => {
@@ -225,9 +368,11 @@ if ('serviceWorker' in navigator) {
   });
 }
 
+// ── Install prompt ──
 let deferredPrompt;
 window.addEventListener('beforeinstallprompt', e => {
-  e.preventDefault(); deferredPrompt = e;
+  e.preventDefault();
+  deferredPrompt = e;
   document.getElementById('install-banner').style.display = 'block';
 });
 document.getElementById('install-btn').addEventListener('click', async () => {

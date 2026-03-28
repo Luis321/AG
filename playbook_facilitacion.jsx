@@ -1,0 +1,1117 @@
+import { useState } from "react";
+
+const GROUPS = [
+  { id: "preparacion", label: "Preparación",   color: "#7C3AED" },
+  { id: "estructura",  label: "Estructura",    color: "#0D9488" },
+  { id: "dificiles",   label: "Situaciones",   color: "#DC2626" },
+  { id: "avanzado",    label: "Avanzado",      color: "#D97706" },
+];
+
+const CHAPTERS = [
+
+  // ══════════ PREPARACIÓN ══════════
+  {
+    id:"prep-sesion", group:"preparacion", title:"Preparación de la Sesión", icon:"📋",
+    color:"#7C3AED", light:"#EDE9FE", border:"#C4B5FD", text:"#4C1D95",
+    functional:`El 80% del éxito de una sesión se decide en los 30 minutos antes, no durante. Un facilitador que improvisa lo nota el grupo en los primeros 5 minutos — y pierde la autoridad del rol antes de empezar.
+
+CHECKLIST PRE-SESIÓN — los 30 minutos antes:
+
+OBJETIVO Y OUTPUT:
+□ ¿El objetivo de la sesión está en una frase? ("Al terminar esta sesión habremos [X]")
+□ ¿El output es concreto? (una decisión, una lista priorizada, un plan, un acuerdo)
+□ ¿Todos los participantes saben por qué están ahí?
+
+PARTICIPANTES:
+□ ¿Están las personas correctas? (¿Hay alguien que falta que bloquea la decisión? ¿Hay alguien que sobra y politiza la sala?)
+□ ¿Sabés cuáles son las agendas individuales de las personas más influyentes?
+□ ¿Hay algún conflicto previo entre participantes que pueda emerger?
+
+LOGÍSTICA:
+□ ¿La sala/herramienta está lista? (Miro, Jira, proyector, post-its)
+□ ¿El timer es visible para todos?
+□ ¿Hay Parking Lot visible desde el inicio?
+
+RIESGOS DE LA SESIÓN:
+□ ¿Cuál es el peor escenario? (dominante que bloquea, silencio total, conflicto político)
+□ ¿Tenés preparada una intervención para ese escenario?
+□ ¿La decisión podría estar pre-tomada políticamente?
+
+DISEÑO DE AGENDA:
+□ ¿Cada actividad tiene un tiempo asignado?
+□ ¿La agenda tiene buffer (10-15% del tiempo total)?
+□ ¿Las actividades siguen el arco divergencia → convergencia → decisión?
+
+LA PREGUNTA MÁS IMPORTANTE ANTES DE CUALQUIER SESIÓN:
+"¿Qué tendría que pasar para que esta sesión sea un fracaso?" — Responderla te da el plan de contingencia antes de que sea urgente.`,
+    technical:`CÓMO DEFINIR EL OBJETIVO CON PRECISIÓN:
+
+EL FORMATO CORRECTO:
+"Al terminar esta sesión, el grupo habrá [verbo concreto] [resultado específico] [para qué propósito]."
+
+Ejemplos:
+MALO: "Alinearnos sobre el roadmap del Q2"
+BUENO: "Haber priorizado las 5 features del Q2 en orden de WSJF y asignado un owner a cada una para el PI Planning del jueves"
+
+MALO: "Mejorar la comunicación del equipo"
+BUENO: "Haber co-creado 3 acuerdos de trabajo sobre cómo comunicamos impedimentos y tomamos decisiones técnicas durante el sprint"
+
+EL TEST DE CALIDAD DEL OBJETIVO:
+¿Podés saber al final de la sesión si se logró o no? → Si no podés medirlo, el objetivo es vago.
+
+CÓMO DISEÑAR UNA AGENDA EFECTIVA:
+
+ESTRUCTURA BASE (sesión de 2 horas):
+0:00-0:05 → Apertura y objetivo (el ATF, no el manager)
+0:05-0:10 → Check-in (una palabra, temperatura, pregunta rápida)
+0:10-0:50 → Divergencia (generación de perspectivas, ideas, datos)
+0:50-1:20 → Convergencia (filtrado, priorización con criterios explícitos)
+1:20-1:45 → Decisión (Fist of Five, DACI, owner + fecha)
+1:45-1:55 → Cierre (compromisos, Parking Lot, check-out)
+1:55-2:00 → Buffer
+
+CÓMO IDENTIFICAR RIESGOS ANTES DE LA SESIÓN:
+1. Preguntar a 1-2 participantes clave 30 min antes: "¿Hay algo que debería saber antes de que empiece?"
+2. Revisar si hay decisiones pre-tomadas políticamente
+3. Identificar la dinámica de poder de la sala (¿quién tiene poder formal? ¿quién tiene poder informal?)
+4. Verificar si el objetivo es genuinamente abierto o si ya hay un resultado esperado`,
+    visual:{ type:"prep-sesion" },
+    questions:[
+      {
+        q:"¿Cuál de estos objetivos de sesión está bien formulado?",
+        opts:["'Alinearnos sobre la estrategia del equipo para el próximo trimestre'","'Al terminar esta sesión, habremos acordado las 3 iniciativas prioritarias del Q3 con owner asignado y criterio de éxito definido para cada una'","'Mejorar la comunicación y el trabajo en equipo'","'Discutir los bloqueos del último sprint y buscar soluciones'"],
+        correct:1,
+        explanation:"Un objetivo bien formulado responde 3 preguntas: ¿qué vamos a producir? (las 3 iniciativas prioritarias), ¿con qué nivel de detalle? (owner + criterio de éxito), ¿para qué? (implícito en el contexto Q3). Las otras opciones son vagas — no podés saber al final si se lograron o no, lo que hace imposible evaluar el éxito de la sesión."
+      },
+      {
+        q:"Estás a 20 minutos de empezar un workshop de roadmap con 12 personas. Descubrís que el Director ya le dijo a dos personas cuál es la prioridad. ¿Qué hacés?",
+        opts:["Empezar la sesión como fue planificada — el proceso ágil prevalece","Cancelar la sesión — si la decisión ya está tomada, no tiene sentido","Hablar rápidamente con el Director antes de empezar: '¿Esta sesión es para tomar la decisión o para comunicar y alinear en torno a una decisión ya tomada?' Si ya está tomada, rediseñar la sesión como comunicación + Q&A en lugar de decisión abierta. Ser transparente con el grupo.","Ignorar la situación y confiar en que el proceso de facilitación generará la decisión correcta"],
+        correct:2,
+        explanation:"Facilitar una sesión de 'decisión abierta' cuando la decisión ya está tomada es una de las formas más rápidas de destruir la confianza del grupo en el proceso. Las personas sienten que el proceso es teatro. La solución: clarificar antes de empezar y rediseñar si es necesario. Una sesión de alineación y Q&A es igualmente válida y más honesta que una falsa decisión participativa."
+      },
+      {
+        q:"¿Qué porcentaje del tiempo total de una sesión debería ser buffer (tiempo no asignado a actividades específicas)?",
+        opts:["0% — cada minuto debe estar planificado para maximizar la eficiencia","10-15% — permite absorber una actividad que toma más tiempo del esperado sin comprometer el cierre","30% — las sesiones de facilitación siempre toman más tiempo del planeado","5% — suficiente para una pregunta de cierre adicional"],
+        correct:1,
+        explanation:"El 10-15% de buffer es el estándar de los facilitadores expertos. Sin buffer, la primera actividad que se extiende 5 minutos hace efecto dominó: cada actividad siguiente pierde tiempo hasta que el cierre queda comprimido en 2 minutos y no hay tiempo para acordar owners. El buffer no es tiempo vacío — es el colchón que protege el cierre, que es donde se genera el impacto real de la sesión."
+      }
+    ]
+  },
+
+  {
+    id:"estructura-universal", group:"preparacion", title:"Estructura Universal de Facilitación", icon:"🏗️",
+    color:"#7C3AED", light:"#EDE9FE", border:"#C4B5FD", text:"#4C1D95",
+    functional:`El arco de 6 fases es el modelo reutilizable para cualquier sesión, desde un daily de 15 minutos hasta un PI Planning de 2 días. La proporción de tiempo en cada fase cambia según el contexto, pero la secuencia nunca cambia.
+
+FASE 1 — APERTURA (5-8% del tiempo):
+Objetivo: crear el contexto compartido. Todos deben saber por qué están aquí y qué se va a producir.
+Qué decir: "Hoy estamos aquí para [objetivo concreto]. Al terminar, habremos [output específico]. El proceso va a ser: primero [actividad 1], luego [actividad 2], y cerramos con [decisión]. Tenemos [X] horas."
+Error: saltear la apertura porque "todos ya saben para qué están" — el grupo nunca tiene el mismo nivel de contexto.
+
+FASE 2 — ALINEACIÓN (8-10%):
+Objetivo: verificar que todos tienen el mismo nivel de información antes de divergir.
+Qué decir: "Antes de empezar a generar ideas, quiero asegurarme de que todos tenemos el mismo contexto. [Presentar datos/contexto en 5 min]. ¿Alguna pregunta de clarificación antes de empezar?"
+Error: presentar más de 10 minutos de contexto — el grupo pierde atención y la sesión empieza con energía baja.
+
+FASE 3 — DIVERGENCIA (30-35%):
+Objetivo: generar la mayor cantidad posible de perspectivas sin filtro ni crítica.
+Qué decir: "Ahora quiero que cada uno explore [X] sin limitarse. No hay respuestas incorrectas en esta fase."
+Error: empezar a evaluar ideas mientras todavía están surgiendo — mata la creatividad y el pensamiento crítico.
+
+FASE 4 — CONVERGENCIA (25-30%):
+Objetivo: reducir las opciones usando criterios explícitos, no preferencias personales.
+Qué decir: "Ahora vamos a filtrar. El criterio que usamos es [X]. Dot voting de 3 puntos cada uno, todos al mismo tiempo."
+Error: dejar que la convergencia la haga la persona con más poder — el proceso pierde legitimidad.
+
+FASE 5 — DECISIÓN (15-20%):
+Objetivo: producir un compromiso claro con owner y fecha.
+Qué decir: "Con lo que convergimos, la propuesta es [X]. Fist of Five para confirmar el nivel de compromiso del grupo."
+Error: terminar con "lo discutimos" sin una decisión concreta.
+
+FASE 6 — CIERRE (8-10%):
+Objetivo: cerrar el loop y asegurar que los compromisos son explícitos.
+Qué decir: "Revisemos lo que acordamos: [lista de decisiones + owners + fechas]. Parking Lot: [revisar ítems]. Check-out: una palabra que describe cómo te vas."
+Error: saltear el cierre porque "se acabó el tiempo" — el cierre es donde se genera el impacto real.`,
+    technical:`APLICACIÓN POR TIPO DE SESIÓN:
+
+RETROSPECTIVA (90 min):
+Apertura (5 min): objetivo + reglas de participación
+Alineación (10 min): revisar acciones de retro anterior
+Divergencia (30 min): recoger datos (brainwriting, post-its)
+Convergencia (20 min): agrupar + dot voting para priorizar
+Decisión (15 min): 1-3 acciones con owner y fecha
+Cierre (10 min): compromisos + check-out
+
+SPRINT PLANNING (2 horas):
+Apertura (5 min): contexto del PI y objetivo del sprint
+Alineación (15 min): PO presenta las historias top, equipo hace preguntas
+Divergencia (40 min): equipo clarifica, estima (planning poker)
+Convergencia (30 min): selección de historias que caben en capacidad
+Decisión (20 min): Sprint Goal acordado + sprint backlog comprometido
+Cierre (10 min): confirmación de compromisos + "¿algo que necesitamos antes de empezar?"
+
+WORKSHOP DE OKRS (3 horas):
+Apertura (10 min): contexto estratégico + objetivo de la sesión
+Alineación (20 min): datos del período anterior, aprendizajes
+Divergencia (50 min): generación de Objectives (1-2-4-All)
+Convergencia (40 min): selección de 3 Objectives + Key Results
+Decisión (30 min): OKRs finales + validación SMART + owners
+Cierre (10 min): compromisos + próximos pasos
+
+PI PLANNING (2 días):
+Día 1 AM: Apertura + Alineación (contexto de negocio)
+Día 1 PM: Divergencia por equipos (planificación individual)
+Día 2 AM: Convergencia (Program Board, dependencias, ROAM)
+Día 2 PM: Decisión (confidence vote) + Cierre (retrospectiva del PI Planning)
+
+EL PRINCIPIO DE RECUPERACIÓN:
+Si la sesión se desvía, siempre podés volver al arco: "Perdimos el foco. Volvamos a nuestro objetivo: [X]. ¿Qué necesitamos hacer en los próximos [Y] minutos para llegar a una decisión?"`,
+    visual:{ type:"estructura-universal" },
+    questions:[
+      {
+        q:"Una sesión de workshop de OKRs de 3 horas ya lleva 2 horas y el grupo todavía está en la fase de Divergencia. ¿Qué hacés?",
+        opts:["Dejar que continúen — la divergencia es la fase más importante","Cortar la divergencia ahora: 'Tenemos 60 minutos restantes. Voy a activar la convergencia para que podamos llegar a una decisión. Con lo que tenemos, vamos a hacer Dot Voting en 5 minutos.' La sesión sin decisión no produce impacto.","Pedir 30 minutos adicionales al grupo","Cancelar la sesión y reagendarla con más tiempo"],
+        correct:1,
+        explanation:"El facilitador es el guardián del tiempo y del objetivo. Si la divergencia consume el tiempo de convergencia y decisión, la sesión no produce el output esperado. La intervención correcta es cortar la divergencia de forma explícita ('vamos a activar la convergencia') con el proceso ya diseñado (dot voting). Una sesión sin decisión no genera impacto, independientemente de cuán rica haya sido la discusión."
+      },
+      {
+        q:"¿Por qué saltear la Fase de Alineación (contexto compartido) es un error costoso aunque el grupo 'ya sabe' de qué se trata la sesión?",
+        opts:["No lo es — si todos saben el contexto, es más eficiente ir directamente al trabajo","El grupo nunca tiene el mismo nivel de contexto. Sin alineación, cada persona diverge desde un punto de partida diferente, las ideas no son comparables, y la convergencia requiere mucho más tiempo para resolver las divergencias de contexto que hubieran tomado 5 minutos al inicio.","La fase de alineación es solo para sesiones con participantes nuevos","La alineación es responsabilidad del PO, no del facilitador"],
+        correct:1,
+        explanation:"'Todos ya saben' es una de las asunciones más costosas en facilitación. En la práctica, cada persona llega con su propio contexto, sus propias asunciones y su propio estado emocional. 5 minutos de alineación explícita (mismos datos, mismas definiciones, mismo contexto) ahorran 30 minutos de conversaciones que en realidad son sobre diferentes entendimientos del mismo problema."
+      },
+      {
+        q:"En el cierre de una retro, el grupo acordó 5 acciones pero nadie tiene owner ni fecha. ¿Qué es lo más importante para hacer antes de liberar la sala?",
+        opts:["Enviar un email resumen con las 5 acciones después de la sesión","Reducir las 5 acciones a 1-3 y asignar owner específico y fecha a cada una ANTES de cerrar. Un acuerdo sin owner es una promesa sin accountability. 5 acciones sin owner no se implementará ninguna.","Asignar todas las acciones al SM para que haga seguimiento","Documentar las acciones en Confluence y compartir el link"],
+        correct:1,
+        explanation:"El cierre sin owners y fechas es el anti-patrón más frecuente y más costoso en facilitación. Las acciones con owner específico (una persona, no 'el equipo') y fecha concreta tienen una tasa de implementación significativamente mayor. Además, 5 acciones diluyen el foco — 1-3 acciones con owner y fecha producen más impacto que 5 promesas difusas."
+      }
+    ]
+  },
+
+  {
+    id:"tecnicas-clave", group:"preparacion", title:"Técnicas Clave — Uso Práctico", icon:"🧰",
+    color:"#7C3AED", light:"#EDE9FE", border:"#C4B5FD", text:"#4C1D95",
+    functional:`Las 6 técnicas más usadas en facilitación ágil. Para cada una: cuándo usarla, cómo aplicarla paso a paso, y los errores que cometen incluso los facilitadores con experiencia.
+
+PARKING LOT:
+Cuándo: cuando surge un tema importante pero fuera del objetivo de la sesión actual.
+Cómo: "Ese tema es importante — lo anoto en el Parking Lot para no perderlo. ¿Continuamos con [tema actual]?" El Parking Lot debe ser visible para todos desde el inicio.
+Cierre obligatorio: al final de cada sesión, revisar CADA ítem. Para cada uno: ¿tarea, sesión separada, o descartado? Sin esto, el Parking Lot pierde credibilidad.
+Error: usarlo para evitar conversaciones difíciles — hay temas que deben tratarse en la sesión y el Parking Lot no es una excusa válida para todos.
+
+DOT VOTING:
+Cuándo: priorizar una lista de 5+ ítems con múltiples perspectivas.
+Cómo: (1) listar opciones claramente, (2) silencio para leer, (3) distribuir N puntos simultáneamente, (4) mostrar resultados, (5) facilitar conversación sobre lo que los resultados revelan.
+Regla: 3 puntos por persona para listas de 5-10 ítems. Se puede poner todos en uno.
+Error crítico: votar secuencialmente (efecto de ancla social — todos votan lo mismo que el primero).
+
+FIST OF FIVE:
+Cuándo: verificar el nivel real de compromiso en una decisión importante.
+0: bloqueo total — la decisión no avanza hasta resolver
+1: desacuerdo fuerte — necesito hablar antes de avanzar
+2: dudas significativas — necesito escuchar más
+3: puedo vivir con esto aunque no sea mi preferencia
+4: de acuerdo, lo apoyo activamente
+5: totalmente de acuerdo, lo defiendo
+Ante un 0 o 1: "¿Qué necesitarías para poder avanzar?" — no presionar el cambio.
+Error: presionar hasta que todos den 4-5 — destruye la utilidad de la herramienta.
+
+ROUND ROBIN:
+Cuándo: cuando una o dos personas dominan la conversación y el resto no participa.
+Cómo: "Antes de abrir la discusión libre, quiero escuchar la perspectiva de cada uno. Empezamos por [nombre] y vamos en orden."
+Por qué funciona: da permiso a las voces menos dominantes para hablar antes de que la voz dominante tome el espacio.
+Error: hacerlo con grupos de más de 10 personas (demasiado largo, la gente desconecta).
+
+1-2-4-ALL (Liberating Structures):
+Cuándo: maximizar participación en grupos donde hay dominantes o donde la seguridad psicológica es baja.
+Cómo: reflexión individual (1 min) → pares (2 min) → grupos de 4 (4 min) → compartir con todos (5 min).
+Por qué funciona: las ideas se generan antes de que la persona más dominante pueda influir.
+Error: saltear la etapa individual — es la más importante.
+
+ROAM (gestión de riesgos en PI Planning):
+R: Resolved — el riesgo ya no existe
+O: Owned — una persona específica lo gestiona (nombre, no "el equipo")
+A: Accepted — se acepta conscientemente el impacto
+M: Mitigated — hay un plan concreto de reducción
+Cuándo: en el Day 2 del PI Planning para procesar todos los riesgos identificados.
+Error: dejar riesgos Owned sin nombre individual — responsabilidad colectiva = irresponsabilidad.`,
+    technical:`PROTOCOLO DETALLADO PARA CADA TÉCNICA:
+
+DOT VOTING — paso a paso sin errores:
+1. Listar las opciones en pizarra/Miro — sin interpretación, texto exacto de cada opción
+2. Dar 2 minutos de silencio para que todos lean ANTES de distribuir puntos
+3. Todos ponen sus puntos SIMULTÁNEAMENTE (física o virtualmente)
+4. Contar y mostrar los resultados
+5. Preguntar: "¿Qué nos dice esta distribución? ¿Alguien que votó diferente a la mayoría quiere compartir su criterio?"
+6. Los ítems con más puntos son candidatos para conversación, no la decisión final
+
+FIST OF FIVE — protocolo de manejo:
+Al revelar los votos, escanear rápidamente:
+→ Todos 4-5: avanzar, pero considerar preguntar "¿alguien tiene reservas aunque apoya?"
+→ Mayoría 3-5 con algunos 2: dar espacio a los 2 brevemente antes de avanzar
+→ Algún 1 o 0: DETENER y dar espacio: "¿Qué objeción específica tenés?" — escuchar sin defenderse
+
+ROUND ROBIN — cuándo terminarlo:
+Si tenés más de 8 personas, hacer Round Robin solo para la primera ronda de inputs. Luego abrir la discusión general. Con grupos más grandes, usar 1-2-4-All en su lugar.
+
+1-2-4-ALL — variaciones:
+Para retros: la fase individual de 1 minuto puede ser Brainwriting (escribir en silencio)
+Para PI Planning: la fase de 4 personas puede ser por equipo
+Para workshops: la fase de todos puede ser un gallery walk (todos circulan y leen los aportes de cada grupo)
+
+ROAM — tiempo estimado:
+Para un ART típico con 8-12 equipos: 60-90 minutos para procesar todos los riesgos si está bien facilitado.
+Truco: pre-clasificar los riesgos obvios (Resolved o Accepted) antes de la sesión con el equipo core. Llevar solo los Owned y Mitigated a la sesión completa.`,
+    visual:{ type:"tecnicas-clave" },
+    questions:[
+      {
+        q:"En un Dot Voting, una persona del grupo mira los puntos de los demás y luego pone todos sus puntos en el ítem más votado. ¿Qué sesgo ocurrió y cómo lo prevenís?",
+        opts:["No hay problema — votar el ítem más popular puede ser racional","Efecto de anclaje social o comportamiento de manada. Fix: instruir que todos distribuyan sus puntos SIMULTÁNEAMENTE sin mirar los puntos de los demás. En Miro, usar la función de 'ocultar votos hasta revelar'. En presencial, todos ponen sus stickers al mismo tiempo a una señal del facilitador.","Pedirle a esa persona que redistribuya sus puntos","Descartar ese voto y pedir al grupo que vote de nuevo"],
+        correct:1,
+        explanation:"El efecto de anclaje social en el Dot Voting es uno de los anti-patrones más frecuentes. Cuando las personas ven los votos de los demás antes de votar, tienden a conformarse con la mayoría o con la persona de mayor status. La revelación simultánea elimina este sesgo — todos votan desde su propia perspectiva independiente. En herramientas digitales como Miro existe la función de ocultar votos hasta que todos terminen."
+      },
+      {
+        q:"Usás 1-2-4-All en un workshop de retrospectiva. En la etapa de 1 (reflexión individual), algunas personas empiezan a conversar entre sí después de 30 segundos. ¿Qué hacés?",
+        opts:["Dejar que conversen — si ya tienen ideas, la etapa individual fue suficiente","La etapa individual es la más crítica — es donde se generan perspectivas independientes antes de la influencia grupal. Intervención: 'Necesito 1 minuto de silencio individual antes de empezar los pares — esto garantiza que cada uno llegue con su propia perspectiva. Volvemos a empezar.' Con gentileza pero firmeza.","Acelerar a la etapa de pares directamente","Ignorarlo — si la técnica se usa con flexibilidad produce igual resultado"],
+        correct:1,
+        explanation:"Saltear la etapa individual en el 1-2-4-All es el error que convierte la técnica en una discusión normal de grupo. El valor de la técnica está exactamente en que cada persona genera perspectivas propias ANTES de la influencia social. Si la gente conversa en la etapa individual, las etapas de pares y grupos de 4 reproducen las mismas perspectivas — no generan riqueza adicional."
+      },
+      {
+        q:"En el ROAM Board del PI Planning, el riesgo 'dependencia crítica con el equipo de infraestructura' está clasificado como Owned pero el owner es 'equipo de desarrollo'. ¿Cuál es el problema y cómo lo resolvés?",
+        opts:["No hay problema — el equipo de desarrollo es el responsable lógico","'Equipo de desarrollo' como owner equivale a nadie — responsabilidad difusa. Ante el grupo: 'Para que este riesgo esté realmente gestionado, necesita una persona con nombre que reporte en cada Scrum of Scrums. ¿Quién del equipo de desarrollo toma este riesgo?' No se puede cerrar el ROAM sin un nombre real en los riesgos Owned.","Moverlo a Accepted — si no hay un owner individual, el riesgo debe aceptarse","Escalarlo al RTE para que asigne el owner desde arriba"],
+        correct:1,
+        explanation:"Uno de los principios del ROAM: responsabilidad colectiva = irresponsabilidad. Cuando el riesgo se materialice, 'el equipo' apuntará a 'el equipo' y nadie habrá gestionado nada. El facilitador no puede cerrar el ROAM con owners colectivos. La pregunta '¿quién del equipo de desarrollo toma este riesgo?' requiere un nombre y apellido antes de avanzar."
+      }
+    ]
+  },
+
+  // ══════════ SITUACIONES DIFÍCILES ══════════
+  {
+    id:"situaciones-1-5", group:"dificiles", title:"Situaciones Difíciles 1-5", icon:"⚡",
+    color:"#DC2626", light:"#FEE2E2", border:"#FCA5A5", text:"#7F1D1D",
+    functional:`Los 10 escenarios más frecuentes en facilitación de equipos ágiles. Para cada uno: señales de alerta, qué está pasando realmente, qué hacer paso a paso, y qué NO hacer.
+
+CASO 1 — LA PERSONA DOMINANTE:
+Señales: habla más del 50% del tiempo, interrumpe constantemente, el grupo mira a esa persona antes de responder.
+Qué está pasando: puede ser expertise genuino mal regulado, necesidad de visibilidad, o dinámica de poder consciente.
+Qué hacer:
+1. Round Robin: "Antes de continuar, quiero escuchar la perspectiva de cada uno en turno."
+2. Brainwriting: "5 minutos en silencio — cada uno escribe sus ideas. Luego compartimos."
+3. Intervención directa (con cuidado): "Gracias [nombre]. Para que podamos escuchar otras perspectivas, voy a pausar aquí. ¿Alguien más?"
+4. En privado (si continúa): "Tu expertise es muy valioso. Necesito tu ayuda para que otros también contribuyan — ¿podés hacer las preguntas en lugar de dar las respuestas?"
+QUÉ NO HACER: confrontar públicamente — destruye la relación y la dinámica del grupo.
+
+CASO 2 — SILENCIO TOTAL:
+Señales: nadie responde a las preguntas, respuestas monosilábicas, energía muy baja.
+Qué está pasando: puede ser seguridad psicológica baja, pregunta demasiado abierta, tema sensible, o simplemente que el grupo necesita tiempo para pensar.
+Qué hacer:
+1. Esperar 10-15 segundos antes de intervenir (la mayoría de los facilitadores intervienen demasiado rápido).
+2. Reformular la pregunta: "Quizás la pregunta fue muy amplia. Específicamente: [versión más concreta]."
+3. Brainwriting anónimo: "Escribe tu respuesta en un post-it primero."
+4. Pregunta más segura: en lugar de "¿qué salió mal?", usar "¿qué haríamos diferente?"
+5. Check-in directo: "Noto silencio. ¿Hay algo que hace difícil responder esta pregunta?"
+QUÉ NO HACER: responder vos mismo la pregunta — establece que el facilitador da las respuestas.
+
+CASO 3 — CONFLICTO FUERTE ENTRE DOS PERSONAS:
+Señales: tono elevado, interrupciones mutuas, el resto del grupo se retira emocionalmente.
+Qué está pasando: puede ser conflicto de ideas (sano), conflicto de ego o histórico (destructivo), o diferencia real de valores.
+Qué hacer:
+1. Pausar INMEDIATAMENTE: "Necesito pausar la conversación un momento."
+2. Nombrar el patrón sin señalar personas: "Noto que la conversación se intensificó. Quiero asegurarme de que podemos tener esta discusión de forma productiva."
+3. Separar las posiciones de las necesidades: "¿Podemos explorar qué necesita cada posición para que el proyecto funcione?"
+4. Si continúa: "Voy a proponer que retomemos este tema en una sesión bilateral con las dos personas involucradas. Por ahora, continuamos con [otro tema]."
+QUÉ NO HACER: tomar partido o intentar mediar en profundidad en la sesión grupal.
+
+CASO 4 — EL GRUPO SE DESVÍA DEL TEMA:
+Señales: la conversación deriva hacia temas no relacionados con el objetivo, el tiempo pasa sin producción.
+Qué hacer:
+1. Parking Lot: "Ese tema es importante — lo anoto. Volvemos a nuestro objetivo: [X]."
+2. Releer el objetivo en voz alta: "Nuestro objetivo para esta sesión es [X]. ¿Cómo conecta lo que estamos discutiendo con ese objetivo?"
+3. Timeboxing visible: mostrar el timer y el tiempo restante.
+QUÉ NO HACER: seguir el desvío esperando que el grupo vuelva solo.
+
+CASO 5 — NO SE LOGRA TOMAR DECISIONES:
+Señales: la discusión gira en círculos, los mismos argumentos se repiten, nadie propone una opción concreta.
+Qué está pasando: puede ser falta de información, conflicto de poder no resuelto, miedo al compromiso, o indefinición de quién decide.
+Qué hacer:
+1. Clarificar el DACI: "¿Quién tiene la autoridad final para esta decisión?" — si hay múltiples Approvers, ese es el problema.
+2. Decisión timeboxed: "Vamos a intentar llegar a una decisión en los próximos 10 minutos. Si no llegamos, tomo la decisión provisional como Driver."
+3. Cambiar el marco: de "¿cuál es la opción correcta?" a "¿cuál es la opción de menor riesgo para probar en el próximo sprint?"
+4. Separar la decisión del análisis: "¿Qué información adicional necesitaríamos para decidir? Si podemos obtenerla en 24h, la conseguimos. Si no, decidimos con lo que tenemos."
+QUÉ NO HACER: forzar un "consenso" que en realidad es rendición de la minoría.`,
+    technical:`FRASES REALES PARA SITUACIONES DIFÍCILES 1-5:
+
+CASO 1 — Persona dominante:
+→ "Gracias [nombre]. Quiero escuchar perspectivas que aún no hemos escuchado. ¿Alguien que no haya hablado?"
+→ "Voy a hacer un Round Robin para que todos podamos aportar. Empezamos por [otro lado de la sala]."
+→ (En privado) "Tu conocimiento es clave para esta sesión. ¿Podés ayudarme haciendo preguntas al grupo en lugar de dar las respuestas? Creo que eso multiplica tu impacto."
+
+CASO 2 — Silencio total:
+→ "Voy a dar 2 minutos para que cada uno escriba su respuesta. Luego compartimos." [silencio deliberado]
+→ "Quizás la pregunta fue muy abierta. Específicamente: ¿qué es lo que más os frustró esta semana?"
+→ "Noto que hay silencio. ¿Hay algo en la pregunta que hace difícil responder?"
+
+CASO 3 — Conflicto fuerte:
+→ "Necesito pausar la conversación. Noto que la discusión se intensificó y quiero que sigamos de forma productiva."
+→ "Ambas perspectivas son válidas. Quiero entender qué necesita cada posición para que el proyecto funcione."
+→ "Propongo que continuemos con [otro tema] y que esta conversación específica la tengamos en un espacio bilateral."
+
+CASO 4 — Desvío del tema:
+→ "Es un tema importante. Lo pongo en el Parking Lot. Volvemos a nuestro objetivo que es [X]."
+→ "En 45 minutos cerramos. Necesitamos estar en [fase Y] para llegar a la decisión. ¿Continuamos?"
+→ "¿Cómo conecta lo que estamos discutiendo con el objetivo de hoy?"
+
+CASO 5 — No se decide:
+→ "Llevamos [X] minutos en este punto. Propongo 10 minutos finales para llegar a una decisión. Si no llegamos, tomamos la opción de menor riesgo como provisional revisable en el próximo sprint."
+→ "¿Qué información específica necesitamos para poder decidir? Si la podemos obtener en 24h, la buscamos. Si no, decidimos con lo que tenemos."
+→ "¿Quién tiene la autoridad final para esta decisión? Necesitamos claridad en el Approver antes de avanzar."`,
+    visual:{ type:"situaciones-1-5" },
+    questions:[
+      {
+        q:"En un workshop hay silencio total después de tu pregunta '¿qué problemas tiene el proceso actual?'. Llevas 15 segundos esperando. ¿Qué hacés?",
+        opts:["Responder vos mismo la pregunta para que el grupo vea un ejemplo","Reformular: 'Quizás la pregunta fue muy amplia. Específicamente: ¿qué es lo que más os ralentizó en el último sprint?' Y activar Brainwriting: 'Escriban su respuesta en silencio por 2 minutos.'","Cambiar de actividad — si no responden, el tema no les importa","Preguntar directamente a la persona más senior del grupo"],
+        correct:1,
+        explanation:"Los dos pasos correctos son secuenciales: (1) reformular la pregunta a una versión más concreta y segura, y (2) activar Brainwriting para eliminar la inhibición de ser el primero en hablar. Responder vos mismo establece el patrón de que el facilitador da las respuestas, lo que destruye la dinámica participativa. Esperar 15 segundos más sin cambiar nada tampoco produce resultado."
+      },
+      {
+        q:"Dos personas tienen un conflicto abierto en el daily. El tono sube, se interrumpen mutuamente, el resto del equipo se congela. ¿Cuál es la intervención inmediata?",
+        opts:["Dejar que resuelvan el conflicto — el daily es el espacio correcto para esto","Pausar inmediatamente: 'Necesito pausar la conversación un momento. Noto que la discusión se intensificó.' Proponer separar el tema: 'Propongo que esta conversación específica la tengamos en un espacio bilateral hoy. Por ahora, continuamos con el daily.' El daily no es el espacio ni el tiempo para mediar un conflicto.","Tomar partido por quien tenga más razón técnica","Terminar el daily inmediatamente para dar espacio al conflicto"],
+        correct:1,
+        explanation:"El daily no es el espacio para mediar conflictos interpersonales — ni tiene el tiempo ni la estructura adecuada. La intervención correcta es pausar inmediatamente (para proteger al resto del equipo que se congeló), nombrar el patrón sin señalar culpables, y mover el conflicto a un espacio bilateral con el facilitador como mediador. Dejar que el conflicto continúe destruye la seguridad psicológica del equipo completo."
+      },
+      {
+        q:"El grupo lleva 45 minutos dando vueltas en círculos sobre una decisión de arquitectura sin llegar a ningún lado. ¿Cuál es el diagnóstico más probable y la intervención?",
+        opts:["El grupo necesita más tiempo — las decisiones de arquitectura son complejas","Lo más probable es falta de información clara, indefinición de quién decide (múltiples Approvers implícitos), o miedo al compromiso. Intervención: '¿Quién tiene la autoridad final para esta decisión? Necesito claridad en el Approver.' Y si hay consenso en quién decide: '10 minutos finales para llegar a una decisión provisional revisable.'","Escalar al arquitecto empresarial para que decida","Hacer Dot Voting con las opciones que surgieron hasta ahora"],
+        correct:1,
+        explanation:"45 minutos sin decisión en un grupo es casi siempre un problema de proceso, no de contenido. Los tres culpables más frecuentes: (1) múltiples personas creen tener autoridad final (múltiples Approvers implícitos — el DACI no está claro), (2) falta información específica que el grupo necesita pero no tiene, (3) el grupo tiene miedo de comprometerse con algo que puede fallar. El diagnóstico correcto determina la intervención correcta."
+      }
+    ]
+  },
+
+  {
+    id:"situaciones-6-10", group:"dificiles", title:"Situaciones Difíciles 6-10", icon:"🔥",
+    color:"#DC2626", light:"#FEE2E2", border:"#FCA5A5", text:"#7F1D1D",
+    functional:`Los 5 escenarios más políticamente delicados en facilitación ágil en organizaciones bancarias como BCP.
+
+CASO 6 — STAKEHOLDER IMPONE DECISIONES:
+Señales: el ejecutivo declara la decisión antes de que el proceso termine, el grupo deja de participar, el facilitador pierde credibilidad.
+Qué está pasando: el stakeholder no entiende (o no acepta) el rol del proceso colaborativo, o la decisión ya estaba tomada antes de la sesión.
+Qué hacer:
+1. En privado antes de la sesión: "¿Esta sesión es para tomar la decisión juntos o para comunicar y alinear en torno a una decisión ya tomada?"
+2. Si ocurre en la sesión: "Escucho que tenés una propuesta concreta. Propongo que la presentemos como opción para que el grupo pueda evaluar los tradeoffs antes de confirmar."
+3. Crear espacio para el input: "Antes de confirmar, ¿hay perspectivas que deberíamos escuchar para asegurar que esta decisión tiene en cuenta todos los ángulos?"
+QUÉ NO HACER: confrontar directamente al stakeholder en público — perdés la relación y el acceso futuro.
+
+CASO 7 — FALSO CONSENSO:
+Señales: todos dicen "sí" demasiado rápido en una decisión compleja, nadie hace preguntas difíciles, la energía es de alivio (no de compromiso genuino).
+Qué está pasando: groupthink, efecto HiPPO (todos siguieron al de mayor jerarquía), o resignación disfrazada de acuerdo.
+Qué hacer:
+1. Fist of Five para verificar el nivel real de compromiso.
+2. Abogado del diablo: "Antes de confirmar, quiero que alguien argumente en contra por 3 minutos — quiero asegurarme de que consideramos los riesgos."
+3. Pre-mortem: "Imaginen que es 3 meses después y esto no funcionó. ¿Qué pasó?"
+4. Verificar con Brainwriting anónimo: "Antes de cerrar, escribe en un post-it tu preocupación principal con esta decisión."
+QUÉ NO HACER: aceptar el "sí" rápido en decisiones de alta consecuencia.
+
+CASO 8 — FALTA DE ENERGÍA O ABURRIMIENTO:
+Señales: personas en el teléfono, respuestas cortas, bostezos, miradas al reloj.
+Qué está pasando: la sesión es demasiado larga sin actividad, el formato es pasivo (mucha presentación, poca participación), o el contenido no les parece relevante.
+Qué hacer:
+1. Break de 5 minutos (siempre funciona): "Vamos a tomar 5 minutos."
+2. Cambiar el formato: pasar de presentación a actividad participativa.
+3. Pregunta de energía: "¿Qué necesitaría esta sesión para que valga la pena tu tiempo?"
+4. Conectar con la relevancia: "¿Por qué importa esto para tu trabajo específico?"
+QUÉ NO HACER: acelerar el contenido para "terminar más rápido" — produce más desconexión.
+
+CASO 9 — EXCESO DE DISCUSIÓN TÉCNICA SIN AVANZAR:
+Señales: dos o tres personas en debate técnico profundo mientras el resto espera, la sesión pierde su propósito original.
+Qué hacer:
+1. Parking Lot y sesión técnica separada: "Este nivel de detalle técnico necesita más tiempo del que tenemos. Lo anoto para una sesión específica con los involucrados."
+2. Timeboxing: "Tenemos 5 minutos para esta parte. Si no llegamos a acuerdo, lo parkeo."
+3. Reformular el nivel correcto: "Para los propósitos de esta sesión, necesitamos decidir [X a alto nivel]. Los detalles de implementación los resuelve el equipo técnico."
+QUÉ NO HACER: participar en el debate técnico — el facilitador pierde su neutralidad.
+
+CASO 10 — TIEMPO AGOTÁNDOSE SIN RESULTADOS:
+Señales: quedan 15 minutos, el grupo todavía está en divergencia, no hay decisión a la vista.
+Qué hacer:
+1. Anunciar el estado: "Quedan 15 minutos. Con lo que tenemos, voy a activar la convergencia ahora."
+2. Dot Voting rápido sobre lo generado: "3 puntos cada uno, 3 minutos."
+3. Decisión mínima viable: "¿Cuál es la decisión de menor riesgo que podemos tomar ahora con la información que tenemos?"
+4. Si no es posible: "No llegamos a la decisión final. Lo que sí acordamos hoy es [X]. La decisión completa la tomamos en [fecha concreta]."
+QUÉ NO HACER: extender la sesión sin el acuerdo del grupo — genera resentimiento.`,
+    technical:`FRASES REALES PARA SITUACIONES 6-10:
+
+CASO 6 — Stakeholder impone:
+→ "Escucho una propuesta concreta. Propongo presentarla al grupo como opción para evaluar los tradeoffs antes de confirmar."
+→ "Antes de confirmar esta decisión, ¿hay perspectivas que deberíamos escuchar para asegurar que tiene en cuenta todos los ángulos?"
+→ (Pre-sesión) "¿Esta sesión es para decidir juntos o para alinear sobre algo ya acordado?"
+
+CASO 7 — Falso consenso:
+→ "Noto que llegamos a acuerdo rápidamente. En una decisión de esta importancia, quiero asegurarme de que exploramos los riesgos. Quién puede argumentar en contra por 3 minutos?"
+→ "Fist of Five para confirmar el nivel real de compromiso — quiero ver los números antes de avanzar."
+→ "Pre-mortem rápido: imaginen que es 6 meses después y esta decisión no funcionó. ¿Qué pasó?"
+
+CASO 8 — Falta de energía:
+→ "Vamos a tomar 5 minutos de break."
+→ "Noto que la energía bajó. ¿Qué necesitaría esta sesión para que valga la pena tu tiempo?"
+→ "Cambiamos el formato. En lugar de presentación, vamos a trabajar en grupos de 3."
+
+CASO 9 — Debate técnico excesivo:
+→ "Este nivel de detalle técnico es importante pero necesita más espacio del que tenemos. Lo pongo en el Parking Lot para una sesión técnica específica."
+→ "Para los propósitos de esta sesión, necesitamos una decisión a alto nivel. Los detalles de implementación los resuelve el equipo técnico después."
+→ "Timebox de 5 minutos para este tema. Al terminar, o decidimos o lo parkeo."
+
+CASO 10 — Tiempo agotado:
+→ "Quedan 15 minutos. Voy a activar la convergencia ahora con lo que tenemos."
+→ "¿Cuál es la decisión de menor riesgo que podemos tomar ahora con la información disponible?"
+→ "No llegamos a la decisión completa. Lo que sí acordamos es [X]. La decisión final la tomamos en [fecha]."`,
+    visual:{ type:"situaciones-6-10" },
+    questions:[
+      {
+        q:"El CEO declara la decisión en medio del workshop antes de que el proceso de convergencia termine. El grupo deja de participar. ¿Cuál es tu intervención?",
+        opts:["Aceptar la decisión del CEO — tiene la autoridad final","Confrontar al CEO públicamente: 'El proceso todavía no terminó'","Crear espacio para el input del grupo sin desafiar la autoridad del CEO: 'Escucho una propuesta concreta de [CEO]. Propongo presentarla al grupo como la opción principal para que podamos evaluar los tradeoffs y asegurar que tiene en cuenta todos los ángulos antes de confirmar.' Esto honra la autoridad del CEO y preserva el valor del proceso colaborativo.","Terminar la sesión — el CEO tomó la decisión y ya no hay nada que facilitar"],
+        correct:2,
+        explanation:"La intervención correcta honra la autoridad del CEO (que es legítima) sin abandonar el proceso colaborativo (que tiene valor real). Al reformular la declaración del CEO como 'la opción principal a evaluar', el facilitador crea espacio para que el grupo identifique riesgos o perspectivas que el CEO pudo no haber considerado — lo que en realidad sirve al propio CEO. Confrontarlo públicamente destruye la relación y cierra el acceso futuro."
+      },
+      {
+        q:"El grupo llega a consenso en 2 minutos sobre una decisión arquitectónica que afecta a 5 equipos durante el próximo año. Todos dicen 'sí'. ¿Qué señal de alarma ves y qué hacés?",
+        opts:["El equipo es maduro y eficiente — el consenso rápido es positivo","Un consenso demasiado rápido en una decisión de alta consecuencia es una señal de Groupthink o efecto HiPPO. Intervención: Fist of Five para verificar el nivel real de compromiso, y pre-mortem: 'Imaginen que es 6 meses después y esta decisión no funcionó. ¿Qué pasó?' La resistencia a estas preguntas es en sí misma un dato.","Registrar el consenso y cerrar la sesión","Pedir más análisis antes de confirmar — 2 minutos es insuficiente para cualquier decisión importante"],
+        correct:1,
+        explanation:"La velocidad del consenso es inversamente proporcional a la calidad de la decisión cuando el tema es complejo. Un 'sí' en 2 minutos para una decisión que afecta 5 equipos durante un año es casi siempre Groupthink (la cohesión suprime el pensamiento crítico) o efecto HiPPO (todos siguieron a quien más poder tiene). El pre-mortem y el Fist of Five son las herramientas que revelan si el consenso es genuino o performativo."
+      },
+      {
+        q:"Quedan 10 minutos de sesión y el grupo está en plena divergencia, muy lejos de una decisión. ¿Cuál es la secuencia correcta de acciones?",
+        opts:["Extender la sesión 30 minutos — el trabajo es demasiado importante para dejarlo incompleto","Anunciar el estado ('quedan 10 min') → activar Dot Voting de 2 minutos sobre lo generado → formular la decisión mínima viable → si no hay decisión posible, cerrar con lo que se acordó + fecha concreta para la decisión completa","Continuar la divergencia y cortar en 10 minutos sin cierre formal","Escalar la decisión al manager para que la tome fuera de la sesión"],
+        correct:1,
+        explanation:"La secuencia es crítica: anunciar el estado (transparencia), activar convergencia rápida (dot voting), buscar la decisión mínima viable (lo que SÍ podemos decidir ahora), y si no es posible, cerrar honestamente con lo acordado + fecha para la decisión completa. Extender sin acuerdo del grupo genera resentimiento. Cortar sin cierre desperdicia todo el trabajo generado en la sesión."
+      }
+    ]
+  },
+
+  // ══════════ AVANZADO ══════════
+  {
+    id:"gestion-tiempo", group:"avanzado", title:"Gestión del Tiempo en Vivo", icon:"⏱️",
+    color:"#D97706", light:"#FEF3C7", border:"#FCD34D", text:"#78350F",
+    functional:`La gestión del tiempo en vivo es la habilidad que más diferencia a un facilitador experto de uno intermedio. El intermediario aplica el plan. El experto adapta el plan en tiempo real sin perder el objetivo.
+
+EL DIAGNÓSTICO DE TIEMPO — los 3 estados:
+
+ESTADO 1 — EN TIEMPO (el grupo va según lo planificado):
+No cambies nada. Confía en el diseño. El riesgo es intervenir cuando no hace falta.
+
+ESTADO 2 — ADELANTADO (el grupo fue más rápido de lo esperado):
+Opciones: profundizar en la decisión con más preguntas de calidad, expandir el cierre para asegurar compromisos más sólidos, o terminar antes y devolver tiempo al grupo (que siempre agradecen).
+Nunca: agregar actividades no planificadas solo para "usar" el tiempo.
+
+ESTADO 3 — ATRASADO (el grupo va más lento de lo esperado):
+Este es el estado que requiere más habilidad. Las 4 palancas disponibles:
+
+PALANCA 1 — Comprimir la actividad actual:
+"Tenemos 5 minutos más para esto. Quiero capturar las 2-3 ideas principales."
+
+PALANCA 2 — Eliminar una actividad posterior:
+Priorizar en tiempo real: ¿qué actividad de las que quedan es menos crítica para el objetivo?
+Regla: nunca eliminar el cierre — es donde se genera el impacto real.
+
+PALANCA 3 — Hacer la convergencia más directa:
+En lugar de divergencia completa → convergencia gradual → decisión, ir directamente a: "De lo que hemos discutido, ¿cuáles son las 2-3 opciones principales?"
+
+PALANCA 4 — Decisión mínima viable:
+"Con lo que tenemos, ¿cuál es la decisión más pequeña que podemos tomar ahora y que destrabe el trabajo?"
+
+CÓMO ANUNCIAR LOS AJUSTES SIN PERDER CONFIANZA:
+El facilitador que ajusta la agenda en silencio pierde credibilidad cuando el grupo nota que el plan cambió.
+El facilitador que anuncia los ajustes con claridad mantiene la confianza: "Voy a ajustar el plan. Vamos a comprimir [actividad X] para asegurar que llegamos a la decisión. ¿De acuerdo?"`,
+    technical:`PROTOCOLO DE AJUSTE EN TIEMPO REAL:
+
+CADA 30 MINUTOS en una sesión larga, hacer un check interno silencioso:
+→ ¿Dónde debería estar según el plan?
+→ ¿Dónde estoy realmente?
+→ ¿El grupo está produciendo lo que necesito para el objetivo?
+→ ¿Necesito ajustar algo ahora?
+
+SEÑALES DE QUE NECESITÁS AJUSTAR:
+→ La fase de divergencia consumió más del 50% del tiempo total
+→ El grupo está debatiendo los mismos argumentos por segunda vez
+→ Quedan menos de 20 minutos y no hay decisión en vista
+→ La energía del grupo cayó bruscamente
+
+CÓMO PRIORIZAR CUANDO NO ALCANZA EL TIEMPO — la jerarquía:
+1. El cierre SIEMPRE (compromisos + owners + fechas)
+2. La decisión (aunque sea mínima viable)
+3. La convergencia (aunque sea incompleta)
+4. La divergencia (puede quedar parcial si hay suficiente input)
+5. La alineación (puede ajustarse o eliminarse si el grupo ya tiene contexto)
+
+CORTAR SIN GENERAR FRICCIÓN — el protocolo:
+1. Anunciar el tiempo restante con visibilidad: mostrar el timer
+2. Reformular el objetivo a una versión reducida: "En 10 minutos, ¿qué es lo mínimo que podemos acordar para destrabar el próximo sprint?"
+3. Activar la técnica más rápida de convergencia: Dot Voting de 2 minutos
+4. Tomar la decisión y nombrar owners
+5. Cerrar con lo acordado — aunque sea parcial
+
+FRASE PARA CORTAR CON RESPETO:
+"Veo que estamos en una conversación importante y sé que hay más para decir. El tiempo nos obliga a elegir: podemos profundizar en esta conversación ahora y dejar el cierre sin tiempo, o cerramos aquí y agendamos una sesión específica para profundizar. ¿Cuál prefiere el grupo?"`,
+    visual:{ type:"gestion-tiempo" },
+    questions:[
+      {
+        q:"Quedan 20 minutos y el grupo está en divergencia con mucho material pero sin converger. ¿Cuál es la palanca más efectiva?",
+        opts:["Dar 5 minutos más de divergencia para capturar todas las ideas","Activar convergencia directa: 'De todo lo que generamos, ¿cuáles son las 2-3 opciones principales?' + Dot Voting de 3 minutos para priorizar + decisión con Fist of Five en 10 minutos = cierre en 20 minutos.","Eliminar el cierre para tener más tiempo de convergencia","Extender la sesión — el material generado es demasiado valioso para apresurar"],
+        correct:1,
+        explanation:"Con 20 minutos disponibles, la secuencia convergencia acelerada → decisión → cierre es exactamente posible si se ejecuta con disciplina. La palanca clave es ir de 'divergencia total' a '¿cuáles son las 2-3 opciones principales?' — esto colapsa la convergencia gradual en una pregunta directa. El error más común es sacrificar el cierre, que es exactamente donde se transforma la sesión en impacto real."
+      },
+      {
+        q:"El grupo termina la fase de divergencia 25 minutos antes de lo planificado. ¿Cuál es la mejor decisión?",
+        opts:["Agregar más actividades de divergencia para aprovechar el tiempo","Profundizar la calidad de la convergencia y el cierre — más preguntas de verificación, Fist of Five, asegurarse de que los owners comprenden completamente sus compromisos. O terminar antes y devolver tiempo al grupo.","Repetir la actividad de divergencia con una pregunta diferente","Avanzar al siguiente tema de la agenda del área"],
+        correct:1,
+        explanation:"El tiempo 'ganado' en una sesión tiene dos usos correctos: mejorar la calidad de las fases que siguen (convergencia y cierre más profundos) o devolverlo al grupo (que siempre agradecen terminar antes). Agregar actividades no planificadas solo para 'usar' el tiempo diluye el objetivo y puede reducir la calidad del cierre."
+      },
+      {
+        q:"¿Cuál de las siguientes frases es más efectiva para cortar una actividad sin generar fricción?",
+        opts:["'Ok, tenemos que seguir — se nos acaba el tiempo'","'Veo que hay más para decir sobre esto y sé que es importante. El tiempo nos obliga a elegir: profundizamos ahora y dejamos el cierre sin espacio, o cerramos aquí y agendo una sesión específica para profundizar. ¿Cuál prefiere el grupo?'","'Vamos terminando este punto'","'El tiempo se acabó para este tema — pasemos al siguiente'"],
+        correct:1,
+        explanation:"La frase efectiva cumple 4 funciones: valida que el tema es importante (no lo minimiza), hace visible el tradeoff real (profundidad vs cierre), da al grupo la decisión (no la toma el facilitador unilateralmente), y ofrece una alternativa concreta (sesión específica). Las otras opciones son directivas o minimizadoras — generan resentimiento o sensación de que el facilitador está apresurado."
+      }
+    ]
+  },
+
+  {
+    id:"cierre-followup", group:"avanzado", title:"Cierre Efectivo y Follow-up", icon:"✅",
+    color:"#D97706", light:"#FEF3C7", border:"#FCD34D", text:"#78350F",
+    functional:`El cierre es la fase más subestimada y más frecuentemente sacrificada por falta de tiempo. Es exactamente donde una sesión se transforma (o no) en impacto real.
+
+LOS 5 ELEMENTOS DE UN CIERRE EFECTIVO:
+
+1. RESUMEN DE DECISIONES (no de conversaciones):
+No es "discutimos X y luego hablamos de Y." Es "acordamos [decisión 1], [decisión 2], y [decisión 3]."
+Si el facilitador no puede resumir las decisiones en 60 segundos, la sesión no produjo claridad suficiente.
+
+2. OWNERS Y FECHAS — no negociables:
+Cada decisión o acción necesita: ¿qué se va a hacer?, ¿quién lo hace? (una persona, no 'el equipo'), ¿para cuándo?
+Regla: si no hay owner, no hay acción. Si no hay fecha, no hay compromiso.
+
+3. PARKING LOT — revisión completa:
+Cada ítem del Parking Lot necesita una decisión: ¿tarea con owner?, ¿sesión separada?, ¿descartado?
+Un Parking Lot que no se revisa al cierre destruye la credibilidad de la herramienta.
+
+4. VERIFICACIÓN DE COMPROMISOS:
+Antes de cerrar, dar un momento para que cada persona con un commitment lo repita en voz alta: "Confirmo que [X] para [fecha]."
+Esto solidifica el compromiso y detecta inconsistencias antes de que la gente salga de la sala.
+
+5. CHECK-OUT:
+Una pregunta de cierre que calibra cómo sale el grupo. Opciones:
+→ "Una palabra que describe cómo te vas de esta sesión"
+→ "En una escala de 1-10, ¿qué tan confiante estás de que podemos implementar lo que acordamos?"
+→ "¿Hay algo que necesitás antes de poder implementar tu compromiso?"
+
+FOLLOW-UP EN LAS PRIMERAS 24 HORAS:
+El follow-up que llega 3 días después de la sesión no tiene el mismo impacto. El resumen en las primeras 24h (idealmente 4-6h) mantiene el momentum.
+Formato mínimo: objetivo de la sesión + lista de decisiones + tabla de owners/fechas/acciones + próximos pasos + fecha de seguimiento.`,
+    technical:`CÓMO ASEGURAR QUE LA SESIÓN GENERA IMPACTO:
+
+EL TEST DE IMPACTO — hacerse esta pregunta antes de cerrar:
+"Si mañana no viniera a trabajar y alguien leyera el resumen de esta sesión, ¿sabría exactamente qué se decidió, quién va a hacer qué, y para cuándo?"
+Si la respuesta es no → el cierre no está completo.
+
+PROTOCOLO DE COMPROMISOS:
+MALO: "Quedamos en revisar el roadmap."
+BUENO: "María va a preparar el draft del roadmap actualizado para el jueves 17/4 a las 5pm y lo compartirá en el canal del equipo."
+
+FORMATO DE RESUMEN POST-SESIÓN (template):
+
+SESIÓN: [nombre + fecha]
+OBJETIVO: [objetivo original]
+¿SE LOGRÓ?: Sí / Parcialmente / No (con razón)
+DECISIONES:
+1. [Decisión 1]
+2. [Decisión 2]
+ACCIONES:
+| Qué | Quién | Para cuándo |
+|-----|-------|-------------|
+| X   | Y     | 15/4        |
+PARKING LOT PENDIENTE:
+- [Ítem 1] → Owner: [Z], para: [fecha]
+PRÓXIMA REUNIÓN: [fecha + objetivo]
+
+CÓMO HACER SEGUIMIENTO SIN SER EL POLICÍA:
+El ATF no es el responsable de que las acciones se implementen — es el responsable de que el sistema de accountability funcione.
+→ 24h después: enviar el resumen
+→ 48h antes del deadline: ping al owner: "¿Cómo va [X]? ¿Necesitás algo para poder entregarlo?"
+→ En la siguiente sesión: revisar el status de TODAS las acciones antes de agregar nuevas
+
+SI LAS ACCIONES NO SE IMPLEMENTAN SISTEMÁTICAMENTE:
+Esto no es un problema de seguimiento — es un problema de ownership y seguridad psicológica.
+La retro más valiosa en ese punto: "¿Por qué no implementamos lo que acordamos? ¿Qué hace que sea difícil?"`,
+    visual:{ type:"cierre-followup" },
+    questions:[
+      {
+        q:"Al cierre de un workshop de 3 horas, el resumen del facilitador es: 'Discutimos el roadmap y hubo muchas ideas interesantes sobre la priorización.' ¿Cuál es el problema?",
+        opts:["El resumen es demasiado corto — necesita más detalle","El resumen describe conversaciones, no decisiones. Un resumen de cierre efectivo sería: 'Acordamos priorizar las features A, B y C en el Q2. María es la owner del roadmap actualizado para el jueves. El equipo técnico evaluará la feasibilidad de C antes del viernes con Juan como referente.' Sin decisiones + owners + fechas, la sesión no produjo impacto.","El facilitador debería resumir todas las ideas, no solo las decisiones","El resumen está bien — el follow-up por email puede agregar los detalles"],
+        correct:1,
+        explanation:"'Hubo muchas ideas interesantes' describe actividad, no impacto. Si el resumen no puede responder '¿qué se decidió, quién lo hace, y cuándo?', la sesión no cerró correctamente. El test simple: si alguien leyera el resumen mañana sin haber estado en la sesión, ¿sabría exactamente qué tiene que pasar? Si no, el cierre no está completo."
+      },
+      {
+        q:"Después de acordar 4 acciones en la retro, el facilitador pregunta a cada persona que repita su compromiso en voz alta. ¿Para qué sirve este paso?",
+        opts:["Es un ritual innecesario que consume tiempo del cierre","Cumple dos funciones: solidifica el compromiso (decirlo en voz alta en público aumenta la probabilidad de implementación) y detecta inconsistencias antes de que la gente salga de la sala — si alguien no puede repetir el compromiso con claridad, el acuerdo no estaba realmente entendido.","Es para verificar que el facilitador tomó nota correctamente","Es solo útil cuando el equipo tiene baja confianza entre sí"],
+        correct:1,
+        explanation:"La verbalización pública de compromisos tiene un efecto psicológico real: aumenta la probabilidad de implementación porque el compromiso ahora es social, no solo personal. Además, al pedir la repetición, el facilitador detecta en tiempo real si el acuerdo estaba claro — 'iba a revisar el... ¿qué era exactamente?' indica que el compromiso no fue suficientemente específico en la definición."
+      },
+      {
+        q:"En la siguiente sesión descubrís que ninguna de las 5 acciones de la retro anterior se implementó. ¿Cuál es el diagnóstico correcto?",
+        opts:["El equipo es irresponsable y necesita más presión","El problema de seguimiento — el facilitador no hizo el seguimiento correcto","Esto no es un problema de seguimiento — es un problema de ownership, seguridad psicológica o impedimentos sistémicos. La retro más valiosa en ese momento: '¿Por qué no implementamos lo que acordamos? ¿Qué hace que sea difícil?' Sin responder esa pregunta, agregar más acciones produce el mismo resultado.","Las acciones eran demasiado ambiciosas — hay que definir acciones más pequeñas"],
+        correct:2,
+        explanation:"El patrón de acciones acordadas pero no implementadas es uno de los más frecuentes y más diagnósticamente valiosos. Las causas posibles son: no había ownership real (todos asintieron pero nadie se comprometió genuinamente), hay impedimentos sistémicos que bloquean la implementación (falta de tiempo, recursos, autoridad), o la seguridad psicológica es tan baja que el equipo acordó para complacer al facilitador. La retro que diagnostica esto tiene más valor que 10 acciones nuevas."
+      }
+    ]
+  },
+
+  {
+    id:"nivel-avanzado", group:"avanzado", title:"Nivel Avanzado — Energía, Poder y Neutralidad", icon:"🔥",
+    color:"#D97706", light:"#FEF3C7", border:"#FCD34D", text:"#78350F",
+    functional:`Las habilidades de nivel avanzado que no se enseñan en los cursos de facilitación — pero que determinan si un facilitador puede operar en entornos de alta complejidad política como BCP.
+
+CÓMO LEER LA ENERGÍA DEL GRUPO:
+
+LA ENERGÍA SE MIDE EN 3 DIMENSIONES:
+1. ENERGÍA FÍSICA: ¿están presentes o distraídos? Cámaras encendidas, postura, contacto visual.
+2. ENERGÍA EMOCIONAL: ¿hay tensión, entusiasmo, resignación, o miedo? Se lee en el tono de voz y las microexpresiones.
+3. ENERGÍA COGNITIVA: ¿están pensando o están en modo automático? Calidad de los aportes, originalidad de las ideas.
+
+SEÑALES DE ENERGÍA BAJA:
+→ Respuestas muy cortas y genéricas
+→ Nadie hace preguntas
+→ El grupo acepta la primera propuesta sin análisis
+→ En remoto: cámaras apagadas, sin mensajes en el chat
+
+INTERVENCIONES PARA SUBIR LA ENERGÍA:
+→ Break de 5 minutos (siempre efectivo)
+→ Cambiar el formato: de pasivo (escuchar) a activo (hacer)
+→ Pregunta de relevancia: "¿Por qué importa esto para tu trabajo específico?"
+→ Reducir el scope del problema: hacer que parezca más manejable
+
+CÓMO MANEJAR DINÁMICAS DE PODER:
+
+PODER FORMAL (jerarquía): el Director, el CTO, el Gerente. Tienen autoridad para aprobar o vetar.
+PODER INFORMAL (influencia): el tech lead senior que todos respetan, la persona que "siempre sabe lo que realmente pasa". Puede tener más influencia real que el poder formal.
+
+ESTRATEGIAS:
+Para el poder formal: hablar con el stakeholder antes de la sesión para entender su posición. Crear espacio para su input sin dejar que domine el proceso.
+Para el poder informal: involucrar a estas personas como co-facilitadores o expertos referentes. Neutralizar el efecto HiPPO haciendo que el proceso sea más importante que la persona.
+
+CÓMO INTERVENIR SIN PERDER NEUTRALIDAD:
+
+El facilitador neutral no es el que no tiene opinión — es el que no usa su posición para imponer su opinión.
+La neutralidad se mantiene en el PROCESO, no necesariamente en el CONTENIDO.
+
+Intervenciones que mantienen la neutralidad:
+→ Hacer preguntas en lugar de afirmaciones
+→ Reflejar lo que el grupo dice sin agregar interpretación
+→ Hacer explícitos los tradeoffs sin señalar cuál es "mejor"
+→ Nombrar el patrón de grupo sin nombrara personas
+
+Cuándo romper la neutralidad (con criterio):
+→ Cuando el grupo está tomando una decisión que claramente viola principios éticos o técnicos fundamentales
+→ Cuando hay información que el grupo no tiene y que cambiaría la decisión
+→ En estos casos: anunciar explícitamente que salís del rol de facilitador para hacer un aporte, y luego volver al rol.`,
+    technical:`PROTOCOLO COMPLETO — FACILITACIÓN EN ENTORNOS DE ALTA PRESIÓN POLÍTICA:
+
+ANTES DE LA SESIÓN:
+1. Conversaciones bilaterales con los stakeholders más influyentes para entender posiciones previas
+2. Verificar si la decisión tiene una "respuesta esperada" políticamente
+3. Preparar la intervención para el escenario HiPPO más probable
+4. Diseñar el proceso para que los datos hablen antes que las personas
+
+DURANTE LA SESIÓN:
+1. Apertura: establecer las reglas de participación explícitamente al inicio
+2. En la divergencia: Brainwriting antes de cualquier discusión abierta
+3. En la convergencia: criterios explícitos antes de votar (qué nos importa para tomar esta decisión)
+4. Ante el HiPPO: datos antes de que el HiPPO hable
+5. Ante el groupthink: pre-mortem antes de cerrar cualquier decisión importante
+
+DESPUÉS DE LA SESIÓN:
+1. Resumen en 24h con decisiones + owners + fechas
+2. Follow-up a los owners 48h antes del deadline
+3. En la siguiente sesión: status de TODAS las acciones antes de agregar nuevas
+
+SEÑALES DE QUE LA SESIÓN FUE UN ÉXITO REAL (no solo bien evaluada):
+→ Las decisiones se implementan sin recordatorio adicional
+→ Los owners toman iniciativa antes del deadline
+→ El grupo puede reproducir el proceso en la siguiente sesión con menos dependencia del facilitador
+→ Las métricas que la sesión debía mover (Lead Time, Sprint Goal, etc.) mejoran en el sprint/PI siguiente
+
+SEÑALES DE QUE FUE UN ÉXITO APARENTE (bien evaluada pero sin impacto):
+→ Las acciones se acumulan sin implementarse
+→ El grupo necesita al facilitador para todas las sesiones subsiguientes
+→ Las mismas conversaciones se repiten en cada sesión
+→ Las métricas de negocio no cambian
+
+CALARIS COMO GUÍA DE FACILITACIÓN AVANZADA:
+C: Diagnosticar el contexto político antes de diseñar la sesión
+A: Verificar que la alineación es real y no groupthink
+L: Decidir cuándo intervenir y cómo (con autoridad vs como facilitador)
+A: Adaptar el formato al nivel de seguridad psicológica de la audiencia
+R: Ajustar el plan de la sesión en tiempo real según el estado del grupo
+I: Medir el impacto real de la sesión en las próximas 2 semanas
+S: Construir el sistema para que el grupo facilite sus propias sesiones`,
+    visual:{ type:"nivel-avanzado" },
+    questions:[
+      {
+        q:"Notás que el grupo está en 'falsa convergencia' — todos aceptan la primera propuesta sin análisis real. ¿Qué 3 intervenciones secuenciales hacés?",
+        opts:["Aceptar la convergencia — el grupo tomó una decisión y hay que respetarla","Fist of Five para verificar el nivel real de compromiso → Pre-mortem: 'Imaginen que es 6 meses después y esto no funcionó — ¿qué pasó?' → Si todavía hay silencio: Brainwriting anónimo: 'Escribe tu preocupación principal sobre esta decisión.' Estas 3 intervenciones en secuencia revelan si el consenso es genuino o performativo.","Descartarla propuesta y empezar de nuevo con más divergencia","Preguntar directamente a cada persona si realmente está de acuerdo"],
+        correct:1,
+        explanation:"La secuencia Fist of Five → Pre-mortem → Brainwriting anónimo es escalante: cada intervención es más privada y más segura que la anterior. Si el Fist of Five revela 4-5 de todos, el pre-mortem puede revelar preocupaciones que no dijeron en voz alta. Y si el pre-mortem también produce silencio, el Brainwriting anónimo elimina la inhibición social completamente. Las tres juntas son el test más robusto de consenso genuino."
+      },
+      {
+        q:"¿Cuándo es legítimo que un facilitador 'rompa' su neutralidad y comparta su propia perspectiva?",
+        opts:["Nunca — la neutralidad del facilitador es absoluta y no puede romperse","Cuando el grupo está tomando una decisión que viola principios éticos o técnicos fundamentales, o cuando tiene información que el grupo no tiene y que cambiaría la decisión. En estos casos: anunciar explícitamente que salís del rol de facilitador ('Voy a salir del rol de facilitador un momento para compartir algo importante'), hacer el aporte, y volver al rol.","Cuando el facilitador tiene más experiencia que el grupo en el tema","Cuando la sesión se está extendiendo demasiado y necesita acelerar"],
+        correct:1,
+        explanation:"La neutralidad del facilitador es una postura, no una ley absoluta. Hay momentos donde guardar la neutralidad es una forma de complicidad (ante una decisión técnicamente errónea o éticamente problemática) o de negligencia (cuando el facilitador tiene información relevante que el grupo no tiene). La clave es anunciarlo explícitamente — 'salgo del rol de facilitador' — para que el grupo entienda que lo que sigue es una perspectiva personal, no la guía del proceso."
+      },
+      {
+        q:"¿Cuál es la diferencia entre una sesión 'bien evaluada' y una sesión que generó impacto real?",
+        opts:["Son lo mismo — si el grupo evalúa bien la sesión, generó impacto","Una sesión bien evaluada puede tener alta satisfacción del participante pero las acciones no se implementan, las métricas no cambian, y las mismas conversaciones se repiten en la próxima sesión. El impacto real se mide 2 semanas después: ¿las decisiones se implementaron? ¿las métricas mejoraron? ¿el grupo puede reproducir el proceso solo?","Las sesiones bien evaluadas siempre generan impacto — la evaluación positiva es el indicador","El impacto se mide solo en sesiones estratégicas, no en ceremonias ágiles"],
+        correct:1,
+        explanation:"La satisfacción del participante y el impacto real son métricas diferentes que a veces se correlacionan y a veces no. Una sesión donde se tomaron decisiones difíciles puede tener evaluación mediocre pero alto impacto. Una sesión donde todos se sintieron bien y no se tomó ninguna decisión difícil puede tener alta evaluación pero impacto cero. El facilitador experto mide ambas y entiende la diferencia."
+      }
+    ]
+  }
+];
+
+const tabs = [
+  { id:"functional", label:"Funcional" },
+  { id:"technical",  label:"Técnico" },
+  { id:"visual",     label:"Visual" },
+  { id:"quiz",       label:"¿Lo entendí?" }
+];
+
+// ── VISUALS ──
+
+function VisualPrepSesion() {
+  return (
+    <div style={{display:"flex",flexDirection:"column",gap:8}}>
+      <div style={{background:"#0f172a",borderRadius:8,padding:"10px 14px"}}>
+        <div style={{fontSize:10,fontWeight:700,color:"#fbbf24",marginBottom:6}}>CHECKLIST PRE-SESIÓN — 30 min antes</div>
+        {[
+          {cat:"Objetivo","items":["Una frase concreta","Output medible al final","Todos saben por qué están"]},
+          {cat:"Participantes","items":["¿Están las personas correctas?","¿Hay agendas implícitas?","¿Hay conflictos previos?"]},
+          {cat:"Riesgos","items":["¿Cuál es el peor escenario?","¿Decisión pre-tomada políticamente?","¿Tenés intervención preparada?"]},
+        ].map((x,i)=>(
+          <div key={i} style={{marginBottom:6}}>
+            <div style={{fontSize:10,fontWeight:700,color:"#94a3b8",marginBottom:3}}>{x.cat.toUpperCase()}</div>
+            {x.items.map((it,j)=><div key={j} style={{fontSize:10,color:"#e2e8f0",lineHeight:1.6}}>☐ {it}</div>)}
+          </div>
+        ))}
+      </div>
+      <div style={{background:"#EDE9FE",border:"1px solid #C4B5FD",borderRadius:7,padding:"8px 12px",fontSize:11,color:"#4C1D95",fontWeight:600,textAlign:"center"}}>
+        "¿Qué tendría que pasar para que esta sesión sea un fracaso?" → Respondela antes de empezar
+      </div>
+    </div>
+  );
+}
+
+function VisualEstructuraUniversal() {
+  const fases = [
+    {n:"APERTURA",p:"5-8%",d:"Objetivo + proceso + reglas",c:"#7C3AED",bg:"#EDE9FE"},
+    {n:"ALINEACIÓN",p:"8-10%",d:"Mismo contexto para todos",c:"#0D9488",bg:"#CCFBF1"},
+    {n:"DIVERGENCIA",p:"30-35%",d:"Generar perspectivas sin filtro",c:"#2563EB",bg:"#DBEAFE"},
+    {n:"CONVERGENCIA",p:"25-30%",d:"Filtrar con criterios explícitos",c:"#D97706",bg:"#FEF3C7"},
+    {n:"DECISIÓN",p:"15-20%",d:"Owner + fecha + compromiso",c:"#DC2626",bg:"#FEE2E2"},
+    {n:"CIERRE",p:"8-10%",d:"Resumen + Parking Lot + check-out",c:"#16A34A",bg:"#DCFCE7"},
+  ];
+  return (
+    <div style={{display:"flex",flexDirection:"column",gap:5}}>
+      {fases.map((f,i)=>(
+        <div key={i} style={{display:"flex",alignItems:"center",gap:10,background:f.bg,border:`1px solid ${f.c}40`,borderRadius:7,padding:"8px 12px",borderLeft:`4px solid ${f.c}`}}>
+          <div style={{minWidth:90,fontSize:11,fontWeight:700,color:f.c}}>{f.n}</div>
+          <div style={{minWidth:44,background:f.c,color:"#fff",borderRadius:4,padding:"2px 6px",fontSize:10,fontWeight:700,textAlign:"center"}}>{f.p}</div>
+          <div style={{fontSize:10,color:"#374151"}}>{f.d}</div>
+        </div>
+      ))}
+      <div style={{background:"#0f172a",borderRadius:7,padding:"8px 12px",fontSize:11,color:"#fbbf24",textAlign:"center",fontWeight:700,marginTop:4}}>
+        REGLA: nunca eliminar el CIERRE aunque falte tiempo
+      </div>
+    </div>
+  );
+}
+
+function VisualTecnicasClave() {
+  return (
+    <div style={{display:"flex",flexDirection:"column",gap:6}}>
+      {[
+        {n:"Parking Lot",u:"Tema válido, fuera del foco",err:"Usarlo para evitar conversaciones difíciles",tip:"Revisar CADA ítem al cierre",c:"#7C3AED"},
+        {n:"Dot Voting",u:"Priorizar 5+ ítems",err:"Votar secuencialmente (efecto ancla)",tip:"Revelar simultáneamente, siempre",c:"#0D9488"},
+        {n:"Fist of Five",u:"Verificar compromiso real",err:"Presionar hasta que todos den 5",tip:"Ante 0 o 1: '¿Qué necesitarías?'",c:"#2563EB"},
+        {n:"Round Robin",u:"Voz dominante, grupo callado",err:"Con grupos de +10 personas",tip:"Dar turno antes de la discusión libre",c:"#D97706"},
+        {n:"1-2-4-All",u:"Seguridad psicológica baja",err:"Saltear la etapa individual (1 min)",tip:"La etapa individual es la más crítica",c:"#DC2626"},
+        {n:"ROAM",u:"PI Planning · gestión de riesgos",err:"Owners colectivos ('el equipo')",tip:"Nombre individual en cada riesgo Owned",c:"#16A34A"},
+      ].map((x,i)=>(
+        <div key={i} style={{background:"#f8fafc",border:`1px solid ${x.c}30`,borderRadius:7,padding:"8px 12px",borderLeft:`3px solid ${x.c}`}}>
+          <div style={{display:"flex",justifyContent:"space-between",alignItems:"flex-start",flexWrap:"wrap",gap:4,marginBottom:3}}>
+            <div style={{fontSize:11,fontWeight:700,color:x.c}}>{x.n}</div>
+            <div style={{fontSize:9,background:`${x.c}20`,color:x.c,borderRadius:4,padding:"2px 6px"}}>Usar: {x.u}</div>
+          </div>
+          <div style={{fontSize:10,color:"#DC2626"}}>✗ Error: {x.err}</div>
+          <div style={{fontSize:10,color:"#16A34A",marginTop:2}}>✓ Tip: {x.tip}</div>
+        </div>
+      ))}
+    </div>
+  );
+}
+
+function VisualSituaciones15() {
+  const casos = [
+    {n:"1 · Persona dominante",fix:"Round Robin → Brainwriting → en privado: 'hacé preguntas en lugar de dar respuestas'",no:"Confrontar públicamente",c:"#DC2626"},
+    {n:"2 · Silencio total",fix:"Esperar 15 seg → reformular → Brainwriting anónimo → 'Noto silencio, ¿qué hace difícil responder?'",no:"Responder vos mismo la pregunta",c:"#D97706"},
+    {n:"3 · Conflicto fuerte",fix:"Pausar inmediatamente → nombrar el patrón sin señalar → separar necesidades de posiciones → bilateral",no:"Tomar partido o mediar en la sesión grupal",c:"#7C3AED"},
+    {n:"4 · Grupo se desvía",fix:"Parking Lot → releer el objetivo en voz alta → mostrar timer",no:"Seguir el desvío esperando que vuelvan solos",c:"#2563EB"},
+    {n:"5 · No se decide",fix:"Clarificar quién es el Approver → decisión timeboxed → opción de menor riesgo como provisional",no:"Forzar un 'consenso' que es rendición de la minoría",c:"#0D9488"},
+  ];
+  return (
+    <div style={{display:"flex",flexDirection:"column",gap:6}}>
+      {casos.map((x,i)=>(
+        <div key={i} style={{background:"#f8fafc",border:`1px solid ${x.c}30`,borderRadius:8,padding:"10px 12px",borderLeft:`4px solid ${x.c}`}}>
+          <div style={{fontSize:12,fontWeight:700,color:x.c,marginBottom:5}}>{x.n}</div>
+          <div style={{fontSize:10,color:"#16A34A",marginBottom:3}}>→ {x.fix}</div>
+          <div style={{fontSize:10,color:"#DC2626"}}>✗ NO: {x.no}</div>
+        </div>
+      ))}
+    </div>
+  );
+}
+
+function VisualSituaciones610() {
+  const casos = [
+    {n:"6 · Stakeholder impone",fix:"Pre-sesión: '¿Esta sesión es para decidir juntos o comunicar lo decidido?' En sesión: reformular como 'opción principal a evaluar'",no:"Confrontar al stakeholder en público",c:"#DC2626"},
+    {n:"7 · Falso consenso",fix:"Fist of Five → Pre-mortem ('¿qué pasó si falla?') → Brainwriting anónimo ('¿cuál es tu preocupación?')",no:"Aceptar el 'sí' rápido en decisiones de alta consecuencia",c:"#D97706"},
+    {n:"8 · Sin energía",fix:"Break de 5 min → cambiar a formato activo → '¿qué necesitaría esta sesión para que valga tu tiempo?'",no:"Acelerar el contenido para 'terminar más rápido'",c:"#7C3AED"},
+    {n:"9 · Debate técnico excesivo",fix:"Parking Lot para sesión técnica específica → timebox de 5 min → reformular al nivel correcto",no:"Participar en el debate (perdés la neutralidad)",c:"#2563EB"},
+    {n:"10 · Tiempo agotado",fix:"Anunciar el estado → Dot Voting de 2 min → decisión mínima viable → cerrar con lo acordado + fecha",no:"Extender sin acuerdo del grupo",c:"#16A34A"},
+  ];
+  return (
+    <div style={{display:"flex",flexDirection:"column",gap:6}}>
+      {casos.map((x,i)=>(
+        <div key={i} style={{background:"#f8fafc",border:`1px solid ${x.c}30`,borderRadius:8,padding:"10px 12px",borderLeft:`4px solid ${x.c}`}}>
+          <div style={{fontSize:12,fontWeight:700,color:x.c,marginBottom:5}}>{x.n}</div>
+          <div style={{fontSize:10,color:"#16A34A",marginBottom:3}}>→ {x.fix}</div>
+          <div style={{fontSize:10,color:"#DC2626"}}>✗ NO: {x.no}</div>
+        </div>
+      ))}
+    </div>
+  );
+}
+
+function VisualGestionTiempo() {
+  return (
+    <div style={{display:"flex",flexDirection:"column",gap:8}}>
+      <div style={{display:"grid",gridTemplateColumns:"repeat(3,1fr)",gap:6}}>
+        {[
+          {n:"EN TIEMPO","d":"Confía en el diseño. No intervengas si no hace falta.",c:"#16A34A",bg:"#DCFCE7"},
+          {n:"ADELANTADO","d":"Profundizar la calidad del cierre o devolver tiempo al grupo.",c:"#0D9488",bg:"#CCFBF1"},
+          {n:"ATRASADO","d":"Comprimir → Eliminar → Convergencia directa → Decisión mínima.",c:"#DC2626",bg:"#FEE2E2"},
+        ].map((x,i)=>(
+          <div key={i} style={{background:x.bg,border:`1px solid ${x.c}40`,borderRadius:7,padding:"8px",textAlign:"center"}}>
+            <div style={{fontSize:11,fontWeight:700,color:x.c,marginBottom:4}}>{x.n}</div>
+            <div style={{fontSize:10,color:"#374151",lineHeight:1.4}}>{x.d}</div>
+          </div>
+        ))}
+      </div>
+      <div style={{background:"#0f172a",borderRadius:8,padding:"10px 14px"}}>
+        <div style={{fontSize:10,fontWeight:700,color:"#fbbf24",marginBottom:6}}>JERARQUÍA — qué preservar cuando no alcanza el tiempo</div>
+        {[
+          {n:"1° CIERRE","d":"Siempre — es donde se genera el impacto","c":"#4ade80"},
+          {n:"2° DECISIÓN","d":"Aunque sea mínima viable","c":"#86efac"},
+          {n:"3° CONVERGENCIA","d":"Aunque sea incompleta","c":"#fbbf24"},
+          {n:"4° DIVERGENCIA","d":"Puede quedar parcial","c":"#fca5a5"},
+          {n:"5° ALINEACIÓN","d":"Puede reducirse si el grupo ya tiene contexto","c":"#f87171"},
+        ].map((x,i)=>(
+          <div key={i} style={{display:"flex",gap:8,marginBottom:4}}>
+            <div style={{fontSize:10,fontWeight:700,color:x.c,minWidth:100}}>{x.n}</div>
+            <div style={{fontSize:10,color:"#94a3b8"}}>{x.d}</div>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+}
+
+function VisualCierreFollowup() {
+  return (
+    <div style={{display:"flex",flexDirection:"column",gap:8}}>
+      <div style={{display:"flex",flexDirection:"column",gap:5}}>
+        {[
+          {n:"1. Resumen de DECISIONES","d":"No de conversaciones. 'Acordamos X, Y y Z.' Si no podés resumirlo en 60 seg, la sesión no produjo claridad.",c:"#7C3AED"},
+          {n:"2. Owners y Fechas","d":"Cada acción: qué + quién (una persona) + cuándo. Sin owner = sin acción.",c:"#0D9488"},
+          {n:"3. Parking Lot revisado","d":"Cada ítem: tarea / sesión separada / descartado. Sin revisión = sin credibilidad.",c:"#2563EB"},
+          {n:"4. Compromisos verbalizados","d":"Cada persona repite su compromiso en voz alta. Detecta inconsistencias.",c:"#D97706"},
+          {n:"5. Check-out","d":"'Una palabra que describe cómo te vas' — calibra el estado final del grupo.",c:"#16A34A"},
+        ].map((x,i)=>(
+          <div key={i} style={{background:"#f8fafc",border:`1px solid ${x.c}30`,borderRadius:7,padding:"8px 12px",borderLeft:`3px solid ${x.c}`}}>
+            <div style={{fontSize:11,fontWeight:700,color:x.c,marginBottom:2}}>{x.n}</div>
+            <div style={{fontSize:10,color:"#374151"}}>{x.d}</div>
+          </div>
+        ))}
+      </div>
+      <div style={{background:"#0f172a",borderRadius:7,padding:"8px 12px",fontSize:10,color:"#e2e8f0",textAlign:"center"}}>
+        <strong style={{color:"#fbbf24"}}>Test del cierre:</strong> "Si alguien leyera el resumen mañana sin haber estado, ¿sabría exactamente qué pasa?"
+      </div>
+    </div>
+  );
+}
+
+function VisualNivelAvanzado() {
+  return (
+    <div style={{display:"flex",flexDirection:"column",gap:8}}>
+      <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:6}}>
+        <div style={{background:"#FEF3C7",border:"1px solid #FCD34D",borderRadius:8,padding:"10px 12px"}}>
+          <div style={{fontSize:12,fontWeight:700,color:"#D97706",marginBottom:5}}>SESIÓN BIEN EVALUADA</div>
+          {["Alta satisfacción del grupo","Todos salieron contentos","Las conversaciones fluyeron"].map((x,i)=><div key={i} style={{fontSize:10,color:"#374151",lineHeight:1.7}}>{x}</div>)}
+          <div style={{fontSize:10,color:"#D97706",marginTop:5,fontStyle:"italic"}}>Puede = impacto cero si no hay acciones</div>
+        </div>
+        <div style={{background:"#DCFCE7",border:"1px solid #86EFAC",borderRadius:8,padding:"10px 12px"}}>
+          <div style={{fontSize:12,fontWeight:700,color:"#16A34A",marginBottom:5}}>IMPACTO REAL — 2 semanas después</div>
+          {["Decisiones implementadas","Métricas mejoran","Grupo se autogestiona"].map((x,i)=><div key={i} style={{fontSize:10,color:"#374151",lineHeight:1.7}}>{x}</div>)}
+          <div style={{fontSize:10,color:"#16A34A",marginTop:5,fontStyle:"italic"}}>El único indicador que importa</div>
+        </div>
+      </div>
+      <div style={{background:"#0f172a",borderRadius:8,padding:"10px 14px"}}>
+        <div style={{fontSize:10,fontWeight:700,color:"#fbbf24",marginBottom:6}}>CUÁNDO ROMPER LA NEUTRALIDAD</div>
+        {[
+          {c:"✓ Legítimo","d":"Grupo viola principios éticos o técnicos fundamentales",col:"#4ade80"},
+          {c:"✓ Legítimo","d":"Tenés información que cambiaría la decisión del grupo",col:"#4ade80"},
+          {c:"✗ No legítimo","d":"No estás de acuerdo con la dirección del grupo",col:"#f87171"},
+          {c:"✗ No legítimo","d":"Querés acelerar la sesión",col:"#f87171"},
+        ].map((x,i)=>(
+          <div key={i} style={{display:"flex",gap:8,marginBottom:4}}>
+            <div style={{fontSize:10,fontWeight:700,color:x.col,minWidth:80}}>{x.c}</div>
+            <div style={{fontSize:10,color:"#e2e8f0"}}>{x.d}</div>
+          </div>
+        ))}
+        <div style={{fontSize:10,color:"#94a3b8",marginTop:5}}>Protocolo: anunciar "'salgo del rol de facilitador un momento para compartir algo importante'" → aportar → volver al rol</div>
+      </div>
+    </div>
+  );
+}
+
+function Visual({chapter}) {
+  const t = chapter.visual.type;
+  if(t==="prep-sesion")          return <VisualPrepSesion/>;
+  if(t==="estructura-universal") return <VisualEstructuraUniversal/>;
+  if(t==="tecnicas-clave")       return <VisualTecnicasClave/>;
+  if(t==="situaciones-1-5")      return <VisualSituaciones15/>;
+  if(t==="situaciones-6-10")     return <VisualSituaciones610/>;
+  if(t==="gestion-tiempo")       return <VisualGestionTiempo/>;
+  if(t==="cierre-followup")      return <VisualCierreFollowup/>;
+  if(t==="nivel-avanzado")       return <VisualNivelAvanzado/>;
+  return null;
+}
+
+function Quiz({questions, color, light, onComplete}) {
+  const [answers, setAnswers] = useState({});
+  const [submitted, setSubmitted] = useState(false);
+  function answer(qi,oi){if(submitted||answers[qi]!==undefined)return;setAnswers(a=>({...a,[qi]:oi}));}
+  function submit(){
+    if(Object.keys(answers).length<questions.length)return;
+    const score=questions.reduce((s,q,i)=>s+(answers[i]===q.correct?1:0),0);
+    setSubmitted(true);onComplete(score);
+  }
+  return (
+    <div>
+      {questions.map((q,qi)=>(
+        <div key={qi} style={{marginBottom:16}}>
+          <div style={{fontSize:13,fontWeight:500,color:"#1e293b",marginBottom:8,lineHeight:1.5}}>{qi+1}. {q.q}</div>
+          <div style={{display:"flex",flexDirection:"column",gap:5}}>
+            {q.opts.map((o,oi)=>{
+              let bg="#f8fafc",border="1px solid #e2e8f0",tc="#374151";
+              if(answers[qi]===oi){bg=light;border=`1px solid ${color}`;tc="#1e293b";}
+              if(submitted&&oi===q.correct){bg="#f0fdf4";border="1px solid #86efac";tc="#14532d";}
+              if(submitted&&answers[qi]===oi&&oi!==q.correct){bg="#fef2f2";border="1px solid #fca5a5";tc="#7f1d1d";}
+              return <div key={oi} onClick={()=>answer(qi,oi)} style={{padding:"9px 13px",borderRadius:7,border,background:bg,cursor:submitted||answers[qi]!==undefined?"default":"pointer",fontSize:12,color:tc,lineHeight:1.4}}>{o}</div>;
+            })}
+          </div>
+          {submitted&&<div style={{marginTop:8,padding:"8px 12px",background:answers[qi]===q.correct?"#f0fdf4":"#fef2f2",border:`1px solid ${answers[qi]===q.correct?"#86efac":"#fca5a5"}`,borderRadius:6,fontSize:12,color:answers[qi]===q.correct?"#14532d":"#7f1d1d",lineHeight:1.6}}>{answers[qi]===q.correct?"✓ ":"✗ "}{q.explanation}</div>}
+        </div>
+      ))}
+      {!submitted&&<button onClick={submit} disabled={Object.keys(answers).length<questions.length} style={{marginTop:4,padding:"9px 20px",borderRadius:7,border:"none",background:Object.keys(answers).length<questions.length?"#e2e8f0":color,color:Object.keys(answers).length<questions.length?"#94a3b8":"#fff",fontSize:13,fontWeight:600,cursor:Object.keys(answers).length<questions.length?"not-allowed":"pointer"}}>Verificar respuestas</button>}
+    </div>
+  );
+}
+
+export default function PlaybookFacilitacion() {
+  const [chapter, setChapter] = useState(0);
+  const [tab, setTab] = useState("functional");
+  const [quizDone, setQuizDone] = useState({});
+  const [totalScore, setTotalScore] = useState(0);
+  const [totalQ, setTotalQ] = useState(0);
+  const [quizKey, setQuizKey] = useState(0);
+
+  const ch = CHAPTERS[chapter];
+  const pct = totalQ>0?Math.round((totalScore/totalQ)*100):0;
+  const doneCh = Object.keys(quizDone).length;
+
+  function handleQuizComplete(score){
+    if(!quizDone[chapter]){setTotalScore(s=>s+score);setTotalQ(t=>t+ch.questions.length);}
+    setQuizDone(d=>({...d,[chapter]:{done:true,score,total:ch.questions.length}}));
+  }
+  function goChapter(idx){setChapter(idx);setTab("functional");setQuizKey(k=>k+1);}
+
+  return (
+    <div style={{fontFamily:"var(--font-sans)",maxWidth:780,margin:"0 auto"}}>
+      <div style={{background:"#0f172a",borderRadius:"12px 12px 0 0",padding:"12px 16px",display:"flex",alignItems:"center",gap:10}}>
+        <div style={{width:32,height:32,borderRadius:8,background:"rgba(124,58,237,.25)",border:"1px solid rgba(196,181,253,.4)",display:"flex",alignItems:"center",justifyContent:"center",fontSize:16,flexShrink:0}}>🎙️</div>
+        <div style={{flex:1}}>
+          <div style={{fontSize:13,fontWeight:500,color:"#f1f5f9"}}>Playbook de Facilitación — Guía interactiva · BCP prep</div>
+          <div style={{fontSize:11,color:"#64748b"}}>{CHAPTERS.length} secciones · {CHAPTERS.reduce((s,c)=>s+c.questions.length,0)} preguntas · 10 situaciones difíciles · Frases reales</div>
+        </div>
+        {doneCh>0&&<div style={{textAlign:"right"}}><div style={{fontSize:18,fontWeight:700,color:pct>=80?"#4ade80":pct>=60?"#fbbf24":"#f87171"}}>{pct}%</div><div style={{fontSize:10,color:"#64748b"}}>{doneCh}/{CHAPTERS.length}</div></div>}
+      </div>
+
+      <div style={{background:"#1e293b",padding:"8px 12px",borderBottom:"1px solid #0f172a"}}>
+        {GROUPS.map(group=>{
+          const gc=CHAPTERS.filter(c=>c.group===group.id);
+          return (
+            <div key={group.id} style={{marginBottom:6}}>
+              <div style={{fontSize:10,fontWeight:700,color:group.color,letterSpacing:".05em",marginBottom:4,paddingLeft:2}}>{group.label.toUpperCase()}</div>
+              <div style={{display:"flex",gap:4,flexWrap:"wrap"}}>
+                {gc.map(c=>{
+                  const idx=CHAPTERS.indexOf(c);
+                  return <button key={idx} onClick={()=>goChapter(idx)} style={{fontSize:11,padding:"5px 10px",borderRadius:6,cursor:"pointer",background:chapter===idx?c.color:"transparent",color:chapter===idx?"#fff":"#94a3b8",border:`1px solid ${chapter===idx?c.color:"#334155"}`,fontWeight:chapter===idx?600:400,display:"flex",alignItems:"center",gap:4,transition:".15s"}}>
+                    {quizDone[idx]&&<span style={{fontSize:9}}>{quizDone[idx].score===quizDone[idx].total?"✓":"~"}</span>}
+                    {c.icon} {c.title}
+                  </button>;
+                })}
+              </div>
+            </div>
+          );
+        })}
+      </div>
+
+      <div style={{background:"#fff",border:"1px solid #e2e8f0",borderTop:"none"}}>
+        <div style={{background:ch.light,borderBottom:`2px solid ${ch.border}`,padding:"14px 18px"}}>
+          <div style={{display:"flex",alignItems:"center",gap:10,flexWrap:"wrap"}}>
+            <div style={{width:42,height:42,borderRadius:10,background:ch.color,display:"flex",alignItems:"center",justifyContent:"center",fontSize:20,flexShrink:0}}>{ch.icon}</div>
+            <div style={{flex:1}}>
+              <div style={{fontSize:15,fontWeight:700,color:ch.text}}>{ch.title}</div>
+              <div style={{fontSize:11,color:ch.color,marginTop:2}}>{ch.questions.length} preguntas{quizDone[chapter]&&` · ${quizDone[chapter].score}/${quizDone[chapter].total} correctas`}</div>
+            </div>
+            <div style={{display:"flex",gap:5,flexWrap:"wrap"}}>
+              {tabs.map(t=><button key={t.id} onClick={()=>setTab(t.id)} style={{fontSize:11,padding:"5px 12px",borderRadius:6,cursor:"pointer",background:tab===t.id?ch.color:"transparent",color:tab===t.id?"#fff":ch.text,border:`1px solid ${tab===t.id?ch.color:ch.border}`,fontWeight:tab===t.id?600:400}}>{t.label}</button>)}
+            </div>
+          </div>
+        </div>
+
+        <div style={{padding:"16px 18px"}}>
+          {tab==="functional"&&<div><div style={{fontSize:10,fontWeight:700,color:"#94a3b8",letterSpacing:".5px",marginBottom:10}}>¿QUÉ ES Y POR QUÉ IMPORTA?</div><div style={{fontSize:13,color:"#374151",lineHeight:1.85,whiteSpace:"pre-line"}}>{ch.functional}</div><div style={{marginTop:14,padding:"10px 14px",background:ch.light,border:`1px solid ${ch.border}`,borderRadius:8,fontSize:12,color:ch.text}}>Orden: <strong>Funcional → Técnico → Visual → ¿Lo entendí?</strong></div></div>}
+          {tab==="technical"&&<div><div style={{fontSize:10,fontWeight:700,color:"#94a3b8",letterSpacing:".5px",marginBottom:10}}>FRASES REALES Y PROTOCOLOS</div><div style={{background:"#0f172a",borderRadius:8,padding:"14px 16px"}}><div style={{fontSize:12,color:"#e2e8f0",lineHeight:1.9,whiteSpace:"pre-line",fontFamily:"monospace"}}>{ch.technical}</div></div></div>}
+          {tab==="visual"&&<div><div style={{fontSize:10,fontWeight:700,color:"#94a3b8",letterSpacing:".5px",marginBottom:10}}>REFERENCIA VISUAL RÁPIDA</div><Visual chapter={ch}/></div>}
+          {tab==="quiz"&&<div><div style={{fontSize:10,fontWeight:700,color:"#94a3b8",letterSpacing:".5px",marginBottom:12}}>VALIDA TU COMPRENSIÓN</div>{quizDone[chapter]?(<div><div style={{background:quizDone[chapter].score===quizDone[chapter].total?"#f0fdf4":"#fffbeb",border:`1px solid ${quizDone[chapter].score===quizDone[chapter].total?"#86efac":"#fcd34d"}`,borderRadius:8,padding:"12px 14px",marginBottom:12}}><div style={{fontSize:13,fontWeight:600,color:"#1e293b"}}>{quizDone[chapter].score===quizDone[chapter].total?"🎯 ¡Sección dominada!":"✅ Completada"}</div><div style={{fontSize:12,color:"#64748b",marginTop:4}}>{quizDone[chapter].score}/{quizDone[chapter].total} correctas</div></div><button onClick={()=>{setQuizDone(d=>{const nd={...d};delete nd[chapter];return nd;});setQuizKey(k=>k+1);}} style={{fontSize:12,padding:"8px 16px",borderRadius:7,border:"1px solid #e2e8f0",background:"#f8fafc",cursor:"pointer",color:"#64748b"}}>Repetir quiz</button></div>):(<Quiz key={quizKey} questions={ch.questions} color={ch.color} light={ch.light} onComplete={handleQuizComplete}/>)}</div>}
+        </div>
+
+        <div style={{padding:"10px 18px 14px",borderTop:"1px solid #f1f5f9",display:"flex",justifyContent:"space-between",alignItems:"center"}}>
+          <button onClick={()=>goChapter(chapter-1)} disabled={chapter===0} style={{fontSize:12,padding:"8px 16px",borderRadius:7,border:"1px solid #e2e8f0",background:"#f8fafc",cursor:chapter===0?"not-allowed":"pointer",color:chapter===0?"#cbd5e1":"#374151"}}>← Anterior</button>
+          <div style={{fontSize:11,color:"#94a3b8"}}>{chapter+1} / {CHAPTERS.length}</div>
+          <button onClick={()=>goChapter(chapter+1)} disabled={chapter===CHAPTERS.length-1} style={{fontSize:12,padding:"8px 16px",borderRadius:7,border:`1px solid ${ch.color}`,background:ch.color,color:"#fff",cursor:chapter===CHAPTERS.length-1?"not-allowed":"pointer",opacity:chapter===CHAPTERS.length-1?.5:1}}>Siguiente →</button>
+        </div>
+      </div>
+    </div>
+  );
+}

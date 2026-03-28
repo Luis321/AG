@@ -1,0 +1,1032 @@
+import { useState } from "react";
+
+const GROUPS = [
+  { id: "roles",        label: "Roles",        color: "#7C3AED" },
+  { id: "herramientas", label: "Herramientas", color: "#0D9488" },
+  { id: "facilitacion", label: "Facilitación", color: "#2563EB" },
+];
+
+const CHAPTERS = [
+
+  // ══════════ ROLES ══════════
+  {
+    id:"sm-atf-coach", group:"roles", title:"SM vs ATF vs Agile Coach", icon:"🧭",
+    color:"#7C3AED", light:"#EDE9FE", border:"#C4B5FD", text:"#4C1D95",
+    functional:`Tres títulos que suenan parecidos pero operan en mundos completamente diferentes. La confusión entre ellos es el primer síntoma de un proceso de selección que no sabe qué necesita.
+
+SCRUM MASTER (nivel equipo):
+Vive dentro del equipo. Su universo es el sprint. Facilita las 5 ceremonias de Scrum, protege al equipo del ruido externo, remueve impedimentos operativos.
+DÍA A DÍA REAL: facilitar el daily (15 min), escalar un impedimento técnico, preparar la retro, ayudar al PO a refinar el backlog. Muy táctico, muy cercano al trabajo del equipo.
+
+AGILE TEAM FACILITATOR (nivel facilitación):
+Sale del equipo y entra en el sistema. Su universo es la sesión. Diseña experiencias de aprendizaje y toma de decisiones. Trabaja con múltiples stakeholders con agendas diferentes.
+DÍA A DÍA REAL: diseñar y facilitar un PI Planning de 2 días, correr un workshop de OKRs con el C-Level, facilitar una retro de programa con 8 equipos, mediar un conflicto entre el PO y el equipo técnico.
+
+AGILE COACH (nivel organización):
+Trabaja con el sistema completo. Su universo es la transformación organizacional. Influye sin autoridad, navega política corporativa, diseña modelos operativos.
+DÍA A DÍA REAL: diagnosticar por qué una transformación está estancada, rediseñar la estructura de equipos, tener conversaciones difíciles con el CTO.
+
+LA TRAMPA MÁS COMÚN:
+Tener el título de Agile Coach pero operar como SM. Facilitar reuniones en lugar de transformar el sistema. La diferencia no es el título — es el nivel de intervención.
+
+PARA BCP/NTT DATA:
+El rol dice "SM / ATF". Tu perfil como Tribe Lead llega al nivel ATF+. En la entrevista, posicionarte como ATF con ejemplos de CALARIS es tu diferencial. No te presentes como SM — presentate como ATF que puede escalar a Coach.`,
+    technical:`HABILIDADES CRÍTICAS POR ROL:
+
+SCRUM MASTER:
+→ Facilitación de las 5 ceremonias (todas, bien)
+→ Manejo de impedimentos: clasificar obstáculo vs impedimento → escalar en <48h
+→ Coaching al equipo hacia autogestión (no dependencia del SM)
+→ Colaboración con el PO (backlog sano, DoR cumplida)
+→ Métricas de equipo: velocity, cycle time, acciones de retro implementadas
+→ NO necesita: influencia ejecutiva, diseño organizacional
+
+AGILE TEAM FACILITATOR — todo lo del SM PLUS:
+→ Diseño de sesiones (divergencia → convergencia → decisión)
+→ Manejo de grupos grandes y heterogéneos
+→ Técnicas avanzadas: WSJF, ROAM, Program Board, Liberating Structures
+→ Coaching conversacional (powerful questions, escucha activa Nivel 2-3)
+→ Lectura del grupo: energía, resistencia, silencios
+→ Métricas de programa: lead time, predictability, flow efficiency
+
+AGILE COACH — todo lo del ATF PLUS:
+→ Diagnóstico organizacional (sistemas, no síntomas)
+→ Gestión de stakeholders (mapeo de poder e influencia)
+→ Diseño de modelos operativos
+→ Coaching ejecutivo (conversaciones C-Level)
+→ Pensamiento sistémico: loops de refuerzo y balance
+→ Métricas organizacionales: business outcomes, TTM, culture indicators
+
+DIFERENCIAS EN EL DÍA A DÍA:
+SM mide éxito en: sprint goal achievement, velocity consistente, equipo que se autogestiona
+ATF mide éxito en: sesiones que producen decisiones, stakeholders alineados, flujo mejorado
+Coach mide éxito en: comportamientos organizacionales cambiados, outcomes de negocio, TTM
+
+PITCH PARA LA ENTREVISTA BCP:
+"Mi rol es crear las condiciones para que el equipo y los stakeholders puedan entregar valor al cliente con calidad y velocidad sostenible." — Esta frase posiciona ATF: sistémico, sin autoridad jerárquica, orientado al valor.`,
+    visual:{ type:"roles" },
+    questions:[
+      {
+        q:"Un SM facilita el daily todos los días perfectamente pero después de 6 meses el equipo no puede hacerlo sin él. ¿Cuál es el problema real?",
+        opts:["El daily es complejo y siempre requiere un facilitador","El SM está facilitando en lugar de hacer coaching — no transfirió la habilidad. Si después de 6 meses el equipo no puede hacer el daily autónomamente, el SM falló su objetivo principal","El equipo es inmaduro y necesita más tiempo","El daily debería eliminarse — genera dependencia del SM"],
+        correct:1,
+        explanation:"El objetivo del SM no es facilitar para siempre — es volverse innecesario para las ceremonias cotidianas. La facilitación del daily es el medio, no el fin. El fin es que el equipo se autogestione. Si el SM facilita el daily semana tras semana sin transferir esa capacidad al equipo, está creando dependencia en lugar de autonomía."
+      },
+      {
+        q:"¿Cuál es la diferencia más crítica entre ATF y SM en términos de quién es su audiencia?",
+        opts:["No hay diferencia — ambos trabajan con el mismo equipo","El SM trabaja principalmente con el equipo de desarrollo; el ATF diseña y facilita para múltiples stakeholders simultáneamente incluyendo ejecutivos, POs, managers y múltiples equipos con agendas divergentes","El SM trabaja on-site; el ATF trabaja remoto","El ATF tiene más años de experiencia que el SM"],
+        correct:1,
+        explanation:"La diferencia de audiencia es la diferencia de universo. El SM facilita al equipo (5-10 personas, misma función, misma agenda). El ATF facilita al sistema: PI Planning con 80 personas, workshop de OKRs con el C-Level y los equipos simultáneamente, sesión de alineación entre negocio y tecnología. Requiere habilidades de lectura de sala, gestión de poder y diseño de sesiones que el SM no necesita en el mismo nivel."
+      },
+      {
+        q:"En la entrevista de BCP te preguntan: '¿Por qué deberíamos contratarte como ATF y no como SM?' ¿Cuál es la mejor respuesta?",
+        opts:["'Porque tengo más certificaciones que un SM estándar'","'Porque un SM solo facilita ceremonias mientras que como ATF diseño el sistema completo: conecto la estrategia del banco con la ejecución del squad, facilito stakeholders ejecutivos con el mismo rigor que las ceremonias del equipo, y mido el impacto en outcomes de negocio, no solo en velocity'","'Porque el ATF gana más que el SM en NTT DATA'","'Porque tengo experiencia en SAFe que el SM no requiere'"],
+        correct:1,
+        explanation:"Esta respuesta demuestra la diferencia sistémica entre los dos roles: el ATF opera en múltiples niveles simultáneamente (equipo + programa + estrategia), facilita audiencias heterogéneas (no solo el equipo técnico), y mide éxito en outcomes (resultados de negocio) no en outputs (ceremonias bien ejecutadas). Eso es exactamente lo que BCP necesita y lo que tu perfil de Tribe Lead puede demostrar con ejemplos concretos."
+      }
+    ]
+  },
+
+  {
+    id:"antipatrones", group:"roles", title:"Anti-patrones por Rol", icon:"⚠️",
+    color:"#7C3AED", light:"#EDE9FE", border:"#C4B5FD", text:"#4C1D95",
+    functional:`Los anti-patrones son los errores que cometen los profesionales bien intencionados. Conocerlos es la diferencia entre un SM/ATF que crece y uno que se estanca en el mismo nivel por años.
+
+ANTI-PATRONES DEL SCRUM MASTER:
+
+1. EL SECRETARIO ÁGIL:
+Toma notas en las retros, actualiza Jira, programa reuniones, coordina calendarios. No facilita — administra.
+Señal: el equipo pregunta "¿podés actualizar el tablero?" y el SM lo hace.
+Fix: dejar de hacer el trabajo operativo. "¿Quién del equipo quiere ser el dueño de actualizar el tablero?"
+
+2. EL ESCUDO SIN FILTRO:
+Bloquea todo acceso del negocio al equipo — incluyendo feedback valioso. El equipo queda aislado de la realidad del cliente.
+Fix: ser filtro inteligente, no muralla total. El feedback del cliente llega al equipo. Las interrupciones operativas, no.
+
+3. EL MICRO-MANAGER ÁGIL:
+Pregunta el avance de cada tarea. Asigna trabajo. Sabe el estado exacto de cada historia mejor que los propios developers.
+Fix: en el daily, no hablar — solo escuchar las primeras 2 semanas. Si alguien pregunta qué hacer: "¿Qué opciones ves?"
+
+4. EL CEREMONY ENFORCER:
+Hace todas las ceremonias perfectamente en forma y tiempo. Pero el equipo no mejora, no entrega valor, los stakeholders están insatisfechos.
+Señal: sprint goals no alcanzados mes tras mes con ceremonies impecables.
+Fix: medir Sprint Goal achievement y customer satisfaction, no calidad de las ceremonies.
+
+ANTI-PATRONES DEL ATF/COACH:
+
+5. EL FRAMEWORK MISSIONARY:
+"Necesitan SAFe." Sin diagnóstico. Sin contexto. Sin evidencia de que SAFe resuelve el problema real.
+Fix: 2 semanas de diagnóstico antes de cualquier propuesta de framework.
+
+6. EL FACILITADOR ETERNO:
+Facilita todas las reuniones del área sin transferir la habilidad. Se vuelve indispensable en lugar de innecesario.
+Fix: rotar la facilitación, enseñar técnicas explícitamente, medir cuántas sesiones puede correr el equipo sin vos.
+
+7. EL CONSULTOR DE POWERPOINT:
+Entrega frameworks hermosos en presentaciones. Nunca baja al equipo. Mide el éxito en documentos entregados.
+Fix: bajar al equipo real, accountability de implementación, medir cambio de comportamiento.`,
+    technical:`TEST DE AUTODIAGNÓSTICO — respondé honestamente:
+
+¿El equipo puede hacer el daily sin vos? → Si no: Secretario Ágil
+¿El PO te llama cuando hay un problema con el equipo? → Si sí frecuentemente: Escudo sin Filtro
+¿Sabés el estado exacto de cada historia en el sprint? → Si sí: Micro-Manager Ágil
+¿Las ceremonies son perfectas pero los resultados mediocres? → Ceremony Enforcer
+¿Llegaste con el framework ya decidido antes del diagnóstico? → Framework Missionary
+¿Hay reuniones que solo funcionan si vos las facilitás? → Facilitador Eterno
+¿Tus entregables son principalmente documentos y presentaciones? → Consultor de PowerPoint
+
+CÓMO SALIR DE CADA ANTI-PATRÓN:
+
+Del Secretario Ágil:
+→ En la próxima retro: "¿Quién quiere ser el facilitador esta vez? Yo te apoyo pero no facilito."
+→ Dejar de actualizar Jira. Si nadie lo hace, usar eso como dato en la retro.
+
+Del Ceremony Enforcer:
+→ Pregunta de diagnóstico: "¿Cuántos de los últimos 5 sprint goals se alcanzaron?"
+→ Si la respuesta es ≤2, el problema no es de ceremonies sino de planning, DoR o impedimentos sistémicos.
+
+Del Framework Missionary:
+→ Protocolo obligatorio: antes de proponer cualquier framework, responder: "¿Qué problema específico resuelve esto para este equipo en este contexto?"
+→ Co-diseñar la solución con el equipo, no presentarla como la respuesta.
+
+Del Facilitador Eterno:
+→ Cada mes, transferir la facilitación de una ceremony al equipo.
+→ Tu éxito se mide en cuántas sesiones puede hacer el equipo sin vos, no en cuántas facilitás vos.
+
+PARA LA ENTREVISTA BCP:
+Cuando te pregunten "¿cuál fue tu mayor error como SM/ATF?", usar el modelo de anti-patrón + cómo lo corregiste. Demuestra madurez profesional y capacidad de autoevaluación.`,
+    visual:{ type:"antipatrones" },
+    questions:[
+      {
+        q:"El equipo lleva 4 sprints completando el 40% de las historias comprometidas. El manager dice 'hay que trabajar más'. ¿Qué anti-patrón estarías cometiendo si le decís que sí y presionás al equipo?",
+        opts:["El Escudo sin Filtro — dejás que el manager presione directamente","El Ceremony Enforcer — más presión sin cambiar el sistema que genera el 40%","El Micro-Manager Ágil — empezás a monitorear cada tarea del equipo","El Framework Missionary — proponés implementar SAFe para resolver el problema"],
+        correct:1,
+        explanation:"Presionar al equipo sin diagnóstico de causa raíz es el Ceremony Enforcer en su forma más dañina: actuar sobre el síntoma (bajo output) sin entender el sistema. El 40% puede venir de sobrecompromiso en el planning, interrupciones no planificadas, cuello de botella técnico o historias sin DoR. La respuesta correcta es: un sprint de observación, CFD del último mes, y datos al manager antes de proponer cualquier acción."
+      },
+      {
+        q:"Un Agile Coach lleva 8 meses en BCP. Las presentaciones son excelentes. Los frameworks están documentados. Pero nada cambió en la forma de trabajar de los equipos. ¿Qué anti-patrón describe esto?",
+        opts:["El Facilitador Eterno — demasiadas reuniones sin impacto","El Consultor de PowerPoint — mide el éxito en entregables documentales, no en cambios de comportamiento. Las recomendaciones no se implementan porque nunca bajó al sistema real","El Secretario Ágil — hizo trabajo administrativo en lugar de coaching","El Escudo sin Filtro — aisló al equipo del liderazgo ejecutivo"],
+        correct:1,
+        explanation:"El Consultor de PowerPoint es el anti-patrón más costoso en transformaciones porque da apariencia de progreso sin impacto real. 8 meses sin cambios de comportamiento indica que el Coach nunca midió si lo que propuso se implementó. La solución: bajar al equipo real, crear accountability de implementación, y medir cambios en métricas concretas (Lead Time, Sprint Goal %, acciones de retro implementadas)."
+      },
+      {
+        q:"Como ATF en BCP, el equipo te pide que actualices el tablero de Jira cada día porque 'ellos están muy ocupados'. ¿Cuál es la respuesta correcta?",
+        opts:["Hacerlo — apoyar al equipo es parte del rol de ATF","Decirle al manager que el equipo no colabora","Declinarlo y facilitar que el equipo encuentre su propio sistema: '¿Cómo podríamos hacer que actualizar el tablero sea parte natural del flujo de trabajo de cada uno? Tenemos 5 minutos para diseñarlo.' El ATF no hace el trabajo del equipo — facilita que el equipo lo haga mejor.","Contratar a alguien administrativo para que actualice el tablero"],
+        correct:2,
+        explanation:"Aceptar actualizar el tablero convierte al ATF en Secretario Ágil instantáneamente. Y es una señal de que el equipo no tiene ownership de su propio proceso — lo que es exactamente el problema que el ATF debería resolver. La respuesta correcta facilita que el equipo diseñe su propio sistema para resolver el problema, en lugar de resolverlo por ellos."
+      }
+    ]
+  },
+
+  // ══════════ HERRAMIENTAS ══════════
+  {
+    id:"timebox-parking-dot-fist", group:"herramientas", title:"Timeboxing · Parking Lot · Dot Voting · Fist of Five", icon:"🧰",
+    color:"#0D9488", light:"#CCFBF1", border:"#5EEAD4", text:"#134E4A",
+    functional:`Las 4 herramientas más usadas en facilitación. Simples en concepto, difíciles de ejecutar bien bajo presión y con grupos heterogéneos.
+
+TIMEBOXING:
+Un límite de tiempo explícito y visible para cualquier actividad.
+¿Cuándo? En TODA sesión que facilites — sin excepción.
+CÓMO CORTAR CONVERSACIONES DIFÍCILES:
+Error: "Ok, vamos cerrando este tema" (nadie cierra nada).
+Correcto: "Tenemos 2 minutos para este tema. Al terminar, o tomamos una decisión o lo parkeo para una sesión separada. ¿Seguimos?" → Forzás la decisión sin imponerla.
+Si el tema es crítico y el tiempo terminó: "Este tema necesita más profundidad. Lo agendo como sesión separada mañana y continuamos con el resto."
+
+PARKING LOT:
+Espacio visible donde van los temas importantes que surgen fuera del foco de la sesión.
+¿Cuándo? Cuando alguien trae un tema válido pero que no es el objetivo de la sesión actual.
+¿Cómo? "Ese tema es importante — lo pongo en el Parking Lot para no perderlo. ¿Podemos seguir con [tema actual]?"
+REGLA CRÍTICA: al cierre de la sesión, SIEMPRE revisar el Parking Lot. Cada ítem necesita un owner y una fecha. Un Parking Lot que nunca se resuelve destruye la confianza en el proceso.
+
+DOT VOTING:
+Cada persona recibe N puntos para distribuir entre opciones.
+¿Cuándo? Para priorizar listas de 5+ ítems con múltiples perspectivas.
+¿Cuándo NO? Para decisiones críticas que requieren análisis — dot voting con grupos no informados produce popularidad, no valor.
+REGLA: votar SIMULTÁNEAMENTE para evitar el efecto de ancla (todos votan lo mismo que el gerente).
+
+FIST OF FIVE:
+0: bloqueo total — la decisión no avanza
+1: desacuerdo fuerte — necesito hablar antes de avanzar
+2: dudas — necesito escuchar más
+3: puedo vivir con esto, no es mi preferencia
+4: de acuerdo, apoyo
+5: totalmente de acuerdo, lo defiendo
+Cuando alguien da 0 o 1: "¿Qué necesitarías para poder avanzar? Tenés 3 minutos."`,
+    technical:`IMPLEMENTACIÓN PRÁCTICA:
+
+TIMEBOXING EN MIRO/PRESENCIAL:
+→ Timer visible para todos (pantalla compartida, app de timer, reloj físico)
+→ Anunciar el tiempo ANTES de comenzar: "Tienen 5 minutos para esto"
+→ Aviso a 1 minuto: "Un minuto más"
+→ Al terminar: "El tiempo terminó. ¿Dónde estamos?"
+
+PROTOCOLO DE PARKING LOT:
+1. Capturar el tema INMEDIATAMENTE en espacio visible
+2. Nombrar un owner en el momento: "¿Quién toma este tema?"
+3. Al cierre: revisar CADA ítem del Parking Lot
+4. Decidir: tarea, reunión separada, o descartado
+5. NUNCA cerrar sin revisar el Parking Lot completo
+
+DOT VOTING PASO A PASO:
+1. Listar las opciones claramente sin interpretación
+2. Dar 2 min de silencio para leer antes de votar
+3. Distribuir puntos SIMULTÁNEAMENTE para evitar influencia
+4. Contar y mostrar resultados
+5. Los ítems con más puntos NO son la decisión final — son candidatos para la conversación
+Regla de puntos: 3 puntos por persona para listas de 5-10 ítems
+
+FIST OF FIVE — cómo manejar el 0 y el 1:
+Ante un 0: "¿Qué necesitarías para poder avanzar con esto?" → escuchar sin defenderse
+Ante un 1: "¿Qué te preocupa específicamente? Tenemos 5 minutos para escucharte"
+Si sigue en 1 después de escuchar: el grupo decide explícitamente si postergar o avanzar sin consenso total
+
+CUÁNDO NO USAR FIST OF FIVE:
+→ Decisiones técnicas simples — es sobreproceso
+→ Grupos de más de 20 personas — usar Mentimeter anónimo en su lugar
+→ Cuando la decisión ya fue tomada ejecutivamente — usarlo sería teatro
+
+ERRORES CLÁSICOS:
+→ Timeboxing: "5 minutos más" repetido infinitamente
+→ Parking Lot: usarlo como basurero para evitar conversaciones difíciles
+→ Dot Voting: votar secuencialmente mientras todos observan (efecto ancla)
+→ Fist of Five: presionar hasta que todos den 4-5 (destruye la herramienta)`,
+    visual:{ type:"herramientas-1" },
+    questions:[
+      {
+        q:"En un Sprint Planning, una discusión técnica lleva 25 minutos sin resolución. ¿Cuál es la intervención correcta del ATF?",
+        opts:["Dejar que continúen — es una discusión importante","Tomar vos la decisión técnica para avanzar","Activar timeboxing + Parking Lot: 'Tenemos 2 minutos más. Al terminar, o llegamos a un acuerdo o agendo una sesión técnica separada para mañana. Si la historia no se puede estimar, no entra al sprint.' Hacer visible el timer.","Pedirle al tech lead que tome la decisión final"],
+        correct:2,
+        explanation:"La combinación timeboxing + Parking Lot es exactamente la intervención correcta. La discusión puede ser válida pero está consumiendo el Planning completo. El ATF no decide la cuestión técnica — crea urgencia con el timer y ofrece una alternativa legítima (sesión técnica separada). Si la historia no puede estimarse porque hay demasiada incertidumbre técnica, no cumple la DoR y no debería entrar al sprint."
+      },
+      {
+        q:"Usaste Dot Voting y el ítem con más puntos no es el favorito del gerente. El gerente quiere sobreescribir el resultado. ¿Qué hacés?",
+        opts:["El gerente tiene autoridad — aceptás su decisión","Hacés el Dot Voting de nuevo hasta que converja con la preferencia del gerente","Dot Voting no toma la decisión — la informa. Mostrás los resultados: 'Esto nos dice cómo distribuye el grupo su energía. Antes de decidir, ¿qué argumentos tiene quien votó diferente que el grupo no escuchó?' Con los criterios explícitos, la decisión es de negocio, no de preferencia personal.","Ignorás el resultado y seguís adelante con el ítem del gerente sin decir nada"],
+        correct:2,
+        explanation:"Dot Voting genera información sobre preferencias del grupo — no toma la decisión. La divergencia entre el voto del gerente y el grupo es el dato más valioso: indica que tienen criterios de priorización diferentes, lo que hay que resolver explícitamente. El ATF facilita que esa conversación sea visible, no la suprime."
+      },
+      {
+        q:"Al usar Fist of Five, todos dan 4-5 inmediatamente en una decisión arquitectónica compleja. ¿Qué señal de alerta ves?",
+        opts:["El equipo está alineado — señal positiva de madurez","La unanimidad inmediata en decisiones complejas es señal de Groupthink o de que la persona con más poder ya indicó cuál es la respuesta esperada. Acción: designar un abogado del diablo: 'Antes de confirmar, quiero que alguien argumente en contra por 3 minutos — quiero asegurarme de que exploramos los riesgos.'","Hay que repetir el Fist of Five con más contexto","El equipo tiene alta seguridad psicológica — no es necesario cuestionar"],
+        correct:1,
+        explanation:"Unanimidad inmediata en decisiones técnicas complejas es una señal de alarma, no de salud. Los equipos con alta seguridad psicológica tienen disenso productivo en las primeras etapas. La ausencia de disenso puede indicar efecto HiPPO (la persona de mayor jerarquía ya señaló la respuesta esperada) o Groupthink (la cohesión suprime el pensamiento crítico). El abogado del diablo fuerza el análisis sin personalizar la resistencia."
+      }
+    ]
+  },
+
+  {
+    id:"wsjf-roam-program", group:"herramientas", title:"WSJF · ROAM · Program Board", icon:"📊",
+    color:"#0D9488", light:"#CCFBF1", border:"#5EEAD4", text:"#134E4A",
+    functional:`Las 3 herramientas de SAFe más evaluadas en entrevistas de ATF/SM senior. La diferencia entre conocerlas y poder usarlas con números reales es lo que separa al candidato que pasa de uno que no.
+
+WSJF — Weighted Shortest Job First:
+Herramienta de priorización que maximiza el retorno económico del flujo de trabajo.
+
+FÓRMULA:
+WSJF = (Valor de negocio + Urgencia temporal + Reducción de riesgo) / Tamaño del trabajo
+Escala: 1, 2, 3, 5, 8, 13 (Fibonacci)
+
+EJEMPLO CON NÚMEROS REALES para BCP:
+
+Feature A — Fix de performance del dashboard:
+Valor de negocio: 5 (afecta a todos los usuarios activos)
+Urgencia temporal: 13 (hay reclamos activos del cliente)
+Reducción de riesgo: 8 (riesgo de churn si no se resuelve)
+Tamaño: 3 (fix relativamente pequeño)
+WSJF = (5+13+8)/3 = 8.7
+
+Feature B — Módulo de pagos internacionales:
+Valor de negocio: 13 (diferenciador estratégico)
+Urgencia temporal: 8 (competidor lo lanzó este mes)
+Reducción de riesgo: 3 (no es técnicamente riesgosa)
+Tamaño: 8 (grande)
+WSJF = (13+8+3)/8 = 3.0
+
+Feature C — Nuevo módulo de inversiones:
+Valor de negocio: 8
+Urgencia temporal: 2 (para Q3)
+Reducción de riesgo: 2
+Tamaño: 13 (muy grande)
+WSJF = (8+2+2)/13 = 0.9
+
+ORDEN: A (8.7) → B (3.0) → C (0.9)
+El fix de performance entra primero aunque el módulo de pagos parezca más "estratégico".
+
+ROAM — gestión de riesgos en PI Planning:
+R: Resolved — el riesgo ya no existe
+O: Owned — alguien específico lo toma y reporta (nombre, no "el equipo")
+A: Accepted — existe, no puede mitigarse, se acepta conscientemente
+M: Mitigated — hay un plan concreto que reduce probabilidad o impacto`,
+    technical:`PROGRAM BOARD — mapa visual de dependencias del PI:
+
+ESTRUCTURA:
+Filas = equipos del ART
+Columnas = sprints del PI (generalmente 5 sprints + 1 IP Sprint)
+Tarjetas azules = Features de negocio
+Tarjetas amarillas = Enablers técnicos
+Hilos de colores = dependencias entre equipos (acuerdos explícitos)
+Triángulos rojos = riesgos ROAM
+Marcadores de milestone = fechas fijas del negocio
+
+CÓMO LEER UN PROGRAM BOARD PROBLEMÁTICO:
+→ Muchos hilos convergiendo en Sprint 2: cuello de botella — demasiadas dependencias en el mismo punto → redistribuir
+→ Hilos que van "hacia atrás" en el tiempo: dependencia imposible → replanificar
+→ Equipo sin ninguna dependencia en un sistema integrado: dependencias ocultas → investigar
+→ IP Sprint lleno de features sin terminar: el equipo no terminará en el PI → redistribuir ahora
+→ Un equipo con todas las dependencias saliendo: ese equipo es el cuello de botella del ART
+
+CÓMO FACILITAR EL ROAMING:
+1. Listar todos los riesgos en post-its (5 min silencio)
+2. Cada riesgo: el grupo decide la categoría en máximo 30 segundos
+3. Los Owned necesitan nombre específico en el momento — no "el equipo de backend"
+4. Los Mitigated necesitan el plan escrito, no "lo resolveremos"
+5. Los Accepted necesitan confirmación explícita de que el negocio entiende el impacto
+6. Revisar el ROAM Board en cada Scrum of Scrums del PI
+
+CUÁNDO NO USAR WSJF:
+→ Backlog con menos de 5 ítems — sobreproceso
+→ Cuando la decisión está tomada políticamente — usarlo para validar lo ya decidido degrada la herramienta
+→ Con equipos que no tienen suficiente contexto de negocio para estimar el valor correctamente
+
+WSJF EN JIRA:
+Crear campos personalizados para Valor, Urgencia y Riesgo. Fórmula calculada automáticamente. El backlog ordenado por WSJF en el Board de BCP es un diferencial concreto que podés mostrar en la entrevista.`,
+    visual:{ type:"wsjf-roam" },
+    questions:[
+      {
+        q:"Tenés 3 features. A (WSJF 8.7), B (WSJF 3.0), C (WSJF 0.9). El PO quiere priorizar B porque es la favorita del gerente. ¿Qué hacés como ATF?",
+        opts:["Priorizás B — el PO tiene autoridad sobre el backlog","Rechazás la propuesta del PO — el WSJF es la metodología oficial de SAFe","Mostrás los números: 'El WSJF que calculamos juntos indica que A tiene el mayor retorno relativo al esfuerzo. Si priorizamos B, estamos eligiendo conscientemente dejar valor en la mesa. ¿Cuál es el argumento de negocio que hace que B sea más urgente que lo que el cálculo muestra?' La decisión es del PO — el WSJF informa, no decide.","Calculás el WSJF de nuevo con otros supuestos para que B quede primero"],
+        correct:2,
+        explanation:"El WSJF es una herramienta de apoyo a la decisión, no un oráculo. El ATF lo usa para hacer visible el costo de la priorización — si el PO decide ignorarlo, esa es una decisión legítima pero debe ser explícita y basada en un argumento de negocio. 'Estamos eligiendo conscientemente dejar valor en la mesa' convierte la preferencia personal en una decisión transparente con tradeoff visible."
+      },
+      {
+        q:"En el ROAM Board, el riesgo 'dependencia con el equipo de arquitectura' dice 'Owned: equipo de desarrollo'. ¿Qué está mal y cómo lo corregís?",
+        opts:["Nada — el equipo de desarrollo es el responsable correcto","'Equipo de desarrollo' como owner equivale a nadie. Intervención en el momento: 'Para que este riesgo esté realmente Owned, necesitamos una persona específica — ¿quién del equipo de desarrollo toma este riesgo y reporta en el Scrum of Scrums?' Sin nombre y apellido, el riesgo no está gestionado.","Moverlo a Accepted — si no hay owner individual no se puede gestionar","Escalarlo al RTE para que asigne el owner desde arriba"],
+        correct:1,
+        explanation:"Responsabilidad colectiva en un ROAM Board equivale a irresponsabilidad. 'El equipo de desarrollo' como owner significa que cuando el riesgo se materialice, todos apuntarán al equipo y nadie habrá gestionado nada. El ATF no cierra el ROAM sin owners individuales con nombre en todos los riesgos Owned. Es la diferencia entre gestión de riesgos real y gestión de riesgos teatro."
+      },
+      {
+        q:"¿Cómo calculás el WSJF de una feature con: Valor=8, Urgencia=5, Reducción de riesgo=3, Tamaño=8?",
+        opts:["WSJF = 8+5+3+8 = 24","WSJF = (8+5+3)/8 = 2.0 — y si el promedio del backlog es 3.5, esta feature entraría después de las que tienen WSJF mayor","WSJF = 8×5×3/8 = 15","WSJF = (8+5+3+8)/4 = 6"],
+        correct:1,
+        explanation:"WSJF = Costo del Delay / Tamaño = (Valor + Urgencia + Riesgo) / Tamaño = (8+5+3)/8 = 2.0. Un WSJF de 2.0 es relativamente bajo — esta feature tiene tamaño grande (8) para el costo de delay que genera. Si hay features con WSJF de 5+ en el backlog, entran primero. El poder del WSJF es exactamente este: hace visible que una feature grande y 'urgente' puede tener menor retorno por esfuerzo que un fix pequeño con alto costo de delay."
+      }
+    ]
+  },
+
+  {
+    id:"kanban-retros", group:"herramientas", title:"Kanban Avanzado y Retros por Contexto", icon:"🌊",
+    color:"#0D9488", light:"#CCFBF1", border:"#5EEAD4", text:"#134E4A",
+    functional:`Kanban y las retrospectivas son las dos herramientas donde más se ven las diferencias entre un facilitador promedio y uno experto.
+
+KANBAN — LOS 4 ELEMENTOS QUE IMPORTAN:
+
+1. WIP LIMITS (la regla más contraintuitiva):
+Limitar cuántas historias pueden estar en cada columna simultáneamente.
+Sin WIP limits: 12 cosas "en progreso", nada avanza, todos están ocupados, nada se termina.
+Con WIP limits: cuando la columna está llena, hay que terminar algo antes de empezar algo nuevo.
+"Stop starting, start finishing."
+Cómo calcular: In Progress = n+1 (n = devs activos). Code Review = 2-3. Testing = 2.
+
+2. LAS 3 MÉTRICAS QUE IMPORTAN:
+Cycle Time: desde que alguien empieza a trabajar hasta Done. Mide la capacidad real.
+Lead Time: desde que entra al backlog hasta Done. Lo que percibe el cliente.
+Flow Efficiency: (Cycle Time / Lead Time) × 100. % del tiempo con trabajo activo.
+Benchmark: la mayoría de los equipos están en 15-35% de flow efficiency.
+
+3. LEY DE LITTLE:
+Lead Time = WIP / Throughput
+Para reducir Lead Time: reducir WIP (más inmediato) o aumentar Throughput (más costoso).
+Ejemplo: WIP=12, Throughput=3/semana → Lead Time = 4 semanas.
+Si reducís WIP a 6 → Lead Time = 2 semanas. Sin contratar a nadie.
+
+4. CFD (Cumulative Flow Diagram):
+Banda que se ensancha = cuello de botella en ese estado.
+Bandas paralelas = flujo saludable.
+Líneas horizontales = trabajo se detuvo.
+
+RETROSPECTIVAS — cuándo usar cada formato:
+Start/Stop/Continue: equipo estable, sprint normal, tiempo limitado. Riesgo: predecible.
+4Ls (Liked/Learned/Lacked/Longed): separar emoción de análisis, equipos nuevos.
+Mad/Sad/Glad: después de sprint difícil con tensión emocional — procesar primero.
+Sailboat: retros estratégicas, inicio de proyecto, visión de largo plazo.
+TRIZ: mismos problemas retro tras retro — invertir el problema.
+Futurospective: equipo con baja moral — orientar hacia el futuro.`,
+    technical:`KANBAN VS SCRUM — cuándo elegir cada uno:
+
+ELEGIR KANBAN cuando:
+→ Trabajo continuo con alta variabilidad (soporte bancario, bugs urgentes, compliance)
+→ Alto % de trabajo no planificado que interrumpe constantemente los sprints
+→ Querés introducir mejoras sin cambiar roles ni procesos existentes
+→ No hay cadencia natural de iteraciones
+
+ELEGIR SCRUM cuando:
+→ Product development con iteraciones predecibles
+→ El equipo puede planificar con semanas de anticipación
+→ Hay un PO y un objetivo de sprint claro
+
+ELEGIR SCRUMBAN (combinación) cuando:
+→ Equipo Scrum con alto % de trabajo urgente e impredecible (común en BCP)
+→ Querés el ritmo de Scrum con la flexibilidad de Kanban para interrupciones
+
+ESTRUCTURA DE RETROSPECTIVA EFECTIVA — 5 pasos:
+1. CHECK-IN (5-7 min): calibrar la energía. Una palabra / temperatura 1-10.
+2. RECOGER DATOS (10-15 min): observaciones factuales. Brainwriting en silencio primero.
+3. GENERAR INSIGHTS (10-15 min): patrones, dot voting para priorizar.
+4. DECIDIR ACCIONES (10 min): 1-3 acciones, owner individual, fecha.
+5. CIERRE (5 min): temperatura de salida, compromisos explícitos.
+
+LO MÁS IGNORADO — al inicio de cada retro:
+Revisar las acciones de la retro anterior. ¿Cuántas se completaron? Si es 0-1, ese es el primer tema — no el nuevo sprint.
+
+REGLA DE ORO DE LAS RETROS:
+1-3 acciones con owner y fecha. Más acciones = ninguna tiene prioridad real.
+"1 acción completada vale más que 10 prometidas."
+
+ELEGIR EL FORMATO DE RETRO — árbol de decisión:
+¿El equipo está emocionalmente afectado? → Mad/Sad/Glad primero
+¿Identifica los mismos problemas sin cambio? → TRIZ
+¿Baja moral, necesitás energía? → Futurospective
+¿Es una retro estratégica o de PI? → Sailboat
+¿Equipo nuevo? → 4Ls
+¿Sprint normal, tiempo limitado? → Start/Stop/Continue`,
+    visual:{ type:"kanban-retros" },
+    questions:[
+      {
+        q:"El equipo tiene Flow Efficiency del 20% — el trabajo pasa el 80% del tiempo en colas. El manager dice que hay que trabajar más horas. ¿Cuál es tu diagnóstico y respuesta?",
+        opts:["El manager tiene razón — el equipo necesita más horas para reducir las esperas","El 20% de flow efficiency significa que el problema no es la velocidad del trabajo sino las colas. Respuesta al manager: 'El equipo pasa el 80% del tiempo esperando, no trabajando. Trabajar más horas en el 20% de trabajo activo tiene impacto mínimo. La palanca correcta es reducir las colas — específicamente en [columna X que muestra el CFD].'","El 20% es normal — nada que hacer","Hay que contratar más personas para procesar más rápido"],
+        correct:1,
+        explanation:"La Ley de Little confirma que el problema no es la velocidad del trabajo sino el WIP y las colas. Un Flow Efficiency del 20% significa que 4 de cada 5 días el trabajo está esperando. Más horas de trabajo en el 20% activo produce mejoras marginales. La intervención efectiva es: identificar la cola más larga con el CFD y remover la causa raíz de esa espera. Datos primero, propuesta de solución después."
+      },
+      {
+        q:"Un equipo Scrum en BCP tiene constantemente el 30% del sprint ocupado con bugs urgentes y soporte que no se planificaron. Los sprint goals raramente se alcanzan. ¿Qué proponés?",
+        opts:["Aumentar el sprint a 4 semanas para absorber las interrupciones","Eliminar el soporte — el equipo no debería hacer eso durante el sprint","Implementar Scrumban: mantener el ritmo de Scrum (planning, retro, review) pero agregar una swim lane de Kanban con WIP limit para el trabajo urgente no planificado. Reservar explícitamente el 30% de la capacidad del sprint para interrupciones y planificar el 70% restante para el sprint goal.","Eliminar el sprint goal — es demasiado ambicioso dado el nivel de interrupciones"],
+        correct:2,
+        explanation:"Cuando el trabajo no planificado consume consistentemente un porcentaje significativo del sprint, la solución es hacerlo visible y planificado. Scrumban reserva capacidad explícita para el trabajo urgente, define un WIP limit para que no consuma más del 30%, y mantiene el ritmo de Scrum para el trabajo planificado. Es más honesto con la realidad del equipo que fingir que el sprint goal puede alcanzarse con ese nivel de interrupciones."
+      },
+      {
+        q:"Es la 4ta retro consecutiva con Start/Stop/Continue. El equipo está en piloto automático: ponen los mismos post-its, identifican los mismos problemas, van a casa. ¿Qué hacés diferente esta retro?",
+        opts:["Cambiar el formato a Sailboat — la variedad resuelve el problema","El problema no es el formato — es que las acciones de retros anteriores no se implementaron. Empezar la retro revisando las últimas 3 acciones comprometidas: ¿cuántas se implementaron? Si la respuesta es 0-1, el tema es de accountability, no de formato. Resolver eso antes de agregar nuevas acciones.","Usar TRIZ para romper el patrón — forzar pensamiento inverso","Aumentar la frecuencia de retros a semanal"],
+        correct:1,
+        explanation:"Cambiar el formato sin resolver la accountability es cosmético — producirá los mismos resultados con más energía gastada. Si el equipo identifica mejoras pero no las implementa, hay un problema sistémico: no hay ownership real, o hay impedimentos que bloquean la implementación. La retro más valiosa en ese momento es una honesta y directa sobre por qué no se implementó lo que se prometió. El formato importa menos que la accountability."
+      }
+    ]
+  },
+
+  // ══════════ FACILITACIÓN ══════════
+  {
+    id:"diseno-sesiones", group:"facilitacion", title:"Diseño de Sesiones y Manejo de Grupos", icon:"🎙️",
+    color:"#2563EB", light:"#DBEAFE", border:"#93C5FD", text:"#1D4ED8",
+    functional:`El facilitador promedio improvisa. El facilitador experto diseña. La diferencia entre una sesión que produce resultados y una que produce frustración está en los 30 minutos de preparación antes.
+
+EL ARCO DE UNA SESIÓN EFECTIVA — 3 fases:
+
+FASE 1 — DIVERGENCIA (35-40% del tiempo):
+Objetivo: generar la mayor cantidad posible de perspectivas e ideas.
+Principio: no hay respuestas incorrectas. La crítica está prohibida en esta fase.
+Técnicas: Brainwriting (en silencio, todos al mismo tiempo), 1-2-4-All, Crazy 8s.
+Error más costoso: pasar a evaluar ideas mientras todavía están apareciendo.
+
+FASE 2 — CONVERGENCIA (35-40% del tiempo):
+Objetivo: reducir las opciones a un conjunto manejable usando criterios explícitos.
+Técnicas: dot voting, clustering temático, WSJF, matriz impacto/esfuerzo.
+Error más costoso: dejar que la persona con más poder decida qué ideas "pasan" sin proceso explícito.
+
+FASE 3 — DECISIÓN (20-30% del tiempo):
+Objetivo: compromiso claro con owner y fecha.
+Técnicas: Fist of Five, DACI, decisión timeboxed.
+Error más costoso: terminar la sesión con "quedamos en..." sin owner ni fecha.
+
+MANEJO DE PERSONAS DOMINANTES:
+→ Brainwriting: escribir ideas en silencio antes de compartir. La voz dominante no puede influir en el pensamiento de los otros.
+→ Round Robin: turno obligatorio para cada persona antes de abrir la discusión.
+→ Intervención directa: "Quiero escuchar perspectivas que aún no escuchamos. ¿Alguien que no haya hablado?"
+→ Breakouts en grupos pequeños: separar al dominante del grupo grande.
+
+MANEJO DEL SILENCIO GRUPAL — 3 tipos:
+→ Silencio de pensamiento: el grupo procesa — esperá 15 segundos antes de intervenir.
+→ Silencio de incomodidad: nadie quiere ser el primero — usá Brainwriting.
+→ Silencio de resistencia: hay algo que el grupo no está diciendo — nombrarlo: "Noto silencio. ¿Hay algo que el grupo está pensando pero no diciendo?"
+
+MANEJO DE CONFLICTOS EN SESIÓN:
+Conflicto de ideas (sano): "Capturemos ambas perspectivas antes de decidir."
+Conflicto interpersonal (tóxico): separar del grupo inmediatamente.
+Conflicto de poder (político): "¿Podemos hacer visible cuál es el tradeoff real entre estas dos opciones?"`,
+    technical:`DISEÑO PRE-FACILITACIÓN — checklist de 30 minutos:
+
+□ ¿Cuál es el objetivo específico? (una frase, no "alinearnos")
+□ ¿Quiénes son los participantes y cuáles son sus agendas reales?
+□ ¿Cuál es la decisión o entregable al final?
+□ ¿Qué herramienta en cada fase? (divergencia / convergencia / decisión)
+□ ¿Cuánto tiempo para cada fase?
+□ ¿Cuál es el peor escenario? ¿Cómo lo manejaría?
+□ ¿Hay un "tema prohibido" que podría aparecer? ¿Cómo lo manejaría?
+
+APERTURA DE SESIÓN — los primeros 5 minutos críticos:
+1. Objetivo: "Hoy estamos aquí para [X]" — específico, no genérico
+2. Proceso: "Vamos a hacer [actividad 1] por [tiempo], luego [actividad 2]"
+3. Reglas si es necesario (confidencialidad, respeto, timeboxing)
+4. Check-in: una pregunta rápida para calibrar la energía del grupo
+
+CIERRE DE SESIÓN — los últimos 5 minutos obligatorios:
+1. Resumir decisiones tomadas (no los temas discutidos)
+2. Confirmar owners y fechas para cada acción
+3. Revisar el Parking Lot completo
+4. Check-out: "Una palabra que describe cómo te vas"
+
+FALTA DE FOCO — 3 causas y soluciones:
+1. El objetivo no estaba claro → releer el objetivo en voz alta
+2. Hay un tema más urgente no dicho → preguntar directamente
+3. El grupo está agotado → break de 5 minutos (siempre funciona)
+
+CÓMO FACILITAR UN PI PLANNING — los momentos críticos:
+Día 1 AM: context setting por negocio → equipos no pueden planificar sin contexto
+Día 1 PM: teams breakout → el ATF rotando entre equipos, no en uno solo
+Día 2 AM: program board review + ROAM → las dependencias se acuerdan aquí, no después
+Día 2 PM: confidence vote (Fist of Five por equipo) + retrospectiva del PI Planning
+
+LIBERATING STRUCTURES — las más útiles:
+1-2-4-All: reflexión individual → pares → grupos de 4 → todos. Máxima participación.
+Troika Consulting: grupos de 3, rotación de roles (cliente/consultores). Para resolver problemas complejos.
+What/So What/Now What: procesar experiencias y extraer acciones. Ideal para post-mortems.`,
+    visual:{ type:"diseno-sesiones" },
+    questions:[
+      {
+        q:"En un workshop de OKRs con 15 personas, el CEO habla el 70% del tiempo. Los demás asienten. Las ideas del CEO son buenas pero probablemente no reflejan la visión del grupo. ¿Cómo intervenís?",
+        opts:["Dejás que el CEO lidere — tiene más contexto estratégico","Interrumpís al CEO directamente y le pedís que hable menos","Activás Brainwriting: 'Antes de continuar, quiero capturar las perspectivas de todos — 5 minutos en silencio, cada uno escribe sus ideas sobre [X]. Luego compartimos.' Iguala la cancha sin confrontar al CEO. Cuando se comparten, hay múltiples perspectivas visibles simultáneamente.","Dividís el grupo en equipos sin el CEO para trabajar libremente"],
+        correct:2,
+        explanation:"Brainwriting es la intervención perfecta porque genera ideas individualmente antes de que la persona dominante pueda influir. El CEO escribe sus ideas en silencio como todos los demás. Cuando se comparten, hay múltiples perspectivas visibles simultáneamente — no solo la del CEO. La intervención es sistémica, no confrontacional. Y el CEO no puede objetar — estás invitando más participación, no menos."
+      },
+      {
+        q:"Al cierre de un workshop de 3 horas, el grupo dice 'quedamos en avanzar con la opción B'. Nadie tiene owner ni fecha. ¿Qué hacés antes de liberar la sala?",
+        opts:["Enviás un email resumen después con los acuerdos","Está bien — el acuerdo verbal es suficiente","'Antes de cerrar: ¿quién es el owner de avanzar con la opción B y cuándo tenemos el primer entregable visible?' No se libera la sala hasta que haya un nombre y una fecha. Un acuerdo sin owner es una promesa sin accountability.","Agendás una reunión de seguimiento para la próxima semana"],
+        correct:2,
+        explanation:"Un acuerdo sin owner y sin fecha es una ilusión de progreso. En la próxima reunión nadie hizo nada porque 'pensaron que el otro lo haría'. El facilitador tiene la responsabilidad de no cerrar la sesión hasta que cada acción tenga: qué se va a hacer, quién lo va a hacer, y para cuándo. Esta es la diferencia entre una sesión que produce cambio y una que produce el sentimiento de que algo se decidió."
+      },
+      {
+        q:"Diseñás una sesión de 2 horas para definir el roadmap del próximo trimestre. ¿Cuál es la distribución correcta de tiempo entre las 3 fases?",
+        opts:["Decisión 60 min · Divergencia 40 min · Convergencia 20 min — empezar por la decisión ahorra tiempo","Divergencia 50 min · Convergencia 50 min · Decisión 20 min — esta distribución maximiza la calidad invirtiendo tiempo en explorar antes de decidir","Las 3 fases deben durar igual — 40 min cada una","Divergencia 10 min · Convergencia 10 min · Decisión 100 min — la decisión es lo más importante"],
+        correct:1,
+        explanation:"La distribución 35-40% / 35-40% / 20-30% es la que produce mejores decisiones. Las decisiones de mala calidad suelen venir de divergencia insuficiente (no se exploraron suficientes opciones) o convergencia apurada (se redujo por autoridad, no por criterios). Dedicar el 80% del tiempo a explorar y filtrar rigurosamente produce mejores decisiones más rápido que ir directo a decidir. La paradoja: cuanto más tiempo en divergencia/convergencia, menos tiempo se pierde en ejecutar la decisión equivocada."
+      }
+    ]
+  },
+
+  {
+    id:"stakeholders-decisiones", group:"facilitacion", title:"Stakeholders · Poder · Toma de Decisiones", icon:"♟️",
+    color:"#2563EB", light:"#DBEAFE", border:"#93C5FD", text:"#1D4ED8",
+    functional:`La gestión de stakeholders es la diferencia entre un ATF que ejecuta bien y un Agile Coach que transforma organizaciones. No está en los cursos de certificación.
+
+MAPA DE PODER E INFLUENCIA — 4 cuadrantes:
+
+ALTO PODER + ALTO INTERÉS → gestionar activamente:
+Sponsors y bloqueadores más peligrosos. Necesitan atención frecuente y conversaciones directas.
+En BCP: Gerente de Transformación Digital, CTO.
+
+ALTO PODER + BAJO INTERÉS → mantener satisfechos:
+Tienen poder de bloquear pero no les importa involucrarse. Su indiferencia puede ser peligrosa.
+En BCP: CFO, Gerente de Compliance.
+
+BAJO PODER + ALTO INTERÉS → mantener informados:
+Early adopters y defensores del cambio. Valiosos como embajadores.
+En BCP: tech leads comprometidos, POs.
+
+BAJO PODER + BAJO INTERÉS → monitorear:
+Bajo esfuerzo de gestión. Solo si se convierten en bloqueadores sorpresivos.
+
+CÓMO MANEJAR LÍDERES DIFÍCILES:
+
+EL ESCÉPTICO: "Ya intentamos esto y no funcionó."
+Respuesta: "¿Qué falló específicamente? Quiero asegurarme de no repetirlo." Usa su experiencia como diagnóstico, no como objeción.
+
+EL HIPERPRESENTE: opina en todo, interrumpe al equipo.
+Respuesta: canalizar su energía. "Tu input en [X] sería valioso — ¿podemos tener una sesión específica para eso?"
+
+EL AUSENTE: dice que apoya pero nunca está disponible.
+Respuesta: cuantificar el costo de su ausencia. "Llevamos 3 decisiones bloqueadas esperando tu input — 30 minutos cada 2 semanas resolvería esto."
+
+EL POLÍTICO: usa el proceso ágil para sus agendas personales.
+Respuesta: hacer explícitos los tradeoffs sin señalar la agenda. Traer datos neutrales.
+
+DACI — para decisiones con múltiples stakeholders:
+D (Driver): conduce el proceso → el ATF
+A (Approver): autoridad final → el ejecutivo sponsor (UNO solo)
+C (Contributors): aportan información → equipo técnico, PO
+I (Informed): necesitan saber la decisión → resto de stakeholders
+Error crítico: múltiples personas en rol A → la decisión nunca se toma.`,
+    technical:`CÓMO ALINEAR SIN AUTORIDAD — 5 técnicas:
+
+1. CONVERTIR RESISTENTES EN CO-DISEÑADORES:
+Las personas resisten lo que se les hace. Participan en lo que co-crearon.
+Invitar al stakeholder más resistente al diseño del proceso.
+
+2. DATOS COMO ARGUMENTO NEUTRAL:
+"El equipo tardó 45 días promedio en llegar a producción" no tiene agenda.
+"El equipo es lento" sí la tiene.
+Los datos desarman la resistencia.
+
+3. ENCONTRAR EL "WHY" DEL STAKEHOLDER:
+Cada resistencia tiene una necesidad detrás.
+El gerente que resiste la autonomía del equipo necesita visibilidad y control.
+Dale visibilidad con un dashboard — no control sobre las decisiones.
+
+4. BUILD COALITIONS PRIMERO:
+Antes de proponer un cambio, hablar individualmente con los stakeholders influyentes.
+Cuando llegás a la reunión grupal, ya sabés dónde están las resistencias.
+
+5. QUICK WINS VISIBLES:
+En las primeras 4 semanas, producir un resultado medible.
+Un quick win bien comunicado crea más adhesión que 6 meses de buen proceso sin resultados.
+
+CONSENSO vs CONSENTIMIENTO — diferencia práctica:
+Consenso: todos están de acuerdo (raramente alcanzable, costoso en tiempo)
+Consentimiento: nadie tiene una objeción fundamental que el grupo no pueda vivir con
+Para la mayoría de las decisiones ágiles: consentimiento es suficiente y más rápido
+
+DECISIÓN TIMEBOXED — para situaciones de parálisis:
+"Tenemos 10 minutos para tomar esta decisión. Si no llegamos a acuerdo, yo como Driver tomo la decisión provisional que puede ser revisada en el próximo sprint. ¿De acuerdo con ese proceso?"
+
+4 TIPOS DE RESISTENCIA:
+1. Por miedo → mostrar beneficios concretos para esa persona
+2. Por experiencia → reconocer la historia, mostrar diferencias concretas
+3. Política → mostrar cómo el cambio los empodera en lugar de reducirlos
+4. Por sobrecarga → empezar pequeño, reducir la fricción del cambio`,
+    visual:{ type:"stakeholders" },
+    questions:[
+      {
+        q:"El Gerente de Compliance de BCP (alto poder, bajo interés) frenó un deploy porque nadie lo consultó. ¿Cómo prevenís que se repita?",
+        opts:["Invitarlo a todas las ceremonias del equipo para que esté informado","Ignorar el problema — fue un caso puntual","Crear proactivamente un proceso de consulta ligero: mapear qué decisiones de delivery requieren input de Compliance, crear un canal simple (email con 1 pregunta, respuesta en 24h), y comunicar ANTES de los deploys que tienen implicancias regulatorias. 15 minutos de coordinación semanal evita semanas de bloqueo.","Escalar al CTO para que Compliance tenga menos poder de veto"],
+        correct:2,
+        explanation:"El stakeholder de alto poder / bajo interés necesita un canal proactivo y de bajo esfuerzo para él. Invitarlo a todas las ceremonias lo sobrecargaría (bajo interés) y generaría resistencia. El proceso correcto: identificar los puntos de contacto obligatorios con Compliance, hacerlos simples y predecibles, y comunicar antes de que sea urgente. La clave es que el proceso no depende de que Compliance esté presente en todas las ceremonias — depende de que el equipo consulte proactivamente en los momentos específicos que lo requieren."
+      },
+      {
+        q:"En un proceso de decisión hay 3 personas que creen ser el Approver (A) en el DACI. La decisión lleva 2 semanas sin avanzar. ¿Cuál es la causa y cómo lo resolvés?",
+        opts:["Múltiples aprobadores mejoran la calidad — hay que darles más tiempo","Múltiples Approvers producen parálisis decisional — cada uno puede vetar y la decisión requiere unanimidad implícita. Solución: facilitar la conversación: '¿Quién tiene la última palabra en esta decisión? Necesitamos un solo Approver final.' Si hay conflicto de autoridad, escalar para que el nivel organizacional superior lo defina explícitamente.","El ATF debe tomar la decisión si los Approvers no pueden — es el Driver","El problema es que falta información — hay que hacer más análisis antes de decidir"],
+        correct:1,
+        explanation:"El anti-patrón más costoso del DACI: múltiples personas en el rol A. El resultado matemático es parálisis: cualquiera puede vetar, lo que significa que la decisión requiere unanimidad — el proceso más lento posible. El ATF facilita que el sistema defina explícitamente quién tiene la última palabra. No es su decisión — es facilitar que la organización la tome. Sin un solo Approver, no hay proceso de decisión — hay negociación política interminable."
+      },
+      {
+        q:"¿Cuál es la técnica más efectiva para generar adhesión de un stakeholder que siempre resistió el cambio ágil?",
+        opts:["Presentarle más casos de éxito de otras organizaciones","Esperar a que vea los resultados y cambie de opinión","Convertirlo en co-diseñador del proceso: las personas resisten lo que se les hace pero participan en lo que co-crearon. Su resistencia contiene las objeciones más válidas — las que el equipo promotor del cambio no quiere escuchar.","Hacer el cambio sin su participación y presentarle los resultados como hechos consumados"],
+        correct:2,
+        explanation:"La resistencia del stakeholder es información valiosa, no un obstáculo a eliminar. Los resistentes más fuertes suelen tener las objeciones más válidas. Convertirlos en co-diseñadores cumple dos funciones: captura sus objeciones antes de que se conviertan en bloqueos, y crea ownership sobre el resultado. Un stakeholder que co-diseñó el proceso no puede oponerse a él sin oponerse a sí mismo."
+      }
+    ]
+  }
+];
+
+const tabs = [
+  { id:"functional", label:"Funcional" },
+  { id:"technical",  label:"Técnico" },
+  { id:"visual",     label:"Visual" },
+  { id:"quiz",       label:"¿Lo entendí?" }
+];
+
+// ── VISUALS ──
+
+function VisualRoles() {
+  return (
+    <div style={{display:"flex",flexDirection:"column",gap:8}}>
+      {[
+        {n:"🔵 Scrum Master",sub:"Nivel equipo · dentro del sprint",skills:"Daily · Retro · Planning · Review · Impedimentos",metrics:"Sprint Goal % · Velocity · Acciones retro implementadas",c:"#7C3AED",bg:"#EDE9FE"},
+        {n:"🟢 Agile Team Facilitator",sub:"Nivel facilitación · múltiples stakeholders",skills:"WSJF · ROAM · Program Board · Liberating Structures · Workshops multi-stakeholder",metrics:"Lead Time · Flow Efficiency · Throughput · Predictability",c:"#0D9488",bg:"#CCFBF1"},
+        {n:"🔴 Agile Coach",sub:"Nivel organización · transformación sistémica",skills:"Diagnóstico organizacional · Gestión de poder · Modelos operativos · Coaching C-Level",metrics:"Business outcomes · TTM · NPS · Culture change",c:"#DC2626",bg:"#FEE2E2"},
+      ].map((x,i)=>(
+        <div key={i} style={{background:x.bg,border:`1px solid ${x.c}40`,borderRadius:8,padding:"10px 14px",borderLeft:`4px solid ${x.c}`}}>
+          <div style={{fontSize:13,fontWeight:700,color:x.c,marginBottom:3}}>{x.n}</div>
+          <div style={{fontSize:11,color:"#64748b",marginBottom:5}}>{x.sub}</div>
+          <div style={{fontSize:10,color:"#374151",marginBottom:2}}><strong>Skills:</strong> {x.skills}</div>
+          <div style={{fontSize:10,color:"#374151"}}><strong>Mide:</strong> {x.metrics}</div>
+        </div>
+      ))}
+      <div style={{background:"#0f172a",borderRadius:7,padding:"8px 12px",fontSize:11,color:"#fbbf24",textAlign:"center",fontWeight:700}}>
+        Para BCP/NTT DATA: posicionarte como ATF que puede escalar a Coach. No como SM.
+      </div>
+    </div>
+  );
+}
+
+function VisualAntipatrones() {
+  return (
+    <div style={{display:"flex",flexDirection:"column",gap:6}}>
+      {[
+        {n:"Secretario Ágil",s:"Actualiza Jira, toma notas, coordina reuniones",fix:"Dejar de hacer el trabajo del equipo. '¿Quién toma ownership de esto?'",c:"#DC2626"},
+        {n:"Escudo sin Filtro",s:"Bloquea todo acceso al equipo incluyendo feedback válido",fix:"Filtro inteligente: feedback del cliente pasa, interrupciones operativas no",c:"#D97706"},
+        {n:"Micro-Manager Ágil",s:"Sabe el estado exacto de cada tarea, asigna trabajo",fix:"En el daily: no hablar, solo escuchar 2 semanas. Preguntas, no respuestas.",c:"#DC2626"},
+        {n:"Ceremony Enforcer",s:"Ceremonies perfectas, sprint goals nunca alcanzados",fix:"Medir Sprint Goal %, no calidad de la ceremony",c:"#D97706"},
+        {n:"Framework Missionary",s:"'Necesitan SAFe' — sin diagnóstico previo",fix:"2 semanas de diagnóstico antes de cualquier propuesta de framework",c:"#DC2626"},
+        {n:"Facilitador Eterno",s:"Nada funciona sin él — creó dependencia total",fix:"Rotar facilitación mensualmente. Medir sesiones que el equipo hace solo.",c:"#D97706"},
+      ].map((x,i)=>(
+        <div key={i} style={{background:"#f8fafc",border:`1px solid ${x.c}30`,borderRadius:7,padding:"8px 12px",borderLeft:`3px solid ${x.c}`}}>
+          <div style={{fontSize:11,fontWeight:700,color:x.c,marginBottom:2}}>✗ {x.n}</div>
+          <div style={{fontSize:10,color:"#64748b",marginBottom:2}}>{x.s}</div>
+          <div style={{fontSize:10,color:"#16A34A",fontWeight:600}}>→ Fix: {x.fix}</div>
+        </div>
+      ))}
+    </div>
+  );
+}
+
+function VisualHerramientas1() {
+  return (
+    <div style={{display:"flex",flexDirection:"column",gap:8}}>
+      <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:6}}>
+        {[
+          {n:"⏱ Timeboxing",u:"TODA sesión siempre",no:"No existe 'no usar'",err:"'5 minutos más' infinito",c:"#7C3AED",bg:"#EDE9FE"},
+          {n:"🅿️ Parking Lot",u:"Tema válido fuera del foco",no:"Basurero para evitar conversaciones",err:"Llenarlo y nunca resolverlo",c:"#0D9488",bg:"#CCFBF1"},
+          {n:"🟣 Dot Voting",u:"Priorizar lista de 5+ ítems",no:"Decisiones críticas sin análisis",err:"Votar secuencialmente (ancla)",c:"#2563EB",bg:"#DBEAFE"},
+          {n:"✋ Fist of Five",u:"Decisiones importantes, ver compromiso real",no:"Decisiones técnicas simples",err:"Presionar hasta que todos den 5",c:"#D97706",bg:"#FEF3C7"},
+        ].map((x,i)=>(
+          <div key={i} style={{background:x.bg,border:`1px solid ${x.c}40`,borderRadius:8,padding:"10px 12px"}}>
+            <div style={{fontSize:12,fontWeight:700,color:x.c,marginBottom:5}}>{x.n}</div>
+            <div style={{fontSize:9,color:"#16A34A",marginBottom:2}}>✓ Cuando: {x.u}</div>
+            <div style={{fontSize:9,color:"#DC2626",marginBottom:2}}>✗ No usar: {x.no}</div>
+            <div style={{fontSize:9,color:"#D97706"}}>⚠ Error: {x.err}</div>
+          </div>
+        ))}
+      </div>
+      <div style={{background:"#0f172a",borderRadius:8,padding:"10px 14px"}}>
+        <div style={{fontSize:10,fontWeight:700,color:"#fbbf24",marginBottom:6}}>PROTOCOLO PARKING LOT — obligatorio</div>
+        {["1. Capturar el tema INMEDIATAMENTE en espacio visible","2. Nombrar un owner en el momento","3. Al CIERRE: revisar CADA ítem del Parking Lot","4. Para cada ítem: tarea / reunión separada / descartado","5. NUNCA cerrar sin revisar el Parking Lot"].map((x,i)=>(
+          <div key={i} style={{fontSize:10,color:"#e2e8f0",lineHeight:1.7}}>{x}</div>
+        ))}
+      </div>
+    </div>
+  );
+}
+
+function VisualWSJFROAM() {
+  return (
+    <div style={{display:"flex",flexDirection:"column",gap:8}}>
+      <div style={{background:"#0f172a",borderRadius:8,padding:"10px 14px"}}>
+        <div style={{fontSize:11,fontWeight:700,color:"#fbbf24",marginBottom:6}}>WSJF = (Valor + Urgencia + Reducción de Riesgo) / Tamaño</div>
+        <div style={{overflowX:"auto"}}>
+          <table style={{borderCollapse:"collapse",width:"100%",minWidth:400}}>
+            <thead><tr>
+              {["Feature","Valor","Urgencia","Riesgo","Tamaño","WSJF"].map((h,i)=>(
+                <th key={i} style={{padding:"5px 8px",background:"#1e293b",color:"#94a3b8",fontSize:10,textAlign:"left"}}>{h}</th>
+              ))}
+            </tr></thead>
+            <tbody>
+              {[
+                ["Fix performance","5","13","8","3","8.7 ✓ 1°","#DCFCE7","#14532D"],
+                ["Módulo pagos","13","8","3","8","3.0 · 2°","#f8fafc","#374151"],
+                ["Módulo inversiones","8","2","2","13","0.9 · 3°","#f8fafc","#374151"],
+              ].map((r,i)=>(
+                <tr key={i}>
+                  {r.slice(0,6).map((c,j)=>(
+                    <td key={j} style={{padding:"6px 8px",background:r[6],color:r[7],fontSize:10,borderBottom:"1px solid #1e293b",fontWeight:j===5?700:400}}>{c}</td>
+                  ))}
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      </div>
+      <div style={{display:"grid",gridTemplateColumns:"repeat(4,1fr)",gap:5}}>
+        {[
+          {l:"R",n:"Resolved",d:"El riesgo ya no existe",c:"#16A34A",bg:"#DCFCE7"},
+          {l:"O",n:"Owned",d:"Owner específico con nombre",c:"#2563EB",bg:"#DBEAFE"},
+          {l:"A",n:"Accepted",d:"Existe, se acepta conscientemente",c:"#D97706",bg:"#FEF3C7"},
+          {l:"M",n:"Mitigated",d:"Plan concreto reduce impacto",c:"#7C3AED",bg:"#EDE9FE"},
+        ].map((x,i)=>(
+          <div key={i} style={{background:x.bg,border:`1px solid ${x.c}40`,borderRadius:7,padding:"8px",textAlign:"center"}}>
+            <div style={{fontSize:18,fontWeight:900,color:x.c}}>{x.l}</div>
+            <div style={{fontSize:10,fontWeight:700,color:x.c,marginBottom:3}}>{x.n}</div>
+            <div style={{fontSize:9,color:"#64748b",lineHeight:1.3}}>{x.d}</div>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+}
+
+function VisualKanbanRetros() {
+  return (
+    <div style={{display:"flex",flexDirection:"column",gap:8}}>
+      <div style={{background:"#f8fafc",border:"1px solid #e2e8f0",borderRadius:8,padding:"10px 14px"}}>
+        <div style={{fontSize:11,fontWeight:700,color:"#1e293b",marginBottom:6}}>LEY DE LITTLE — Lead Time = WIP / Throughput</div>
+        <div style={{display:"grid",gridTemplateColumns:"repeat(3,1fr)",gap:6}}>
+          {[
+            {s:"WIP=12 · TH=3","lt":"4 semanas","note":"Estado actual",c:"#DC2626",bg:"#FEE2E2"},
+            {s:"WIP=6 · TH=3","lt":"2 semanas","note":"Reducir WIP",c:"#D97706",bg:"#FEF3C7"},
+            {s:"WIP=6 · TH=6","lt":"1 semana","note":"Reducir WIP + mejorar TH",c:"#16A34A",bg:"#DCFCE7"},
+          ].map((x,i)=>(
+            <div key={i} style={{background:x.bg,border:`1px solid ${x.c}40`,borderRadius:7,padding:"8px",textAlign:"center"}}>
+              <div style={{fontSize:9,color:x.c,fontWeight:700,marginBottom:3}}>{x.s}</div>
+              <div style={{fontSize:16,fontWeight:700,color:x.c}}>{x.lt}</div>
+              <div style={{fontSize:9,color:"#64748b"}}>{x.note}</div>
+            </div>
+          ))}
+        </div>
+      </div>
+      <div style={{background:"#0f172a",borderRadius:8,padding:"10px 14px"}}>
+        <div style={{fontSize:10,fontWeight:700,color:"#fbbf24",marginBottom:6}}>ELEGIR FORMATO DE RETRO — árbol de decisión</div>
+        {[
+          {c:"¿El equipo está emocionalmente afectado?","r":"→ Mad/Sad/Glad primero"},
+          {c:"¿Mismos problemas sin cambio?","r":"→ TRIZ (invertir el problema)"},
+          {c:"¿Baja moral, necesitás energía?","r":"→ Futurospective"},
+          {c:"¿Retro estratégica o de PI?","r":"→ Sailboat"},
+          {c:"¿Equipo nuevo?","r":"→ 4Ls"},
+          {c:"¿Sprint normal, tiempo limitado?","r":"→ Start/Stop/Continue"},
+        ].map((x,i)=>(
+          <div key={i} style={{display:"flex",gap:8,marginBottom:4}}>
+            <div style={{fontSize:10,color:"#94a3b8",flex:1}}>{x.c}</div>
+            <div style={{fontSize:10,color:"#4ade80",fontWeight:600}}>{x.r}</div>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+}
+
+function VisualDisenoSesiones() {
+  return (
+    <div style={{display:"flex",flexDirection:"column",gap:8}}>
+      <div style={{display:"grid",gridTemplateColumns:"repeat(3,1fr)",gap:6}}>
+        {[
+          {n:"DIVERGENCIA",pct:"35-40%",d:"Generar perspectivas. Sin crítica. Brainwriting.",c:"#16A34A",bg:"#DCFCE7"},
+          {n:"CONVERGENCIA",pct:"35-40%",d:"Reducir opciones con criterios explícitos. Dot Voting.",c:"#D97706",bg:"#FEF3C7"},
+          {n:"DECISIÓN",pct:"20-30%",d:"Compromiso claro. Owner. Fecha. Fist of Five.",c:"#DC2626",bg:"#FEE2E2"},
+        ].map((x,i)=>(
+          <div key={i} style={{background:x.bg,border:`1px solid ${x.c}40`,borderRadius:8,padding:"10px 10px",textAlign:"center"}}>
+            <div style={{fontSize:11,fontWeight:700,color:x.c,marginBottom:3}}>{x.n}</div>
+            <div style={{fontSize:14,fontWeight:700,color:x.c,marginBottom:5}}>{x.pct}</div>
+            <div style={{fontSize:10,color:"#374151",lineHeight:1.4}}>{x.d}</div>
+          </div>
+        ))}
+      </div>
+      <div style={{background:"#f8fafc",border:"1px solid #e2e8f0",borderRadius:8,padding:"10px 14px"}}>
+        <div style={{fontSize:11,fontWeight:700,color:"#1e293b",marginBottom:6}}>MANEJO DE GRUPOS DIFÍCILES</div>
+        {[
+          {p:"Persona dominante","s":"Brainwriting + Round Robin — iguala la cancha sin confrontar","c":"#7C3AED"},
+          {p:"Silencio de incomodidad","s":"Brainwriting antes de discusión abierta","c":"#0D9488"},
+          {p:"Silencio de resistencia","s":"'¿Hay algo que el grupo está pensando pero no diciendo?'","c":"#2563EB"},
+          {p:"Conflicto interpersonal","s":"Separar del grupo inmediatamente, sesión privada después","c":"#DC2626"},
+          {p:"Falta de foco","s":"Releer el objetivo en voz alta — siempre funciona","c":"#D97706"},
+        ].map((x,i)=>(
+          <div key={i} style={{display:"flex",gap:8,marginBottom:5}}>
+            <div style={{fontSize:10,fontWeight:700,color:x.c,minWidth:140}}>{x.p}</div>
+            <div style={{fontSize:10,color:"#374151"}}>{x.s}</div>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+}
+
+function VisualStakeholders() {
+  return (
+    <div style={{display:"flex",flexDirection:"column",gap:8}}>
+      <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:6}}>
+        {[
+          {n:"Alto Poder · Alto Interés",d:"Gestionar activamente — atención frecuente y conversaciones directas",ej:"CTO, Gerente Transformación Digital",c:"#DC2626",bg:"#FEE2E2"},
+          {n:"Alto Poder · Bajo Interés",d:"Mantener satisfechos — resúmenes ejecutivos breves, comunicación proactiva de riesgos",ej:"CFO, Gerente Compliance",c:"#D97706",bg:"#FEF3C7"},
+          {n:"Bajo Poder · Alto Interés",d:"Mantener informados — valiosos como embajadores del cambio",ej:"Tech leads, POs comprometidos",c:"#16A34A",bg:"#DCFCE7"},
+          {n:"Bajo Poder · Bajo Interés",d:"Monitorear — bajo esfuerzo",ej:"Áreas de soporte",c:"#64748b",bg:"#f8fafc"},
+        ].map((x,i)=>(
+          <div key={i} style={{background:x.bg,border:`1px solid ${x.c}40`,borderRadius:8,padding:"10px 12px"}}>
+            <div style={{fontSize:10,fontWeight:700,color:x.c,marginBottom:3}}>{x.n}</div>
+            <div style={{fontSize:10,color:"#374151",marginBottom:3,lineHeight:1.4}}>{x.d}</div>
+            <div style={{fontSize:9,color:"#64748b",fontStyle:"italic"}}>BCP: {x.ej}</div>
+          </div>
+        ))}
+      </div>
+      <div style={{background:"#0f172a",borderRadius:8,padding:"10px 14px"}}>
+        <div style={{fontSize:10,fontWeight:700,color:"#fbbf24",marginBottom:5}}>DACI — un solo Approver o parálisis garantizada</div>
+        {[
+          {l:"D Driver","d":"Conduce el proceso → el ATF",c:"#94a3b8"},
+          {l:"A Approver","d":"Autoridad final → UN ejecutivo (UNO solo)",c:"#f87171"},
+          {l:"C Contributors","d":"Aportan información → equipo, PO",c:"#4ade80"},
+          {l:"I Informed","d":"Necesitan saber la decisión → resto",c:"#94a3b8"},
+        ].map((x,i)=>(
+          <div key={i} style={{display:"flex",gap:8,marginBottom:4}}>
+            <div style={{fontSize:10,fontWeight:700,color:x.c,minWidth:90}}>{x.l}</div>
+            <div style={{fontSize:10,color:"#e2e8f0"}}>{x.d}</div>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+}
+
+function Visual({chapter}) {
+  const t = chapter.visual.type;
+  if(t==="roles")             return <VisualRoles/>;
+  if(t==="antipatrones")      return <VisualAntipatrones/>;
+  if(t==="herramientas-1")    return <VisualHerramientas1/>;
+  if(t==="wsjf-roam")         return <VisualWSJFROAM/>;
+  if(t==="kanban-retros")     return <VisualKanbanRetros/>;
+  if(t==="diseno-sesiones")   return <VisualDisenoSesiones/>;
+  if(t==="stakeholders")      return <VisualStakeholders/>;
+  return null;
+}
+
+function Quiz({questions, color, light, onComplete}) {
+  const [answers, setAnswers] = useState({});
+  const [submitted, setSubmitted] = useState(false);
+  function answer(qi,oi) { if(submitted||answers[qi]!==undefined)return; setAnswers(a=>({...a,[qi]:oi})); }
+  function submit() {
+    if(Object.keys(answers).length<questions.length)return;
+    const score = questions.reduce((s,q,i)=>s+(answers[i]===q.correct?1:0),0);
+    setSubmitted(true); onComplete(score);
+  }
+  return (
+    <div>
+      {questions.map((q,qi)=>(
+        <div key={qi} style={{marginBottom:16}}>
+          <div style={{fontSize:13,fontWeight:500,color:"#1e293b",marginBottom:8,lineHeight:1.5}}>{qi+1}. {q.q}</div>
+          <div style={{display:"flex",flexDirection:"column",gap:5}}>
+            {q.opts.map((o,oi)=>{
+              let bg="#f8fafc",border="1px solid #e2e8f0",tc="#374151";
+              if(answers[qi]===oi){bg=light;border=`1px solid ${color}`;tc="#1e293b";}
+              if(submitted&&oi===q.correct){bg="#f0fdf4";border="1px solid #86efac";tc="#14532d";}
+              if(submitted&&answers[qi]===oi&&oi!==q.correct){bg="#fef2f2";border="1px solid #fca5a5";tc="#7f1d1d";}
+              return <div key={oi} onClick={()=>answer(qi,oi)} style={{padding:"9px 13px",borderRadius:7,border,background:bg,cursor:submitted||answers[qi]!==undefined?"default":"pointer",fontSize:12,color:tc,lineHeight:1.4}}>{o}</div>;
+            })}
+          </div>
+          {submitted&&<div style={{marginTop:8,padding:"8px 12px",background:answers[qi]===q.correct?"#f0fdf4":"#fef2f2",border:`1px solid ${answers[qi]===q.correct?"#86efac":"#fca5a5"}`,borderRadius:6,fontSize:12,color:answers[qi]===q.correct?"#14532d":"#7f1d1d",lineHeight:1.6}}>{answers[qi]===q.correct?"✓ ":"✗ "}{q.explanation}</div>}
+        </div>
+      ))}
+      {!submitted&&<button onClick={submit} disabled={Object.keys(answers).length<questions.length} style={{marginTop:4,padding:"9px 20px",borderRadius:7,border:"none",background:Object.keys(answers).length<questions.length?"#e2e8f0":color,color:Object.keys(answers).length<questions.length?"#94a3b8":"#fff",fontSize:13,fontWeight:600,cursor:Object.keys(answers).length<questions.length?"not-allowed":"pointer"}}>Verificar respuestas</button>}
+    </div>
+  );
+}
+
+export default function SMATFCoachGuia() {
+  const [chapter, setChapter] = useState(0);
+  const [tab, setTab] = useState("functional");
+  const [quizDone, setQuizDone] = useState({});
+  const [totalScore, setTotalScore] = useState(0);
+  const [totalQ, setTotalQ] = useState(0);
+  const [quizKey, setQuizKey] = useState(0);
+
+  const ch = CHAPTERS[chapter];
+  const pct = totalQ>0?Math.round((totalScore/totalQ)*100):0;
+  const doneCh = Object.keys(quizDone).length;
+
+  function handleQuizComplete(score) {
+    if(!quizDone[chapter]){setTotalScore(s=>s+score);setTotalQ(t=>t+ch.questions.length);}
+    setQuizDone(d=>({...d,[chapter]:{done:true,score,total:ch.questions.length}}));
+  }
+  function goChapter(idx){setChapter(idx);setTab("functional");setQuizKey(k=>k+1);}
+
+  return (
+    <div style={{fontFamily:"var(--font-sans)",maxWidth:780,margin:"0 auto"}}>
+      <div style={{background:"#0f172a",borderRadius:"12px 12px 0 0",padding:"12px 16px",display:"flex",alignItems:"center",gap:10}}>
+        <div style={{width:32,height:32,borderRadius:8,background:"rgba(124,58,237,.25)",border:"1px solid rgba(196,181,253,.4)",display:"flex",alignItems:"center",justifyContent:"center",fontSize:16,flexShrink:0}}>🎯</div>
+        <div style={{flex:1}}>
+          <div style={{fontSize:13,fontWeight:500,color:"#f1f5f9"}}>SM → ATF → Agile Coach · Parte 1 de 2</div>
+          <div style={{fontSize:11,color:"#64748b"}}>7 secciones · 21 preguntas · Roles · Herramientas · Facilitación</div>
+        </div>
+        {doneCh>0&&<div style={{textAlign:"right"}}><div style={{fontSize:18,fontWeight:700,color:pct>=80?"#4ade80":pct>=60?"#fbbf24":"#f87171"}}>{pct}%</div><div style={{fontSize:10,color:"#64748b"}}>{doneCh}/{CHAPTERS.length}</div></div>}
+      </div>
+
+      <div style={{background:"#1e293b",padding:"8px 12px",borderBottom:"1px solid #0f172a"}}>
+        {GROUPS.map(group=>{
+          const gc=CHAPTERS.filter(c=>c.group===group.id);
+          return (
+            <div key={group.id} style={{marginBottom:6}}>
+              <div style={{fontSize:10,fontWeight:700,color:group.color,letterSpacing:".05em",marginBottom:4,paddingLeft:2}}>{group.label.toUpperCase()}</div>
+              <div style={{display:"flex",gap:4,flexWrap:"wrap"}}>
+                {gc.map(c=>{
+                  const idx=CHAPTERS.indexOf(c);
+                  return <button key={idx} onClick={()=>goChapter(idx)} style={{fontSize:11,padding:"5px 10px",borderRadius:6,cursor:"pointer",background:chapter===idx?c.color:"transparent",color:chapter===idx?"#fff":"#94a3b8",border:`1px solid ${chapter===idx?c.color:"#334155"}`,fontWeight:chapter===idx?600:400,display:"flex",alignItems:"center",gap:4,transition:".15s"}}>
+                    {quizDone[idx]&&<span style={{fontSize:9}}>{quizDone[idx].score===quizDone[idx].total?"✓":"~"}</span>}
+                    {c.icon} {c.title}
+                  </button>;
+                })}
+              </div>
+            </div>
+          );
+        })}
+      </div>
+
+      <div style={{background:"#fff",border:"1px solid #e2e8f0",borderTop:"none"}}>
+        <div style={{background:ch.light,borderBottom:`2px solid ${ch.border}`,padding:"14px 18px"}}>
+          <div style={{display:"flex",alignItems:"center",gap:10,flexWrap:"wrap"}}>
+            <div style={{width:42,height:42,borderRadius:10,background:ch.color,display:"flex",alignItems:"center",justifyContent:"center",fontSize:20,flexShrink:0}}>{ch.icon}</div>
+            <div style={{flex:1}}>
+              <div style={{fontSize:15,fontWeight:700,color:ch.text}}>{ch.title}</div>
+              <div style={{fontSize:11,color:ch.color,marginTop:2}}>{ch.questions.length} preguntas{quizDone[chapter]&&` · ${quizDone[chapter].score}/${quizDone[chapter].total} correctas`}</div>
+            </div>
+            <div style={{display:"flex",gap:5,flexWrap:"wrap"}}>
+              {tabs.map(t=><button key={t.id} onClick={()=>setTab(t.id)} style={{fontSize:11,padding:"5px 12px",borderRadius:6,cursor:"pointer",background:tab===t.id?ch.color:"transparent",color:tab===t.id?"#fff":ch.text,border:`1px solid ${tab===t.id?ch.color:ch.border}`,fontWeight:tab===t.id?600:400}}>{t.label}</button>)}
+            </div>
+          </div>
+        </div>
+
+        <div style={{padding:"16px 18px"}}>
+          {tab==="functional"&&<div><div style={{fontSize:10,fontWeight:700,color:"#94a3b8",letterSpacing:".5px",marginBottom:10}}>¿QUÉ ES Y POR QUÉ IMPORTA?</div><div style={{fontSize:13,color:"#374151",lineHeight:1.85,whiteSpace:"pre-line"}}>{ch.functional}</div><div style={{marginTop:14,padding:"10px 14px",background:ch.light,border:`1px solid ${ch.border}`,borderRadius:8,fontSize:12,color:ch.text}}>Orden: <strong>Funcional → Técnico → Visual → ¿Lo entendí?</strong></div></div>}
+          {tab==="technical"&&<div><div style={{fontSize:10,fontWeight:700,color:"#94a3b8",letterSpacing:".5px",marginBottom:10}}>IMPLEMENTACIÓN Y DETALLES</div><div style={{background:"#0f172a",borderRadius:8,padding:"14px 16px"}}><div style={{fontSize:12,color:"#e2e8f0",lineHeight:1.9,whiteSpace:"pre-line",fontFamily:"monospace"}}>{ch.technical}</div></div></div>}
+          {tab==="visual"&&<div><div style={{fontSize:10,fontWeight:700,color:"#94a3b8",letterSpacing:".5px",marginBottom:10}}>REPRESENTACIÓN VISUAL</div><Visual chapter={ch}/></div>}
+          {tab==="quiz"&&<div><div style={{fontSize:10,fontWeight:700,color:"#94a3b8",letterSpacing:".5px",marginBottom:12}}>VALIDA TU COMPRENSIÓN</div>{quizDone[chapter]?(<div><div style={{background:quizDone[chapter].score===quizDone[chapter].total?"#f0fdf4":"#fffbeb",border:`1px solid ${quizDone[chapter].score===quizDone[chapter].total?"#86efac":"#fcd34d"}`,borderRadius:8,padding:"12px 14px",marginBottom:12}}><div style={{fontSize:13,fontWeight:600,color:"#1e293b"}}>{quizDone[chapter].score===quizDone[chapter].total?"🎯 ¡Sección dominada!":"✅ Completada"}</div><div style={{fontSize:12,color:"#64748b",marginTop:4}}>{quizDone[chapter].score}/{quizDone[chapter].total} correctas</div></div><button onClick={()=>{setQuizDone(d=>{const nd={...d};delete nd[chapter];return nd;});setQuizKey(k=>k+1);}} style={{fontSize:12,padding:"8px 16px",borderRadius:7,border:"1px solid #e2e8f0",background:"#f8fafc",cursor:"pointer",color:"#64748b"}}>Repetir quiz</button></div>):(<Quiz key={quizKey} questions={ch.questions} color={ch.color} light={ch.light} onComplete={handleQuizComplete}/>)}</div>}
+        </div>
+
+        <div style={{padding:"10px 18px 14px",borderTop:"1px solid #f1f5f9",display:"flex",justifyContent:"space-between",alignItems:"center"}}>
+          <button onClick={()=>goChapter(chapter-1)} disabled={chapter===0} style={{fontSize:12,padding:"8px 16px",borderRadius:7,border:"1px solid #e2e8f0",background:"#f8fafc",cursor:chapter===0?"not-allowed":"pointer",color:chapter===0?"#cbd5e1":"#374151"}}>← Anterior</button>
+          <div style={{fontSize:11,color:"#94a3b8"}}>{chapter+1} / {CHAPTERS.length} · Parte 1</div>
+          <button onClick={()=>goChapter(chapter+1)} disabled={chapter===CHAPTERS.length-1} style={{fontSize:12,padding:"8px 16px",borderRadius:7,border:`1px solid ${ch.color}`,background:ch.color,color:"#fff",cursor:chapter===CHAPTERS.length-1?"not-allowed":"pointer",opacity:chapter===CHAPTERS.length-1?.5:1}}>Siguiente →</button>
+        </div>
+      </div>
+    </div>
+  );
+}
